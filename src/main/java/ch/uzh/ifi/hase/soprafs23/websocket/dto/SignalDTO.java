@@ -3,7 +3,8 @@ package ch.uzh.ifi.hase.soprafs23.websocket.dto;
 import ch.uzh.ifi.hase.soprafs23.constant.SignalType;
 
 public class SignalDTO {
-    private String data, senderId, recipentId;
+    private String senderId, recipentId;
+    private Object data;
     private SignalType type;
 
     public SignalType getType() {
@@ -30,11 +31,11 @@ public class SignalDTO {
         this.senderId = senderId;
     }
 
-    public String getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Object data) {
         this.data = data;
     }
 
