@@ -1,12 +1,27 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
-
 public class MinigameGetDTO {
-    private MinigameType type;
+    private String name;
+    private String description;
     private int scoreToGain;
     private String team1Player;
     private String team2Player;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getTeam1Player() {
         return team1Player;
@@ -30,14 +45,6 @@ public class MinigameGetDTO {
 
     public void setScoreToGain(int scoreToGain) {
         this.scoreToGain = scoreToGain;
-    }
-
-    public MinigameType getType() {
-        return type;
-    }
-
-    public void setType(MinigameType type) {
-        this.type = type;
     }
     
 }
