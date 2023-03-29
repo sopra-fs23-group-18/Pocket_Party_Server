@@ -7,7 +7,4 @@ public class TimingGame extends Minigame {
         this.name = "TimingGame";
     }
 
-    public String toString() {
-        return this.name;
-    };
 }

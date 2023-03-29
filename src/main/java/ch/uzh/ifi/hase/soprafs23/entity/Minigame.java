@@ -7,6 +7,7 @@ public abstract class Minigame {
     private String team1Player;
     private String team2Player;
     protected String name;
+    protected String description;
 
     public Minigame(int scoreToGain) {
         this.scoreToGain = scoreToGain;
@@ -16,7 +17,5 @@ public abstract class Minigame {
         this.winner = winner;
         isFinished = true;
     }
-
-    public abstract String toString();
 
 }

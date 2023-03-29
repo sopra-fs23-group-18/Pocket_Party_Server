@@ -7,8 +7,4 @@ public class TappingGame extends Minigame {
         this.name = "TappingGame";
     }
 
-    public String toString() {
-        return this.name;
-    };
-
 }
