@@ -1,17 +1,14 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
-public class Minigame {
+public abstract class Minigame {
     private boolean isFinished = false;
     private Team winner;
-    private MinigameType type;
     private int scoreToGain;
     private String team1Player;
     private String team2Player;
 
-    public Minigame(MinigameType type, int scoreToGain){
-        this.type = type;
+    public Minigame(int scoreToGain){
         this.scoreToGain = scoreToGain;
     }
 
@@ -19,6 +16,8 @@ public class Minigame {
         this.winner = winner;
         isFinished = true;
     }
+
+    public abstract String toString();
 
 
 }
