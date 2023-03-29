@@ -6,10 +6,13 @@ public class Minigame {
     private boolean isFinished = false;
     private Team winner;
     private MinigameType type;
-    private int scroeToGain;
+    private int scoreToGain;
+    private String team1Player;
+    private String team2Player;
 
-    public Minigame(MinigameType type){
+    public Minigame(MinigameType type, int scoreToGain){
         this.type = type;
+        this.scoreToGain = scoreToGain;
     }
 
     public void setWinner(Team winner){
