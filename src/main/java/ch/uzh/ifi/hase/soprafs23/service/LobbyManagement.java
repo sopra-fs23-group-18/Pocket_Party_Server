@@ -16,4 +16,9 @@ public class LobbyManagement {
         return wip;
     }
 
+    public Minigame getMinigame(Long lobbyId){
+        Minigame wip = new Minigame(MinigameType.TIMING_GAME, 500);
+        return wip;
+    }
+
 }

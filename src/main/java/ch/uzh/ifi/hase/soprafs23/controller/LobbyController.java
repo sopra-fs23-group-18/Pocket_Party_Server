@@ -39,7 +39,14 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
     }
 
-    
+    @GetMapping("/lobbies/{lobbyId}/minigame")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public MinigameGetDTO getMinigame(@PathVariable long lobbyId){
+        
+        Minigame nextMinigame = lobbyManager.getMinigame(lobbyId); 
+        return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
+    }
 
 
 }

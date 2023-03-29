@@ -46,5 +46,5 @@ public interface DTOMapper {
   @Mapping(source = "teams", target = "teams")
   LobbyGetDTO convertEntityToLobbyGetDTO(Lobby lobby);
 
-  
+  MinigameGetDTO convertEntityToMinigameGetDTO(Minigame minigame);
 }
