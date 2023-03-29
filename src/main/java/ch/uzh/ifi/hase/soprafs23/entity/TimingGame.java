@@ -4,6 +4,10 @@ public class TimingGame extends Minigame {
 
     public TimingGame(int scoreToGain) {
         super(scoreToGain);
+        this.name = "TimingGame";
     }
-    
+
+    public String toString() {
+        return this.name;
+    };
 }
