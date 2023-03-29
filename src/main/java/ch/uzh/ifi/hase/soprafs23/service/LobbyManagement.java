@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.TimingGame;
 
 @Service
 @Transactional
@@ -17,7 +18,7 @@ public class LobbyManagement {
     }
 
     public Minigame getMinigame(Long lobbyId){
-        Minigame wip = new Minigame(MinigameType.TIMING_GAME, 500);
+        Minigame wip = new TimingGame(500);
         return wip;
     }
 
