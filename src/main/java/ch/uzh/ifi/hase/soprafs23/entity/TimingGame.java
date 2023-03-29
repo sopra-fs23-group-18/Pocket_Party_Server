@@ -6,6 +6,7 @@ public class TimingGame extends Minigame {
         super(scoreToGain);
         this.name = "TimingGame";
         this.description = "Shake your phone at the right time to catch the objects falling from the sky!";
+    
     }
 
 }
