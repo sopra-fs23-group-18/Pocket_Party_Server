@@ -6,10 +6,7 @@ public class LobbyPostDTO {
     public int getWinningScore() {
         return winningScore;
     }
-
     public void setWinningScore(int winningScore) {
         this.winningScore = winningScore;
     }
-
-
 }

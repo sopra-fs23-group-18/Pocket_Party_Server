@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import java.util.List;
+
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 
 public class LobbyGetDTO {
@@ -8,6 +9,8 @@ public class LobbyGetDTO {
     private int inviteCode;
     private int winningScore;
     private List<Team> teams;
+
+    
 
     public List<Team> getTeams() {
         return teams;
