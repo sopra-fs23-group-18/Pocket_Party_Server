@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import java.util.List;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 
 public class LobbyGetDTO {
@@ -9,8 +10,16 @@ public class LobbyGetDTO {
     private int inviteCode;
     private int winningScore;
     private List<Team> teams;
+    private List<Minigame> minigames;
 
     
+    public List<Minigame> getMinigames() {
+        return minigames;
+    }
+
+    public void setMinigames(List<Minigame> minigames) {
+        this.minigames = minigames;
+    }
 
     public List<Team> getTeams() {
         return teams;

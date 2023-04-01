@@ -1,7 +1,14 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-public class TappingGame extends Minigame {
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "TAPPINGGAME")
+public class TappingGame extends Minigame {
+    public TappingGame() {
+        super();
+    }
     public TappingGame(int scoreToGain) {
         super(scoreToGain);
         this.name = "TappingGame";

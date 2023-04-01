@@ -1,13 +1,41 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-public abstract class Minigame {
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+
+import javax.persistence.InheritanceType;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public abstract class Minigame implements Serializable{
+    private static final long serialVersionUID = 1L;
+
+  @Id
+  @GeneratedValue
+  private Long id;
+
+    @Column(nullable = false)
     private boolean isFinished = false;
+    @Column(nullable = true)
     private Team winner;
+    @Column(nullable = false)
     private int scoreToGain;
-    private String team1Player;
-    private String team2Player;
+    @Column(nullable = false)
+    private String team1Player = "No Player";
+    @Column(nullable = false)
+    private String team2Player = "No Player";
+    @Column(nullable = false)
     protected String name;
+    @Column(nullable = false)
     protected String description;
+
+    public Minigame() {
+    }
 
     public Minigame(int scoreToGain) {
         this.scoreToGain = scoreToGain;
@@ -41,19 +69,17 @@ public abstract class Minigame {
         return scoreToGain;
     }
 
-    public void setWinner(Team winner) {
-        this.winner = winner;
-        isFinished = true;
-    }
-
     public Team getWinner() {
         return winner;
+    }
+
+    public void setWinner(Team winner) {
+        this.winner = winner;
     }
 
     public boolean isFinished() {
         return isFinished;
     }
-
 
     
 

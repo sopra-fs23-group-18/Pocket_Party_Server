@@ -1,6 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import javax.persistence.Entity;
+
+@Entity
 public class TimingGame extends Minigame {
+    public TimingGame() {
+        super();
+    }
 
     public TimingGame(int scoreToGain) {
         super(scoreToGain);
