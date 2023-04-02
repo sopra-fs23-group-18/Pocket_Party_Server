@@ -28,14 +28,7 @@ public class LobbyManagement {
 
     public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository) {
         this.lobbyRepository = lobbyRepository;
-      }
-
-    public Minigame getMinigame(Long lobbyId){
-        Lobby lobby = lobbyRepository.findById(lobbyId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given id does not exist!"));
-        return lobby.getNextMinigame();
-    }
-    
+      }   
 
     public Lobby createLobby(Lobby newLobby) {
         int inviteCode = new Random().nextInt(900000) + 100000;
@@ -54,10 +47,16 @@ public class LobbyManagement {
     
       public Lobby getLobby(Long lobbyId) {
         Lobby lobby = lobbyRepository.findById(lobbyId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given id does not exist!"));
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
         return lobby;
       }
 
-      
+      public Minigame getMinigame(Long lobbyId){
+        Lobby lobby = lobbyRepository.findById(lobbyId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        return lobby.getNextMinigame();
+    }
+
+
 
 }
