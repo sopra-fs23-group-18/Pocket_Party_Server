@@ -41,8 +41,7 @@ public class LobbyController {
         this.playerService = playerService;
         this.minigameService = minigameService;  
     }
-
-    
+   
 
     @PostMapping("/lobbies")
     @ResponseStatus(HttpStatus.CREATED)
@@ -50,16 +49,10 @@ public class LobbyController {
     public LobbyGetDTO createLobby(@RequestBody LobbyPostDTO lobbyPostDTO) {
         // convert API user to internal representation
         Lobby lobbyInput = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(lobbyPostDTO);
-        Team team1 = teamService.createTeam(new Team());
-        Team team2 = teamService.createTeam(new Team());
-        team1.addPlayer(playerService.createPLayer(new Player("bob")));
-        team2.addPlayer(playerService.createPLayer(new Player("alice")));
-        List<Team> teams = Arrays.asList(team1, team2);
-        lobbyInput.setTeams(teams);
-        Minigame tappingGame = minigameService.createMinigame(new TappingGame(100));
-        Minigame timingGame = minigameService.createMinigame(new TimingGame(200));
-        List<Minigame> minigames = Arrays.asList(tappingGame, timingGame);
+
+        List<Minigame> minigames = minigameService.chosenMinigames();
         lobbyInput.setMinigames(minigames);
+        
         // create user
         Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
         
@@ -85,4 +78,15 @@ public class LobbyController {
     }
 
 
+    //TODO when adding settings menu: POST method to create the list of chosen minigames (currently also handled in POST lobby)
+
+
+    // belongs to PUT endpoint of team creation
+
+        // Team team1 = teamService.createTeam(new Team());
+        // Team team2 = teamService.createTeam(new Team());
+        // team1.addPlayer(playerService.createPLayer(new Player("bob")));
+        // team2.addPlayer(playerService.createPLayer(new Player("alice")));
+        // List<Team> teams = Arrays.asList(team1, team2);
+        // lobbyInput.setTeams(teams);
 }

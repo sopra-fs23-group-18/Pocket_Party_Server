@@ -38,8 +38,13 @@ public class LobbyManagement {
     
 
     public Lobby createLobby(Lobby newLobby) {
+        int inviteCode = new Random().nextInt(900000) + 100000;
+        while (lobbyRepository.findByInviteCode(inviteCode) != null){
+          inviteCode = new Random().nextInt(900000) + 100000;
+        }
+        newLobby.setInviteCode(inviteCode);
+
         
-        newLobby.setInviteCode(new Random().nextInt(900000) + 100000);
         newLobby = lobbyRepository.save(newLobby);
         lobbyRepository.flush();
     
@@ -52,5 +57,7 @@ public class LobbyManagement {
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given id does not exist!"));
         return lobby;
       }
+
+      
 
 }
