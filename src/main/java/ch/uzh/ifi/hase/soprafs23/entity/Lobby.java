@@ -15,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+
 
 /**
  * Internal Lobby representation
@@ -45,15 +48,30 @@ import javax.persistence.Table;
   private List<Team> teams = new ArrayList<Team>();
 
   @OneToMany(cascade = CascadeType.ALL)
-  private List<Minigame> minigamesChoice = new ArrayList<Minigame>();
+  private List<MinigameType> minigamesChoice = new LinkedList<MinigameType>();
 
   @OneToMany(cascade = CascadeType.ALL)
   private LinkedList<Minigame> minigamesStarted = new LinkedList<Minigame>();
+
+
+
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<Minigame> minigames = new ArrayList<Minigame>();
 
   @Column(nullable = false)
   private int currentMinigame = 0;
 
     //getters & setters
+
+    public List<MinigameType> getMinigamesChoice() {
+        return minigamesChoice;
+    }
+
+    public void setMinigamesChoice(List<MinigameType> minigamesChoice) {
+        this.minigamesChoice = minigamesChoice;
+    }
+
+
     public List<Minigame> getMinigamesStarted() {
         return minigamesStarted;
     }
@@ -61,10 +79,10 @@ import javax.persistence.Table;
         this.minigamesStarted = minigamesStarted;
     }  
     public List<Minigame> getMinigames() {
-        return minigamesChoice;
+        return minigames;
     }
     public void setMinigames(List<Minigame> minigames) {
-        this.minigamesChoice = minigames;
+        this.minigames = minigames;
     }
     public List<Team> getTeams() {
         return teams;
@@ -93,28 +111,33 @@ import javax.persistence.Table;
 
 
     public Minigame getNextMinigame() {
-        if(minigamesChoice.size() == currentMinigame) {
+        if(minigames.size() == currentMinigame) {
             currentMinigame = 0;
-            Collections.shuffle(minigamesChoice);
+            Collections.shuffle(minigames);
         }
         currentMinigame++;
-        return minigamesChoice.get(currentMinigame-1);
+        return minigames.get(currentMinigame-1);
     }
 
     public Minigame getNextMinigameRandom(){
         int index = randomizer.nextInt(minigamesChoice.size());
-        Minigame suggestion = minigamesChoice.get(index);
+        MinigameType suggestion = minigamesChoice.get(index);
         if (minigamesStarted.size() != 0){
-        while (suggestion.getClass().equals(minigamesStarted.getLast().getClass())){
-            minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
+        while (suggestion.equals(minigamesStarted.getLast().getType())){
+            suggestion = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
         }}
+        //add description from enumMap
+        String description = MinigameDescription.getMinigamesDescriptions().get(suggestion);
+        Minigame nextMinigame = new Minigame(500, suggestion, description);
+
+
+        // while (suggestion.getClass().equals(minigamesStarted.getLast().getClass())){
+        //     minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
+        // }}
         
-        //TODO create instance via flyweight pattern
+        
 
-        return suggestion;
-
-
-
+        return nextMinigame;
     }
 
     public void updateScore(Long teamId, int score) {

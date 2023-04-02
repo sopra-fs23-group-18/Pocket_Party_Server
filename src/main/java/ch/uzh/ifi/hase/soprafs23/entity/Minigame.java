@@ -10,15 +10,20 @@ import javax.persistence.Inheritance;
 
 import javax.persistence.InheritanceType;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Minigame implements Serializable{
+public class Minigame implements Serializable{
     
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(nullable = false)
+    private MinigameType type;
 
     @Column(nullable = false)
     private boolean isFinished = false;
@@ -35,31 +40,48 @@ public abstract class Minigame implements Serializable{
     @Column(nullable = false)
     private String team2Player = "No Player";
 
-    @Column(nullable = false)
-    protected String name;
+    // @Column(nullable = false)
+    // protected String name;
 
     @Column(nullable = false)
     protected String description;
 
-    public Minigame() {
-    }
+    // public Minigame() {
+    // }
 
     public Minigame(int scoreToGain) {
         this.scoreToGain = scoreToGain;
     }
 
-    public Minigame(Minigame pattern) {
-        this.scoreToGain = pattern.getScoreToGain();
+    public Minigame(int scoreToGain, MinigameType type, String description) {
+        this.scoreToGain = scoreToGain;
+        this.type = type;
+        this.description = description;
     }
 
-    
+    // public Minigame(Minigame pattern) {
+    //     this.scoreToGain = pattern.getScoreToGain();
+    // }
+
+    public MinigameType getType() {
+        return type;
+    }
+
+    public void setType(MinigameType type) {
+        this.type = type;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public String getName() {
-        return name;
-    }
+    // public String getName() {
+    //     return name;
+    // }
 
     public String getTeam2Player() {
         return team2Player;
