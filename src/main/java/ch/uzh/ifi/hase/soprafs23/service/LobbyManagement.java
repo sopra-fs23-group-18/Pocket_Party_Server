@@ -54,9 +54,10 @@ public class LobbyManagement {
       public Minigame getMinigame(Long lobbyId){
         Lobby lobby = lobbyRepository.findById(lobbyId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
-        return lobby.getNextMinigame();
+        return lobby.getNextMinigameRandom();
     }
 
+    
 
 
 }
