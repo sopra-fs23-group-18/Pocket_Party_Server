@@ -13,24 +13,31 @@ import javax.persistence.InheritanceType;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Minigame implements Serializable{
+    
     private static final long serialVersionUID = 1L;
 
-  @Id
-  @GeneratedValue
-  private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @Column(nullable = false)
     private boolean isFinished = false;
+
     @Column(nullable = true)
     private Team winner;
+
     @Column(nullable = false)
     private int scoreToGain;
+
     @Column(nullable = false)
     private String team1Player = "No Player";
+
     @Column(nullable = false)
     private String team2Player = "No Player";
+
     @Column(nullable = false)
     protected String name;
+
     @Column(nullable = false)
     protected String description;
 
@@ -41,6 +48,11 @@ public abstract class Minigame implements Serializable{
         this.scoreToGain = scoreToGain;
     }
 
+    public Minigame(Minigame pattern) {
+        this.scoreToGain = pattern.getScoreToGain();
+    }
+
+    
     public String getDescription() {
         return description;
     }

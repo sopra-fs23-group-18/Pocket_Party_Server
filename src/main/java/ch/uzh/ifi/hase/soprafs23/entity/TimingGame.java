@@ -15,4 +15,10 @@ public class TimingGame extends Minigame {
     
     }
 
+    public TimingGame(Minigame pattern) {
+        super(pattern.getScoreToGain());
+        this.name = pattern.getName();
+        this.description = pattern.getDescription();
+    }
+
 }

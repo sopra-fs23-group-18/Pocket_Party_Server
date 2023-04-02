@@ -16,4 +16,10 @@ public class TappingGame extends Minigame {
         
     }
 
+    public TappingGame(Minigame pattern) {
+        super(pattern.getScoreToGain());
+        this.name = pattern.getName();
+        this.description = pattern.getDescription();
+    }
+
 }
