@@ -20,16 +20,25 @@ public class Team implements Serializable{
     @Id
     @GeneratedValue
     private Long id;
+
     @Column(nullable = false)
     private int score = 0;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Player> players = new ArrayList<Player>();
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
     public List<Player> getPlayers() {
         return players;
     }
+
     public void addPlayer(Player player) {
         this.players.add(player);
     }
+
     public Long getId() {
         return id;
     }
@@ -40,6 +49,7 @@ public class Team implements Serializable{
     public int getScore() {
         return score;
     }
+    
     public void setScore(int score) {
         this.score = score;
     }

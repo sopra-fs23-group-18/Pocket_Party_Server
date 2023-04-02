@@ -11,7 +11,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "PLAYER")
 public class Player implements Serializable{
+
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue
     private Long id;
@@ -19,12 +21,12 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
-    public Player() {
-    }
+    // public Player() {
+    // }
 
-    public Player(String nickname) {
-        this.nickname = nickname;
-    }
+    // public Player(String nickname) {
+    //     this.nickname = nickname;
+    // }
 
     public Long getId() {
         return id;
