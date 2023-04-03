@@ -18,7 +18,10 @@
   - Added Lobby.js (main lobby page)
   - Added Player.js (to display individual players)
   - Edited theme.scss to match colors with mockups
-- 
+- Added create lobby page according to mock-ups with create button [#4](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/4):
+  - Added CreateLobby.js
+  - Added the create Lobby button
+  - Added routing so clicking the create button redirects to the lobby
 ## Sven Ringger
 
 ## Guojun Wu
