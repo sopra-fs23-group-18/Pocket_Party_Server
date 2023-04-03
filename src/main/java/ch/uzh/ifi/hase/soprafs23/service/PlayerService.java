@@ -10,12 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 
-
 @Service
 @Transactional
 public class PlayerService {
     private final Logger log = LoggerFactory.getLogger(PlayerService.class);
-
 
     @Autowired
     private final PlayerRepository playerRepository;
@@ -25,12 +23,11 @@ public class PlayerService {
     }
 
     public Player createPLayer(Player newPlayer) {
-        
+
         newPlayer = playerRepository.save(newPlayer);
         playerRepository.flush();
 
         log.debug("Created Information for User: {}", newPlayer);
         return newPlayer;
     }
-    
 }
