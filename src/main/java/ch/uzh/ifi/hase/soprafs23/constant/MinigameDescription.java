@@ -10,6 +10,10 @@ public final class MinigameDescription {
         Map.entry(MinigameType.TIMING_GAME, "Shake your phone at the right time to catch the objects falling from the sky!")
         ));
     
+    private MinigameDescription(){
+
+    }
+    
     // public MinigameDescription(){
     //     this.minigames = new EnumMap<>(MinigameType.class);
     //     minigames.put(MinigameType.TAPPING_GAME, "Tap the screen as fast as you can!");
