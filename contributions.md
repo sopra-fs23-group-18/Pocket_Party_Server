@@ -14,7 +14,7 @@
 ## Stefan Schuler
 
 ## Naseem Hassan
-- Added the join lobby page in frontend according to mockups([#3]https://github.com/sopra-fs23-group-18/pocket-party-web/issues/3):
+- Added the join lobby page in frontend according to mockups[#3](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/3):
   - Added Lobby.js (main lobby page)
   - Added Player.js (to display individual players)
 - 
