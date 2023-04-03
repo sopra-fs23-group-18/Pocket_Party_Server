@@ -68,6 +68,27 @@ public class LobbyManagement {
         return minigame;
       }
 
+      public MinigameType getNextMinigameType(Long lobbyId){
+        Lobby lobby = lobbyRepository.findById(lobbyId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        List<MinigameType> minigamesChoice = lobby.getMinigamesChoice();
+        List<Minigame> minigamesPlayed = lobby.getMinigamesPlayed();
+
+        int index = randomizer.nextInt(minigamesChoice.size());
+        MinigameType nextMinigameType = minigamesChoice.get(index);
+        if (minigamesPlayed.size() != 0){
+        while (nextMinigameType.equals(minigamesPlayed.get(minigamesPlayed.size()-1).getType())){
+          nextMinigameType = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
+        }}
+        return nextMinigameType;
+      }
+
+      public void addUpcommingMinigame(Long lobbyId, Minigame upcomingMinigame){
+        Lobby lobby = lobbyRepository.findById(lobbyId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        lobby.setUpcomingMinigame(upcomingMinigame);
+      }
+
       private void addStartedMinigameToList(Long lobbyId, Minigame startedMinigame){
         Lobby lobby = lobbyRepository.findById(lobbyId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
