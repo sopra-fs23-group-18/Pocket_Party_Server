@@ -8,10 +8,16 @@ import java.util.List;
 import java.util.Random;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -47,11 +53,13 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
   @OneToMany(cascade = CascadeType.ALL)
   private List<Team> teams = new ArrayList<Team>();
 
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<MinigameType> minigamesChoice = new LinkedList<MinigameType>();
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "MinigameType", joinColumns = @JoinColumn(name = "id"))
+  @Enumerated(EnumType.STRING)
+  private List<MinigameType> minigamesChoice = new ArrayList<MinigameType>();
 
   @OneToMany(cascade = CascadeType.ALL)
-  private LinkedList<Minigame> minigamesStarted = new LinkedList<Minigame>();
+  private List<Minigame> minigamesStarted = new ArrayList<Minigame>();
 
 
 
@@ -75,7 +83,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
     public List<Minigame> getMinigamesStarted() {
         return minigamesStarted;
     }
-    public void setMinigamesStarted(LinkedList<Minigame> minigamesStarted) {
+    public void setMinigamesStarted(List<Minigame> minigamesStarted) {
         this.minigamesStarted = minigamesStarted;
     }  
     public List<Minigame> getMinigames() {
@@ -123,7 +131,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
         int index = randomizer.nextInt(minigamesChoice.size());
         MinigameType suggestion = minigamesChoice.get(index);
         if (minigamesStarted.size() != 0){
-        while (suggestion.equals(minigamesStarted.getLast().getType())){
+        while (suggestion.equals(minigamesStarted.get(minigamesStarted.size()-1).getType())){
             suggestion = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
         }}
         //add description from enumMap
