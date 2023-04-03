@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -50,8 +51,8 @@ public class LobbyController {
         // convert API user to internal representation
         Lobby lobbyInput = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(lobbyPostDTO);
 
-        List<Minigame> minigames = minigameService.chosenMinigames();
-        lobbyInput.setMinigames(minigames);
+        List<MinigameType> minigames = minigameService.chosenMinigames();
+        lobbyInput.setMinigamesChoice(minigames);
         
         // create user
         Lobby createdLobby = lobbyManager.createLobby(lobbyInput);

@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
-import ch.uzh.ifi.hase.soprafs23.entity.TappingGame;
-import ch.uzh.ifi.hase.soprafs23.entity.TimingGame;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 
 @Service
@@ -36,12 +34,12 @@ public class MinigameService {
         return minigame;
     }
 
-    public List<Minigame> chosenMinigames(){
-        //List<MinigameType> minigames = Arrays.asList(MinigameType.values());
+    public List<MinigameType> chosenMinigames(){
+        List<MinigameType> minigames = Arrays.asList(MinigameType.values());
 
-        Minigame tappingGame = createMinigame(new TappingGame(100));
-        Minigame timingGame = createMinigame(new TimingGame(200));
-        List<Minigame> minigames = Arrays.asList(tappingGame, timingGame);
+        // Minigame tappingGame = createMinigame(new TappingGame(100));
+        // Minigame timingGame = createMinigame(new TimingGame(200));
+        // List<Minigame> minigames = Arrays.asList(tappingGame, timingGame);
         
         return minigames;
     }
