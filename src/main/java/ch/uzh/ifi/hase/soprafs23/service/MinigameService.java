@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
@@ -27,12 +28,12 @@ public class MinigameService {
         this.minigameRepository = minigameRepository;
     }
 
-    private Minigame createMinigame(Minigame minigame) {
-        minigame = minigameRepository.save(minigame);
-        minigameRepository.flush();
-        log.debug("Created Information for Minigame: {}", minigame);
-        return minigame;
-    }
+    // private Minigame createMinigame(Minigame minigame) {
+    //     minigame = minigameRepository.save(minigame);
+    //     minigameRepository.flush();
+    //     log.debug("Created Information for Minigame: {}", minigame);
+    //     return minigame;
+    // }
 
     public List<MinigameType> chosenMinigames(){
         List<MinigameType> minigames = Arrays.asList(MinigameType.values());
@@ -42,6 +43,18 @@ public class MinigameService {
         // List<Minigame> minigames = Arrays.asList(tappingGame, timingGame);
         
         return minigames;
+    }
+
+    public Minigame createMinigame(MinigameType nexMinigameType){
+        String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
+        Minigame upcommingMinigame = new Minigame();
+        upcommingMinigame.setScoreToGain(500);
+        upcommingMinigame.setType(nexMinigameType);
+        upcommingMinigame.setDescription(description);
+        upcommingMinigame = minigameRepository.save(upcommingMinigame);
+        minigameRepository.flush();
+        log.debug("Created Information for Minigame: {}", upcommingMinigame);
+        return upcommingMinigame;
     }
         
     
