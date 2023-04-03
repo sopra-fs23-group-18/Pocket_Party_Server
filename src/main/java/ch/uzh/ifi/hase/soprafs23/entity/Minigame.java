@@ -46,22 +46,30 @@ public class Minigame implements Serializable{
     @Column(nullable = false)
     protected String description;
 
-    // public Minigame() {
-    // }
+    public Minigame() {
+    }
 
     public Minigame(int scoreToGain) {
         this.scoreToGain = scoreToGain;
     }
 
-    public Minigame(int scoreToGain, MinigameType type, String description) {
-        this.scoreToGain = scoreToGain;
-        this.type = type;
-        this.description = description;
-    }
+    // public Minigame(int scoreToGain, MinigameType type, String description) {
+    //     this.scoreToGain = scoreToGain;
+    //     this.type = type;
+    //     this.description = description;
+    // }
 
     // public Minigame(Minigame pattern) {
     //     this.scoreToGain = pattern.getScoreToGain();
     // }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public MinigameType getType() {
         return type;
@@ -103,15 +111,24 @@ public class Minigame implements Serializable{
         return scoreToGain;
     }
 
+    public void setScoreToGain(int scoreToGain){
+        this.scoreToGain = scoreToGain;
+    }
+
     public Team getWinner() {
         return winner;
     }
 
     public void setWinner(Team winner) {
         this.winner = winner;
+        if (this.winner != null){setIsFinished(true);}
     }
 
-    public boolean isFinished() {
+    public void setIsFinished(boolean isFinished){
+        this.isFinished = isFinished;
+    }
+
+    public boolean getIsFinished() {
         return isFinished;
     }
 

@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,7 +20,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 
@@ -48,7 +46,12 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
   @Column(nullable = false)
   private int winningScore;
 
+  @Column(nullable = true)
+  private Minigame upcomingMinigame;
+
+
   //TODO: define Mapping of entities
+
 
   @OneToMany(cascade = CascadeType.ALL)
   private List<Team> teams = new ArrayList<Team>();
@@ -59,17 +62,25 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
   private List<MinigameType> minigamesChoice = new ArrayList<MinigameType>();
 
   @OneToMany(cascade = CascadeType.ALL)
-  private List<Minigame> minigamesStarted = new ArrayList<Minigame>();
+  private List<Minigame> minigamesPlayed = new ArrayList<Minigame>();
 
 
 
-  @OneToMany(cascade = CascadeType.ALL)
-  private List<Minigame> minigames = new ArrayList<Minigame>();
+//   @OneToMany(cascade = CascadeType.ALL)
+//   private List<Minigame> minigames = new ArrayList<Minigame>();
 
-  @Column(nullable = false)
-  private int currentMinigame = 0;
+//   @Column(nullable = false)
+//   private int currentMinigame = 0;
 
     //getters & setters
+
+    public Minigame getUpcomingMinigame() {
+        return upcomingMinigame;
+    }
+    
+    public void setUpcomingMinigame(Minigame upcomingMinigame) {
+        this.upcomingMinigame = upcomingMinigame;
+    }
 
     public List<MinigameType> getMinigamesChoice() {
         return minigamesChoice;
@@ -80,18 +91,18 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
     }
 
 
-    public List<Minigame> getMinigamesStarted() {
-        return minigamesStarted;
+    public List<Minigame> getMinigamesPlayed() {
+        return minigamesPlayed;
     }
-    public void setMinigamesStarted(List<Minigame> minigamesStarted) {
-        this.minigamesStarted = minigamesStarted;
+    public void setMinigamesPlayed(List<Minigame> minigamesPlayed) {
+        this.minigamesPlayed = minigamesPlayed;
     }  
-    public List<Minigame> getMinigames() {
-        return minigames;
-    }
-    public void setMinigames(List<Minigame> minigames) {
-        this.minigames = minigames;
-    }
+    // public List<Minigame> getMinigames() {
+    //     return minigames;
+    // }
+    // public void setMinigames(List<Minigame> minigames) {
+    //     this.minigames = minigames;
+    // }
     public List<Team> getTeams() {
         return teams;
     }
@@ -118,35 +129,40 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
     }
 
 
-    public Minigame getNextMinigame() {
-        if(minigames.size() == currentMinigame) {
-            currentMinigame = 0;
-            Collections.shuffle(minigames);
-        }
-        currentMinigame++;
-        return minigames.get(currentMinigame-1);
+    //additional methods to add and get single elements
+
+    public void addToMinigamesPlayed(Minigame nextMinigame){
+        minigamesPlayed.add(nextMinigame);
     }
 
-    public Minigame getNextMinigameRandom(){
-        int index = randomizer.nextInt(minigamesChoice.size());
-        MinigameType suggestion = minigamesChoice.get(index);
-        if (minigamesStarted.size() != 0){
-        while (suggestion.equals(minigamesStarted.get(minigamesStarted.size()-1).getType())){
-            suggestion = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
-        }}
-        //add description from enumMap
-        String description = MinigameDescription.getMinigamesDescriptions().get(suggestion);
-        Minigame nextMinigame = new Minigame(500, suggestion, description);
+    // public Minigame getNextMinigame() {
+    //     if(minigames.size() == currentMinigame) {
+    //         currentMinigame = 0;
+    //         Collections.shuffle(minigames);
+    //     }
+    //     currentMinigame++;
+    //     return minigames.get(currentMinigame-1);
+    // }
+
+    // public MinigameType getNextMinigameType(){
+    //     int index = randomizer.nextInt(minigamesChoice.size());
+    //     MinigameType suggestion = minigamesChoice.get(index);
+    //     if (minigamesPlayed.size() != 0){
+    //     while (suggestion.equals(minigamesPlayed.get(minigamesPlayed.size()-1).getType())){
+    //         suggestion = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
+    //     }}
+
+    //     //add description from enumMap
+    //     // String description = MinigameDescription.getMinigamesDescriptions().get(suggestion);
+    //     // Minigame nextMinigame = new Minigame(500, suggestion, description);
 
 
-        // while (suggestion.getClass().equals(minigamesStarted.getLast().getClass())){
-        //     minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
-        // }}
-        
-        
+    //     // while (suggestion.getClass().equals(minigamesPlayed.getLast().getClass())){
+    //     //     minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
+    //     // }}
 
-        return nextMinigame;
-    }
+    //     return suggestion;
+    // }
 
     public void updateScore(Long teamId, int score) {
         for(Team team : teams) {
@@ -172,6 +188,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
             }
         }
         return null;
+        //TODO: what happens if both are over the winningScore?
     }
 
 }
