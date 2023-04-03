@@ -1,7 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
+
+import java.util.List;
 import java.util.Random;
 
 import org.slf4j.Logger;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
 
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 
@@ -24,6 +28,8 @@ public class LobbyManagement {
 
     @Autowired
     private final LobbyRepository lobbyRepository;
+
+    private Random randomizer = new Random();
     
 
     public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository) {
@@ -42,6 +48,9 @@ public class LobbyManagement {
         lobbyRepository.flush();
     
         log.debug("Created Information for User: {}", newLobby);
+
+        //ResponseStatusException missing -> TODO: add 
+
         return newLobby;
       }
     
@@ -54,10 +63,15 @@ public class LobbyManagement {
       public Minigame getMinigame(Long lobbyId){
         Lobby lobby = lobbyRepository.findById(lobbyId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
-        return lobby.getNextMinigameRandom();
-    }
+        Minigame minigame = lobby.getUpcomingMinigame();
+        addStartedMinigameToList(lobbyId, minigame);
+        return minigame;
+      }
 
-    
-
+      private void addStartedMinigameToList(Long lobbyId, Minigame startedMinigame){
+        Lobby lobby = lobbyRepository.findById(lobbyId).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        lobby.addToMinigamesPlayed(startedMinigame);
+      }
 
 }
