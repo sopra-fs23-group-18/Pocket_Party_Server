@@ -64,6 +64,9 @@ public class LobbyManagement {
         Lobby lobby = lobbyRepository.findById(lobbyId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
         Minigame minigame = lobby.getUpcomingMinigame();
+        if (minigame == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcomming Minigame was found!");
+        }
         addStartedMinigameToList(lobbyId, minigame);
         return minigame;
       }
