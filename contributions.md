@@ -12,6 +12,19 @@
   - Added the view which is displayed when the mobile app is in shake detection mode.
 
 ## Stefan Schuler
+- Added the MinigameType enum and later also added the MinigameDescription class that just provides an enumMap that maps enums to a description to display the correct data when creating an instance of Minigame in the backend. [#40](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/40)
+
+- implemented the POST endpoint for the creation of a lobby & added the service class for the lobby and updated methods to include uniqueness of inviteCode. [#21](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/21)
+- implemented the GET endpoint for getting the current Minigame instance & updated getMinigame call to have the correct get call for the minigame. [#32](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/32)
+- added POST-, GET-Lobby & GET-Minigame to the Mapper class and added their DTO's.
+
+- implemented the basic layout of the Minigame class and refactored how it works several times. Updated the lobby class with the neccessary information (minigamesPlayed & minigamesChoice lists + upcomingMinigame) [#34](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/34)
+- also moved out a lot of methods from the lobby class into the corresponding service classes.
+
+Additionally:
+- left some parts in the code as comments that could probably be deleted but wasn't sure yet.
+- Also added some more methods in the service classes for the creation of minigames and to add them to the right lists which is part of later tasks mainly accessed by [#82](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/82) & [#83](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/83)
+
 
 ## Naseem Hassan
 - Added the join lobby page in frontend according to mockups [#3](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/3):
