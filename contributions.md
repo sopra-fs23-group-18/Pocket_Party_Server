@@ -15,7 +15,7 @@
 - Added the MinigameType enum and later also added the MinigameDescription class that just provides an enumMap that maps enums to a description to display the correct data when creating an instance of Minigame in the backend. [#40](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/40)
 
 - implemented the POST endpoint for the creation of a lobby & added the service class for the lobby and updated methods to include uniqueness of inviteCode and the minigamesChoice list. [#21](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/21)
-- implemented the GET endpoint for getting the current Minigame instance & updated getMinigame call to have the correct get call for the minigame and to update the startedMinigames list when getting new Minigame. [#32](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/32)
+- implemented the GET endpoint for getting the current Minigame instance & updated getMinigame call to have the correct get call for the minigame and to update the minigamesPlayed list when getting new Minigame. [#32](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/32)
 - added POST-, GET-Lobby & GET-Minigame to the Mapper class and added their DTO's.
 
 - implemented the basic layout of the Minigame class and refactored how it & it's information in the lobby works several times. Updated the lobby class with the neccessary information (minigamesPlayed & minigamesChoice lists + upcomingMinigame) [#34](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/34)
