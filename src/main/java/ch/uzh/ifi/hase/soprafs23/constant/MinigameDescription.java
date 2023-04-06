@@ -13,13 +13,6 @@ public final class MinigameDescription {
     private MinigameDescription(){
 
     }
-    
-    // public MinigameDescription(){
-    //     this.minigames = new EnumMap<>(MinigameType.class);
-    //     minigames.put(MinigameType.TAPPING_GAME, "Tap the screen as fast as you can!");
-    //     minigames.put(MinigameType.TIMING_GAME, "Shake your phone at the right time to catch the objects falling from the sky!");
-
-    // }
 
     public static EnumMap<MinigameType, String> getMinigamesDescriptions(){
         return minigames;

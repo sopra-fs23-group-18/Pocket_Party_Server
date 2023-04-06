@@ -3,20 +3,12 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 public class MinigameGetDTO {
-    //private String name;
     private String description;
     private int scoreToGain;
     private String team1Player;
     private String team2Player;
     private MinigameType type;
 
-    // public String getName() {
-    //     return name;
-    // }
-
-    // public void setName(String name) {
-    //     this.name = name;
-    // }
 
     public MinigameType getType() {
         return type;

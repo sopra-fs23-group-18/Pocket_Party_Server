@@ -49,20 +49,6 @@ public class Minigame implements Serializable{
     public Minigame() {
     }
 
-    public Minigame(int scoreToGain) {
-        this.scoreToGain = scoreToGain;
-    }
-
-    // public Minigame(int scoreToGain, MinigameType type, String description) {
-    //     this.scoreToGain = scoreToGain;
-    //     this.type = type;
-    //     this.description = description;
-    // }
-
-    // public Minigame(Minigame pattern) {
-    //     this.scoreToGain = pattern.getScoreToGain();
-    // }
-
     public Long getId() {
         return id;
     }
@@ -86,10 +72,6 @@ public class Minigame implements Serializable{
     public String getDescription() {
         return description;
     }
-
-    // public String getName() {
-    //     return name;
-    // }
 
     public String getTeam2Player() {
         return team2Player;

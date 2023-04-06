@@ -21,12 +21,12 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
-    // public Player() {
-    // }
+    public Player() {
+    }
 
-    // public Player(String nickname) {
-    //     this.nickname = nickname;
-    // }
+    public Player(String nickname) {
+        this.nickname = nickname;
+    }
 
     public Long getId() {
         return id;

@@ -28,20 +28,9 @@ public class MinigameService {
         this.minigameRepository = minigameRepository;
     }
 
-    // private Minigame createMinigame(Minigame minigame) {
-    //     minigame = minigameRepository.save(minigame);
-    //     minigameRepository.flush();
-    //     log.debug("Created Information for Minigame: {}", minigame);
-    //     return minigame;
-    // }
-
     public List<MinigameType> chosenMinigames(){
         List<MinigameType> minigames = Arrays.asList(MinigameType.values());
 
-        // Minigame tappingGame = createMinigame(new TappingGame(100));
-        // Minigame timingGame = createMinigame(new TimingGame(200));
-        // List<Minigame> minigames = Arrays.asList(tappingGame, timingGame);
-        
         return minigames;
     }
 
