@@ -34,7 +34,6 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
  public class Lobby implements Serializable{
     
   private static final long serialVersionUID = 1L;
-  private Random randomizer = new Random();
 
   @Id
   @GeneratedValue
@@ -64,15 +63,19 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
   @OneToMany(cascade = CascadeType.ALL)
   private List<Minigame> minigamesPlayed = new ArrayList<Minigame>();
 
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<Player> unassignedPlayers = new ArrayList<Player>();
 
-
-//   @OneToMany(cascade = CascadeType.ALL)
-//   private List<Minigame> minigames = new ArrayList<Minigame>();
-
-//   @Column(nullable = false)
-//   private int currentMinigame = 0;
 
     //getters & setters
+
+    public List<Player> getUnassignedPlayers() {
+        return unassignedPlayers;
+    }
+
+    public void setUnassignedPlayers(List<Player> unassignedPlayers) {
+        this.unassignedPlayers = unassignedPlayers;
+    }
 
     public Minigame getUpcomingMinigame() {
         return upcomingMinigame;
@@ -97,12 +100,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
     public void setMinigamesPlayed(List<Minigame> minigamesPlayed) {
         this.minigamesPlayed = minigamesPlayed;
     }  
-    // public List<Minigame> getMinigames() {
-    //     return minigames;
-    // }
-    // public void setMinigames(List<Minigame> minigames) {
-    //     this.minigames = minigames;
-    // }
+    
     public List<Team> getTeams() {
         return teams;
     }
@@ -135,34 +133,24 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
         minigamesPlayed.add(nextMinigame);
     }
 
-    // public Minigame getNextMinigame() {
-    //     if(minigames.size() == currentMinigame) {
-    //         currentMinigame = 0;
-    //         Collections.shuffle(minigames);
-    //     }
-    //     currentMinigame++;
-    //     return minigames.get(currentMinigame-1);
-    // }
+    public void addToUnassignedPlayers(Player player){
+        unassignedPlayers.add(player);
+    }
 
-    // public MinigameType getNextMinigameType(){
-    //     int index = randomizer.nextInt(minigamesChoice.size());
-    //     MinigameType suggestion = minigamesChoice.get(index);
-    //     if (minigamesPlayed.size() != 0){
-    //     while (suggestion.equals(minigamesPlayed.get(minigamesPlayed.size()-1).getType())){
-    //         suggestion = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
-    //     }}
-
-    //     //add description from enumMap
-    //     // String description = MinigameDescription.getMinigamesDescriptions().get(suggestion);
-    //     // Minigame nextMinigame = new Minigame(500, suggestion, description);
+    //Player names in each lobby need to be unique (per lobby)
+    public void removeFromUnassignedPlayers(String playerName){
+        Player removedPlayer;
+        for (Player player: unassignedPlayers){
+            if (player.getNickname().equals(playerName)){
+                removedPlayer = player;
+                unassignedPlayers.remove(removedPlayer);
+            }
+        }
+    }
 
 
-    //     // while (suggestion.getClass().equals(minigamesPlayed.getLast().getClass())){
-    //     //     minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
-    //     // }}
-
-    //     return suggestion;
-    // }
+    
+    //move these methods into service at a later point
 
     public void updateScore(Long teamId, int score) {
         for(Team team : teams) {
