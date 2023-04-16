@@ -7,6 +7,8 @@ import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 import java.util.List;
 import java.util.Random;
 
+import javax.persistence.Lob;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 
 
 @Service
@@ -61,8 +64,7 @@ public class LobbyManagement {
       }
 
       public Minigame getMinigame(Long lobbyId){
-        Lobby lobby = lobbyRepository.findById(lobbyId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        Lobby lobby = getLobby(lobbyId);
         Minigame minigame = lobby.getUpcomingMinigame();
         if (minigame == null){
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcomming Minigame was found!");
@@ -72,8 +74,7 @@ public class LobbyManagement {
       }
 
       public MinigameType getNextMinigameType(Long lobbyId){
-        Lobby lobby = lobbyRepository.findById(lobbyId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        Lobby lobby = getLobby(lobbyId);
         List<MinigameType> minigamesChoice = lobby.getMinigamesChoice();
         List<Minigame> minigamesPlayed = lobby.getMinigamesPlayed();
 
@@ -87,15 +88,18 @@ public class LobbyManagement {
       }
 
       public void addUpcommingMinigame(Long lobbyId, Minigame upcomingMinigame){
-        Lobby lobby = lobbyRepository.findById(lobbyId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        Lobby lobby = getLobby(lobbyId);
         lobby.setUpcomingMinigame(upcomingMinigame);
       }
 
       private void addStartedMinigameToList(Long lobbyId, Minigame startedMinigame){
-        Lobby lobby = lobbyRepository.findById(lobbyId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!"));
+        Lobby lobby = getLobby(lobbyId);
         lobby.addToMinigamesPlayed(startedMinigame);
+      }
+
+      public void addPlayer(Long lobbyId, Player newPlayer){
+        Lobby lobby = getLobby(lobbyId);
+        lobby.addToUnassignedPlayers(newPlayer);
       }
 
 }
