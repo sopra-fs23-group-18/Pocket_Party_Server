@@ -63,13 +63,20 @@ public class LobbyManagement {
         return lobby;
       }
 
+      public Lobby getLobby(int inviteCode) {
+        Lobby lobby = lobbyRepository.findByInviteCode(inviteCode);
+        if (lobby == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!");
+        }
+        return lobby;
+      }
+
       public Minigame getMinigame(Long lobbyId){
         Lobby lobby = getLobby(lobbyId);
         Minigame minigame = lobby.getUpcomingMinigame();
         if (minigame == null){
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcomming Minigame was found!");
         }
-        addStartedMinigameToList(lobbyId, minigame);
         return minigame;
       }
 
@@ -88,8 +95,14 @@ public class LobbyManagement {
       }
 
       public void addUpcommingMinigame(Long lobbyId, Minigame upcomingMinigame){
+        if (upcomingMinigame == null){
+          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No upcoming Minigame!");
+        }
         Lobby lobby = getLobby(lobbyId);
         lobby.setUpcomingMinigame(upcomingMinigame);
+        addStartedMinigameToList(lobbyId, upcomingMinigame);
+        lobbyRepository.save(lobby);
+        lobbyRepository.flush();
       }
 
       private void addStartedMinigameToList(Long lobbyId, Minigame startedMinigame){
@@ -97,9 +110,23 @@ public class LobbyManagement {
         lobby.addToMinigamesPlayed(startedMinigame);
       }
 
-      public void addPlayer(Long lobbyId, Player newPlayer){
-        Lobby lobby = getLobby(lobbyId);
+      public void addToUnassignedPlayers(Lobby lobby, Player newPlayer){
+        if (lobby == null || newPlayer == null){
+          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Lobby or Player is empty!");
+        }
         lobby.addToUnassignedPlayers(newPlayer);
+        lobbyRepository.save(lobby);
+        lobbyRepository.flush();
+      }
+
+      public void removeFromUnassignedPlayers(Lobby lobby, Player remPlayer){
+        if (lobby == null || remPlayer == null){
+          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Lobby or Player is empty!");
+        }
+        List<Player> players = lobby.getUnassignedPlayers();
+        players.remove(remPlayer);
+        lobbyRepository.save(lobby);
+        lobbyRepository.flush();
       }
 
 }

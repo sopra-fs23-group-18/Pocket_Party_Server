@@ -35,9 +35,9 @@ public class Team implements Serializable{
         return players;
     }
 
-    public void addPlayer(Player player) {
-        this.players.add(player);
-    }
+    // public void addPlayer(Player player) {
+    //     this.players.add(player);
+    // }
 
     public Long getId() {
         return id;

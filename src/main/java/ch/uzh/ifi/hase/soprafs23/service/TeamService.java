@@ -29,7 +29,9 @@ public class TeamService {
     }
 
     public Team createTeam(Team newTeam) {
-        
+        if (newTeam == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
+        }
         newTeam = teamRepository.save(newTeam);
         teamRepository.flush();
 
@@ -38,13 +40,20 @@ public class TeamService {
     }
 
     public void addPlayer(Long teamId, Player player){
+        if (player == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
+        }
         Team team = getTeam(teamId);
-        team.addPlayer(player);
+        List<Player> players = team.getPlayers();
+        players.add(player);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
     public void removePlayer(Long teamId, Player player){
+        if (player == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
+        }
         Team team = getTeam(teamId);
         List<Player> players = team.getPlayers();
         players.remove(player);
