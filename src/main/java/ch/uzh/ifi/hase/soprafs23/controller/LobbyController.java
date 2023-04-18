@@ -2,7 +2,16 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
@@ -22,14 +32,23 @@ import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.TeamService;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerJoinDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.mapper.DTOMapperWebsocket;
 
 @RestController
 public class LobbyController {
+
+    private final Logger log = LoggerFactory.getLogger(LobbyManagement.class);
 
     private final LobbyManagement lobbyManager;
     private final TeamService teamService;
     private final PlayerService playerService;
     private final MinigameService minigameService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
 
     LobbyController(LobbyManagement lobbyManager, TeamService teamService, PlayerService playerService,
             MinigameService minigameService) {
@@ -84,4 +103,23 @@ public class LobbyController {
     // team2.addPlayer(playerService.createPLayer(new Player("alice")));
     // List<Team> teams = Arrays.asList(team1, team2);
     // lobbyInput.setTeams(teams);
+
+    @MessageMapping("/lobbies/{lobbyId}")
+    @SendTo("/queue/lobbies/{lobbyId}")
+    @SendToUser("/queue/join")
+    public PlayerDTO playerJoin(@DestinationVariable long lobbyId, PlayerJoinDTO player) {
+        log.warn("HEllo there");
+
+        Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
+        Player createdPlayer = playerService.createPlayer(playerToCreate);
+        PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
+        // Get the session ID of the user who sent the message
+        // String sessionId = headerAccessor.getSessionId();
+        // log.warn("Session Id: {}", sessionId);
+        // // Send a message to the user's queue
+        // messagingTemplate.convertAndSendToUser(sessionId, "/queue/join", createdPlayerDTO);
+    
+        return createdPlayerDTO;
+
+    }
 }

@@ -24,7 +24,7 @@ public class PlayerService {
         this.playerRepository = playerRepository;
     }
 
-    public Player createPLayer(Player newPlayer) {
+    public Player createPlayer(Player newPlayer) {
 
         newPlayer = playerRepository.save(newPlayer);
         playerRepository.flush();
