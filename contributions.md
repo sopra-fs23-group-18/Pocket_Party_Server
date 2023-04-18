@@ -36,5 +36,8 @@ Additionally:
   - Added the create Lobby button
   - Added routing so clicking the create button redirects to the lobby
 ## Sven Ringger
-
+-Show description of next minigame
+-Show title of minigame that is played next
+-Add page to scan QR Code
+-Generate avatar when nickname is entered
 ## Guojun Wu
