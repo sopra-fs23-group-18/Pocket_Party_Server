@@ -44,5 +44,30 @@ public class Player implements Serializable{
         this.nickname = nickname;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null) {
+            return false;
+        }
+
+        else if (obj == this){
+            return true;
+        }
+
+        else if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        else{
+            return this.id == ((Player)obj).id && this.nickname == ((Player)obj).nickname;
+        }
+    }
+
+    @Override
+    public int hashCode(){
+        return Long.hashCode(id);
+        //don't know if this actually works
+    }
+
     
 }

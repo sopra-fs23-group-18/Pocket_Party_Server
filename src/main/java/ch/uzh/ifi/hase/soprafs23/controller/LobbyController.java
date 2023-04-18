@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -31,14 +30,14 @@ public class LobbyController {
     private final TeamService teamService;
     private final PlayerService playerService;
     private final MinigameService minigameService;
-    
-    LobbyController(LobbyManagement lobbyManager, TeamService teamService, PlayerService playerService, MinigameService minigameService) {
+
+    LobbyController(LobbyManagement lobbyManager, TeamService teamService, PlayerService playerService,
+            MinigameService minigameService) {
         this.lobbyManager = lobbyManager;
         this.teamService = teamService;
         this.playerService = playerService;
-        this.minigameService = minigameService;  
+        this.minigameService = minigameService;
     }
-   
 
     @PostMapping("/lobbies")
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,10 +48,10 @@ public class LobbyController {
 
         List<MinigameType> minigames = minigameService.chosenMinigames();
         lobbyInput.setMinigamesChoice(minigames);
-        
+
         // create user
         Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
-        
+
         // convert internal representation of user back to API
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
     }
@@ -68,22 +67,21 @@ public class LobbyController {
     @GetMapping("/lobbies/{lobbyId}/minigame")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public MinigameGetDTO getMinigame(@PathVariable long lobbyId){
-        
-        Minigame nextMinigame = lobbyManager.getMinigame(lobbyId); 
+    public MinigameGetDTO getMinigame(@PathVariable long lobbyId) {
+
+        Minigame nextMinigame = lobbyManager.getMinigame(lobbyId);
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
-
-    //TODO when adding settings menu: POST method to create the list of chosen minigames (currently also handled in POST lobby)
-
+    // TODO when adding settings menu: POST method to create the list of chosen
+    // minigames (currently also handled in POST lobby)
 
     // belongs to PUT endpoint of team creation
 
-        // Team team1 = teamService.createTeam(new Team());
-        // Team team2 = teamService.createTeam(new Team());
-        // team1.addPlayer(playerService.createPLayer(new Player("bob")));
-        // team2.addPlayer(playerService.createPLayer(new Player("alice")));
-        // List<Team> teams = Arrays.asList(team1, team2);
-        // lobbyInput.setTeams(teams);
+    // Team team1 = teamService.createTeam(new Team());
+    // Team team2 = teamService.createTeam(new Team());
+    // team1.addPlayer(playerService.createPLayer(new Player("bob")));
+    // team2.addPlayer(playerService.createPLayer(new Player("alice")));
+    // List<Team> teams = Arrays.asList(team1, team2);
+    // lobbyInput.setTeams(teams);
 }
