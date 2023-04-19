@@ -102,6 +102,23 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
+    @PutMapping("/lobbies/{lobbyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void startGame(@PathVariable long lobbyId, long team1Id, long team2Id){
+        MinigameType type = lobbyManager.getNextMinigameType(lobbyId);
+
+        //Lobby lobby = lobbyManager.getLobby(lobbyId);
+        //other method: get teams via lobby 
+
+        
+
+        //random player choice
+
+        Minigame nextMinigame = minigameService.createMinigame(type);
+        lobbyManager.addUpcommingMinigame(lobbyId, nextMinigame);
+
+    }
+
     
 
     // TODO when adding settings menu: POST method to create the list of chosen
