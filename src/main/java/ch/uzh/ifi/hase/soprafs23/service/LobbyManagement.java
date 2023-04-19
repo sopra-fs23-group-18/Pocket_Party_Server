@@ -36,16 +36,18 @@ public class LobbyManagement {
 
     private final MinigameService minigameService;
     private final TeamService teamService;
+    private final PlayerService playerService;
 
 
 
     private Random randomizer = new Random();
     
 
-    public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, MinigameService minigameService, TeamService teamService) {
+    public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, MinigameService minigameService, TeamService teamService, PlayerService playerService) {
         this.lobbyRepository = lobbyRepository;
         this.minigameService = minigameService;
         this.teamService = teamService;
+        this.playerService = playerService;
       }   
 
     public Lobby createLobby(Lobby newLobby) {
@@ -117,10 +119,17 @@ public class LobbyManagement {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcoming Minigame!");
         }
 
+        // wip
         //random player choice
 
-        Minigame nextMinigame = minigameService.createMinigame(type);
         Lobby lobby = getLobby(lobbyId);
+        List<Team> teams = lobby.getTeams();
+        Player playerTeam1 = playerService.getMinigamePlayer(teams.get(0));
+        Player playerTeam2 = playerService.getMinigamePlayer(teams.get(1));
+
+
+
+        Minigame nextMinigame = minigameService.createMinigame(type, playerTeam1.getNickname(), playerTeam2.getNickname());
         lobby.setUpcomingMinigame(nextMinigame);
         lobbyRepository.save(lobby);
         lobbyRepository.flush();

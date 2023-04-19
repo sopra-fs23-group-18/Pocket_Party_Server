@@ -34,12 +34,19 @@ public class MinigameService {
         return minigames;
     }
 
-    public Minigame createMinigame(MinigameType nexMinigameType){
+    public Minigame createMinigame(MinigameType nexMinigameType, String player1Name, String player2Name){
         String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
         Minigame upcommingMinigame = new Minigame();
         upcommingMinigame.setScoreToGain(500);
         upcommingMinigame.setType(nexMinigameType);
         upcommingMinigame.setDescription(description);
+
+        // wip
+        upcommingMinigame.setTeam1Player(player1Name);
+        upcommingMinigame.setTeam2Player(player2Name);
+
+
+
         upcommingMinigame = minigameRepository.save(upcommingMinigame);
         minigameRepository.flush();
         log.debug("Created Information for Minigame: {}", upcommingMinigame);
