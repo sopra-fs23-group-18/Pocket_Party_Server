@@ -75,6 +75,8 @@ public class LobbyController {
         teams.add(teamService.createTeam());
         lobbyInput.setTeams(teams);
 
+        List<Player> unassignedPlayers = new ArrayList<Player>();
+        lobbyInput.setUnassignedPlayers(unassignedPlayers);
         
         // create user
         Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
