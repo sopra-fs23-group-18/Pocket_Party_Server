@@ -65,16 +65,6 @@ public class LobbyController {
     public LobbyGetDTO createLobby(@RequestBody LobbyPostDTO lobbyPostDTO) {
         // convert API user to internal representation
         Lobby lobbyInput = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(lobbyPostDTO);
-
-        List<MinigameType> minigames = minigameService.chosenMinigames();
-        lobbyInput.setMinigamesChoice(minigames);
-        List<Team> teams = new ArrayList<Team>();
-        teams.add(teamService.createTeam());
-        teams.add(teamService.createTeam());
-        lobbyInput.setTeams(teams);
-
-        List<Player> unassignedPlayers = new ArrayList<Player>();
-        lobbyInput.setUnassignedPlayers(unassignedPlayers);
         
         // create user
         Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
@@ -102,19 +92,11 @@ public class LobbyController {
 
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void startGame(@PathVariable long lobbyId, long team1Id, long team2Id){
+    public void startGame(@PathVariable long lobbyId){
         MinigameType type = lobbyManager.getNextMinigameType(lobbyId);
 
-        //Lobby lobby = lobbyManager.getLobby(lobbyId);
-        //other method: get teams via lobby 
-
-        
-
-        //random player choice
-
-        Minigame nextMinigame = minigameService.createMinigame(type);
-        lobbyManager.addUpcommingMinigame(lobbyId, nextMinigame);
-
+        //Minigame nextMinigame = minigameService.createMinigame(type);
+        lobbyManager.addUpcommingMinigame(lobbyId, type);
     }
 
     
@@ -140,7 +122,7 @@ public class LobbyController {
 
         Player createdPlayer = playerService.createPlayer(playerToCreate);
         Lobby joinedLobby = lobbyManager.getLobby(inviteCode);
-        lobbyManager.addToUnassignedPlayers(joinedLobby, createdPlayer);
+        lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
         PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
         // Get the session ID of the user who sent the message
         // String sessionId = headerAccessor.getSessionId();
@@ -164,8 +146,7 @@ public class LobbyController {
 
         Player player = playerService.getPlayer(playerId);
         teamService.removePlayer(teamId, player);
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        lobbyManager.addToUnassignedPlayers(lobby, player);
+        lobbyManager.addToUnassignedPlayers(lobbyId, player);
     }
 
 

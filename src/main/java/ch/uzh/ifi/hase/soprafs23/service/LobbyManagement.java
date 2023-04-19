@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -33,11 +34,18 @@ public class LobbyManagement {
     @Autowired
     private final LobbyRepository lobbyRepository;
 
+    private final MinigameService minigameService;
+    private final TeamService teamService;
+
+
+
     private Random randomizer = new Random();
     
 
-    public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository) {
+    public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, MinigameService minigameService, TeamService teamService) {
         this.lobbyRepository = lobbyRepository;
+        this.minigameService = minigameService;
+        this.teamService = teamService;
       }   
 
     public Lobby createLobby(Lobby newLobby) {
@@ -47,6 +55,15 @@ public class LobbyManagement {
         }
         newLobby.setInviteCode(inviteCode);
 
+        List<MinigameType> minigames = minigameService.chosenMinigames();
+        newLobby.setMinigamesChoice(minigames);
+        List<Team> teams = new ArrayList<Team>();
+        teams.add(teamService.createTeam());
+        teams.add(teamService.createTeam());
+        newLobby.setTeams(teams);
+
+        List<Player> unassignedPlayers = new ArrayList<Player>();
+        newLobby.setUnassignedPlayers(unassignedPlayers);
         
         newLobby = lobbyRepository.save(newLobby);
         lobbyRepository.flush();
@@ -95,12 +112,16 @@ public class LobbyManagement {
         return nextMinigameType;
       }
 
-      public void addUpcommingMinigame(Long lobbyId, Minigame upcomingMinigame){
-        if (upcomingMinigame == null){
-          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No upcoming Minigame!");
+      public void addUpcommingMinigame(Long lobbyId, MinigameType type){
+        if (type == null){
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcoming Minigame!");
         }
+
+        //random player choice
+
+        Minigame nextMinigame = minigameService.createMinigame(type);
         Lobby lobby = getLobby(lobbyId);
-        lobby.setUpcomingMinigame(upcomingMinigame);
+        lobby.setUpcomingMinigame(nextMinigame);
         lobbyRepository.save(lobby);
         lobbyRepository.flush();
       }
@@ -110,9 +131,10 @@ public class LobbyManagement {
         lobby.addToMinigamesPlayed(startedMinigame);
       }
 
-      public void addToUnassignedPlayers(Lobby lobby, Player newPlayer){
+      public void addToUnassignedPlayers(Long lobbyId, Player newPlayer){
+        Lobby lobby = getLobby(lobbyId);
         if (lobby == null || newPlayer == null){
-          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Lobby or Player is empty!");
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby or Player is empty!");
         }
         lobby.addToUnassignedPlayers(newPlayer);
         lobbyRepository.save(lobby);

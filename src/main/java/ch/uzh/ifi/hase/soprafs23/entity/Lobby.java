@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
@@ -41,10 +42,10 @@ public class Lobby implements Serializable {
     @Column(nullable = false)
     private int winningScore;
 
-    @Column(nullable = true)
-    private Minigame upcomingMinigame;
-
     // TODO: define Mapping of entities
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Minigame upcomingMinigame;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Team> teams = new ArrayList<Team>();
