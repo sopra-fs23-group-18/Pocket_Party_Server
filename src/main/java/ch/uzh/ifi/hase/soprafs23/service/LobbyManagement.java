@@ -67,7 +67,7 @@ public class LobbyManagement {
       public Lobby getLobby(int inviteCode) {
         Lobby lobby = lobbyRepository.findByInviteCode(inviteCode);
         if (lobby == null){
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Id does not exist!");
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given Invite Code does not exist!");
         }
         return lobby;
       }
