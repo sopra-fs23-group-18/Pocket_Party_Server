@@ -156,7 +156,24 @@ public class LobbyController {
 
     }
 
-    
+    @MessageMapping("/lobbies/{lobbyId}/assign")
+    public void assignPlayer(@DestinationVariable long lobbyId, long playerId, long teamId) {
+
+        Player player = playerService.getPlayer(playerId);
+        lobbyManager.removeFromUnassignedPlayers(lobbyId, player);
+        teamService.addPlayer(teamId, player);
+    }
+
+    @MessageMapping("/lobbies/{lobbyId}/unassign")
+    public void unassignPlayer(@DestinationVariable long lobbyId, long playerId, long teamId) {
+
+        Player player = playerService.getPlayer(playerId);
+        teamService.removePlayer(teamId, player);
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        lobbyManager.addToUnassignedPlayers(lobby, player);
+    }
+
+
 
 
 
