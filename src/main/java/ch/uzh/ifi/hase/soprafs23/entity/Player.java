@@ -21,12 +21,17 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    private String avatar;
+
+    
+
     public Player() {
     }
 
-    public Player(String nickname) {
-        this.nickname = nickname;
-    }
+    // public Player(String nickname) {
+    //     this.nickname = nickname;
+    // }
 
     public Long getId() {
         return id;
@@ -42,6 +47,14 @@ public class Player implements Serializable{
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @Override
