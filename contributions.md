@@ -49,6 +49,34 @@ Additionally:
 - Made joining a lobby possible from the mobile phone (implememted the full stack) [#26](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/26)
 
 ## Stefan Schuler
+- updated the websocket endpoint to update the lobby with the new players when they join [#86](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/86)
+    - added a check for players joining a lobby to see if the nickname is allowed and if it is full already
+
+- added assign & unassign endpoints to call when a player gets moved around in the client while assigning players to teams [#66](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/66)
+	- methods in teamservice and lobbymanagement to update the lobby/team accordingly (unassignedPlayers list and teams) (add and remove methods for team & unassignedPlayers)
+	- get methods to get teams & players from repo
+
+- added startGame endpoint (Lobby PUT) that when all players are assigned and you press start it will create a new Minigame Instance and adds that to the lobby [#76](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/76)
+
+- updated the create lobby endpoint and some service methods to initialize the teams and unassigned players list when creating the lobby [#21](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/21) 
+
+- some minor not notable changes like changing the input from lobbyId to lobby directly or a second getLobby method
+- added checks for methods if input is null and each change to entities is saved
+- minor changes to DTO and mapper (also send unassignedPlayers list)
+
+- updated Player (& DTO, mapper) to include the avatar as a string [#26](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/26)
+
+- started implementing the random Player picker, but not finished yet [#80](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/80)
+
+- additional fixes and changes for the creation of the minigame [#82](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/82)
+
+- some rearrangements because of errors in the code
+
+Upcoming:
+- finish the random player picker
+- methods and endpoints for updating the score after each minigame, including creating and getting a new instance &
+ also to get the total score and a final score if the winning score was reached [#70](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/70) [#71](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/71) [#83](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/83)
+- also add Tests for the tasks that are otherwise finished
 
 ## Naseem Hassan
 - Host can now assign players to each of the teams in the main Lobby [#6](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/6):
