@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -110,23 +108,19 @@ public class LobbyController {
     // List<Team> teams = Arrays.asList(team1, team2);
     // lobbyInput.setTeams(teams);
 
-    @MessageMapping("/lobbies/{lobbyId}")
-    @SendTo("/queue/lobbies/{lobbyId}")
+    @MessageMapping("/lobbies/{inviteCode}")
     @SendToUser("/queue/join")
-    public PlayerDTO playerJoin(@DestinationVariable long lobbyId, PlayerJoinDTO player) {
-        log.warn("HEllo there");
-
+    public PlayerDTO playerJoin(@DestinationVariable int inviteCode, PlayerJoinDTO player) {
         Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
         Player createdPlayer = playerService.createPlayer(playerToCreate);
-        Lobby joinedLobby = lobbyManager.getLobby(lobbyId);
-        lobbyManager.addToUnassignedPlayers(joinedLobby, createdPlayer);
+        Lobby joinedLobby = lobbyManager.getLobby(inviteCode);
+        // lobbyManager.addToUnassignedPlayers(joinedLobby, createdPlayer);
         PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
         // Get the session ID of the user who sent the message
         // String sessionId = headerAccessor.getSessionId();
         // log.warn("Session Id: {}", sessionId);
         // // Send a message to the user's queue
-        // messagingTemplate.convertAndSendToUser(sessionId, "/queue/join", createdPlayerDTO);
-    
+        messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", joinedLobby.getId()), createdPlayerDTO);
         return createdPlayerDTO;
 
     }
