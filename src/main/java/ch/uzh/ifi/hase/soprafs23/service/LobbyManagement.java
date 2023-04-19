@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Team;
 
 
 @Service
@@ -100,12 +101,11 @@ public class LobbyManagement {
         }
         Lobby lobby = getLobby(lobbyId);
         lobby.setUpcomingMinigame(upcomingMinigame);
-        addStartedMinigameToList(lobbyId, upcomingMinigame);
         lobbyRepository.save(lobby);
         lobbyRepository.flush();
       }
 
-      private void addStartedMinigameToList(Long lobbyId, Minigame startedMinigame){
+      private void addMinigameToPlayedList(Long lobbyId, Minigame startedMinigame){
         Lobby lobby = getLobby(lobbyId);
         lobby.addToMinigamesPlayed(startedMinigame);
       }
@@ -119,14 +119,41 @@ public class LobbyManagement {
         lobbyRepository.flush();
       }
 
-      public void removeFromUnassignedPlayers(Lobby lobby, Player remPlayer){
+      public void removeFromUnassignedPlayers(Long lobbyId, Player remPlayer){
+        Lobby lobby = getLobby(lobbyId);
         if (lobby == null || remPlayer == null){
-          throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Lobby or Player is empty!");
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby or Player is empty!");
         }
         List<Player> players = lobby.getUnassignedPlayers();
         players.remove(remPlayer);
         lobbyRepository.save(lobby);
         lobbyRepository.flush();
       }
+
+      public boolean ableToJoin(Long LobbyId, Player playerToCreate){
+        Lobby lobby = getLobby(LobbyId);
+        int cnt = 0;
+        for (Player p : lobby.getUnassignedPlayers()){
+          if (p.getNickname().equals(playerToCreate.getNickname())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Player with this Nickname already exists in this lobby!");
+          }
+          cnt += 1;
+        }
+        for (Team t : lobby.getTeams()){
+          for (Player p : t.getPlayers()){
+            if (p.getNickname().equals(playerToCreate.getNickname())){
+              throw new ResponseStatusException(HttpStatus.CONFLICT, "Player with this Nickname already exists in this lobby!");
+            }
+            cnt += 1;
+          }
+        }
+        if (cnt == 8){
+          throw new ResponseStatusException(HttpStatus.LOCKED, "Player limit for lobby was reached!");
+        }
+
+        return true;
+      }
+
+      
 
 }
