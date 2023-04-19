@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
@@ -67,6 +69,10 @@ public class LobbyController {
 
         List<MinigameType> minigames = minigameService.chosenMinigames();
         lobbyInput.setMinigamesChoice(minigames);
+        List<Team> teams = new ArrayList<Team>();
+        teams.add(teamService.createTeam());
+        teams.add(teamService.createTeam());
+        lobbyInput.setTeams(teams);
 
         // create user
         Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
@@ -124,4 +130,16 @@ public class LobbyController {
         return createdPlayerDTO;
 
     }
+
+    // @MessageMapping("/lobbies/{lobbyId}/assign")
+    // public void movePlayer(@DestinationVariable long lobbyId, PlayerDTO player) {
+    //     log.warn("HEllo there");
+
+    //     Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
+    //     Player createdPlayer = playerService.createPlayer(playerToCreate);
+    //     Lobby joinedLobby = lobbyManager.getLobby(lobbyId);
+    //     lobbyManager.addToUnassignedPlayers(joinedLobby, createdPlayer);
+    //     PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
+
+    // }
 }

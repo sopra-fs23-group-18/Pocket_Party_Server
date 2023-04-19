@@ -28,10 +28,8 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-    public Team createTeam(Team newTeam) {
-        if (newTeam == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
-        }
+    public Team createTeam() {
+        Team newTeam = new Team();
         newTeam = teamRepository.save(newTeam);
         teamRepository.flush();
 
