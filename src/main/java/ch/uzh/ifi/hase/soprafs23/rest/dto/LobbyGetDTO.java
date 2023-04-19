@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import java.util.List;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 
 public class LobbyGetDTO {
@@ -9,6 +10,15 @@ public class LobbyGetDTO {
     private int inviteCode;
     private int winningScore;
     private List<Team> teams;
+    private List<Player> unassignedPlayers;
+
+    public List<Player> getUnassignedPlayers() {
+        return unassignedPlayers;
+    }
+
+    public void setUnassignedPlayers(List<Player> unassignedPlayers) {
+        this.unassignedPlayers = unassignedPlayers;
+    }
 
     public List<Team> getTeams() {
         return teams;
