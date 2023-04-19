@@ -16,6 +16,7 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -74,6 +75,7 @@ public class LobbyController {
         teams.add(teamService.createTeam());
         lobbyInput.setTeams(teams);
 
+        
         // create user
         Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
 
@@ -98,6 +100,8 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
+    
+
     // TODO when adding settings menu: POST method to create the list of chosen
     // minigames (currently also handled in POST lobby)
 
@@ -114,12 +118,14 @@ public class LobbyController {
     @SendTo("/queue/lobbies/{lobbyId}")
     @SendToUser("/queue/join")
     public PlayerDTO playerJoin(@DestinationVariable long lobbyId, PlayerJoinDTO player) {
-        log.warn("HEllo there");
 
         Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
+        lobbyManager.ableToJoin(lobbyId, playerToCreate);
+
+
         Player createdPlayer = playerService.createPlayer(playerToCreate);
-        Lobby joinedLobby = lobbyManager.getLobby(lobbyId);
-        lobbyManager.addToUnassignedPlayers(joinedLobby, createdPlayer);
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        lobbyManager.addToUnassignedPlayers(lobby, createdPlayer);
         PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
         // Get the session ID of the user who sent the message
         // String sessionId = headerAccessor.getSessionId();
@@ -131,15 +137,9 @@ public class LobbyController {
 
     }
 
-    // @MessageMapping("/lobbies/{lobbyId}/assign")
-    // public void movePlayer(@DestinationVariable long lobbyId, PlayerDTO player) {
-    //     log.warn("HEllo there");
+    
 
-    //     Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
-    //     Player createdPlayer = playerService.createPlayer(playerToCreate);
-    //     Lobby joinedLobby = lobbyManager.getLobby(lobbyId);
-    //     lobbyManager.addToUnassignedPlayers(joinedLobby, createdPlayer);
-    //     PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
 
-    // }
+
+
 }
