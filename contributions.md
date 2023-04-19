@@ -36,9 +36,9 @@ Additionally:
   - Added the create Lobby button
   - Added routing so clicking the create button redirects to the lobby
 ## Sven Ringger
-- Show description of next minigame
-- Show title of minigame that is played next
-- Create components for features above
+- Show description of next minigame (web)
+- Show title of minigame that is played next (web)
+- Create components for features above (web)
 ## Guojun Wu
 
 # 06.04 - 19.04
