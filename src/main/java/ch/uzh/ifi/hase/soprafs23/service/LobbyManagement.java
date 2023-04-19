@@ -130,8 +130,8 @@ public class LobbyManagement {
         lobbyRepository.flush();
       }
 
-      public boolean ableToJoin(Long LobbyId, Player playerToCreate){
-        Lobby lobby = getLobby(LobbyId);
+      public boolean ableToJoin(int inviteCode, Player playerToCreate){
+        Lobby lobby = getLobby(inviteCode);
         int cnt = 0;
         for (Player p : lobby.getUnassignedPlayers()){
           if (p.getNickname().equals(playerToCreate.getNickname())){

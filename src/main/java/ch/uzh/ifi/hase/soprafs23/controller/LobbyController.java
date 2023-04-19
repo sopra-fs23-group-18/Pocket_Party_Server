@@ -135,7 +135,7 @@ public class LobbyController {
     @SendToUser("/queue/join")
     public PlayerDTO playerJoin(@DestinationVariable int inviteCode, PlayerJoinDTO player) {
         Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
-        lobbyManager.ableToJoin(lobbyId, playerToCreate);
+        lobbyManager.ableToJoin(inviteCode, playerToCreate);
 
 
         Player createdPlayer = playerService.createPlayer(playerToCreate);
