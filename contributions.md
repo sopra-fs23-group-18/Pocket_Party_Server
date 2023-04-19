@@ -1,4 +1,4 @@
-# 27.03 - 31.03
+# 27.03 - 05.04
 
 ## Nils Grob
 
@@ -41,3 +41,16 @@ Additionally:
 -Add page to scan QR Code
 -Generate avatar when nickname is entered
 ## Guojun Wu
+
+# 06.04 - 19.04
+
+## Nils Grob
+
+## Stefan Schuler
+
+## Naseem Hassan
+
+## Sven Ringger
+
+## Guojun Wu
+
