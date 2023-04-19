@@ -41,3 +41,38 @@ Additionally:
 -Add page to scan QR Code
 -Generate avatar when nickname is entered
 ## Guojun Wu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Naseem Hassan
+- Host can now assign players to each of the teams in the main Lobby [#6](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/6):
+  - Added a Drag and Drop system to drag players who have joined into one of the two teams
+  - When dropped inside a team container the color of the player container changes to the teams color
+  - Edited colors in theme.scss to be more distinct
+- Added a qr code with the invite code of the lobby in it using the external api [#7](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/7):
+  - A qr code containing the lobby invite code is now visible in the main Lobby
+  - The qr code was generated with the following external api: https://goqr.me/de/api/
