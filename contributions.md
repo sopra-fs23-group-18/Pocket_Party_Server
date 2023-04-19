@@ -57,6 +57,5 @@ Additionally:
 - Create GameHeader component and add it to all existing components (web)
 - Create GameWon screen (web)
 - Add confetti effect to GameWon screen (web)
-- 
 ## Guojun Wu
 
