@@ -24,7 +24,16 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String avatar;
 
-    
+    @Column(nullable = false)
+    private int roundsPlayed = 0;
+
+    public int getRoundsPlayed() {
+        return roundsPlayed;
+    }
+
+    public void setRoundsPlayed(int roundsPlayed) {
+        this.roundsPlayed = roundsPlayed;
+    }    
 
     public Player() {
     }
