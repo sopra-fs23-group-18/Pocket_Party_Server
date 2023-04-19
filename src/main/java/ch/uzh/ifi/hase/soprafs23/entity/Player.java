@@ -21,8 +21,8 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private String avatar;
+    // @Column(nullable = false)
+    // private String avatar;
 
     @Column(nullable = false)
     private int roundsPlayed = 0;
@@ -58,13 +58,13 @@ public class Player implements Serializable{
         this.nickname = nickname;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
+    // public String getAvatar() {
+    //     return avatar;
+    // }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
+    // public void setAvatar(String avatar) {
+    //     this.avatar = avatar;
+    // }
 
     @Override
     public boolean equals(Object obj){
