@@ -36,10 +36,9 @@ Additionally:
   - Added the create Lobby button
   - Added routing so clicking the create button redirects to the lobby
 ## Sven Ringger
--Show description of next minigame
--Show title of minigame that is played next
--Add page to scan QR Code
--Generate avatar when nickname is entered
+- Show description of next minigame
+- Show title of minigame that is played next
+
 ## Guojun Wu
 
 # 06.04 - 19.04
@@ -51,6 +50,13 @@ Additionally:
 ## Naseem Hassan
 
 ## Sven Ringger
-
+- Add page to scan QR Code (mobile)
+- Add field to manually input Lobby code (mobile)
+- Generate avatar when nickname is entered (mobile)
+- Add WaitingScreen for display until lobby is filled (mobile)
+- Create GameHeader component and add it to all existing components (web)
+- Create GameWon screen (web)
+- Add confetti effect to GameWon screen (web)
+- 
 ## Guojun Wu
 
