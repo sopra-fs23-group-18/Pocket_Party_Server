@@ -38,7 +38,7 @@ Additionally:
 ## Sven Ringger
 - Show description of next minigame
 - Show title of minigame that is played next
-
+- Create components for features above
 ## Guojun Wu
 
 # 06.04 - 19.04
