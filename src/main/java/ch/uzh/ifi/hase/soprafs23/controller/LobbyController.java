@@ -124,6 +124,7 @@ public class LobbyController {
         Lobby joinedLobby = lobbyManager.getLobby(inviteCode);
         lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
         PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
+        createdPlayerDTO.setAvatar(player.getAvatar());
         // Get the session ID of the user who sent the message
         // String sessionId = headerAccessor.getSessionId();
         // log.warn("Session Id: {}", sessionId);
