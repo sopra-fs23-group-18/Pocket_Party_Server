@@ -41,6 +41,8 @@ Additionally:
 - Create components for features above (web) #19, #18 & #21
 - Show screen with players competing in the next minigame (web) #21
 ## Guojun Wu
+- create lobby, team and player class and their methods(server) [#20](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/20)
+- create lobby repository and database(server) [#81](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/81)
 
 # 06.04 - 19.04
 
@@ -96,3 +98,6 @@ Upcoming:
 - Add confetti effect to GameWon screen (web) #13
 
 ## Guojun Wu
+- Detect tap on smartphone(mobile) [#6](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/6)
+- Design an in game screen (mobile) [#5](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/5)
+
