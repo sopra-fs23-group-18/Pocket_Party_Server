@@ -24,6 +24,9 @@ public class Team implements Serializable{
     @Column(nullable = false)
     private int score = 0;
 
+    @Column(nullable = false)
+    private String name;
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Player> players = new ArrayList<Player>();
 
@@ -38,6 +41,14 @@ public class Team implements Serializable{
     // public void addPlayer(Player player) {
     //     this.players.add(player);
     // }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
