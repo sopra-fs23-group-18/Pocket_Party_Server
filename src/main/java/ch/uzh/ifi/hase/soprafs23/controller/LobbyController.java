@@ -94,11 +94,30 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable long lobbyId){
         lobbyManager.ableToStart(lobbyId);
-        MinigameType type = lobbyManager.getNextMinigameType(lobbyId);
+        
 
         //Minigame nextMinigame = minigameService.createMinigame(type);
-        lobbyManager.addUpcommingMinigame(lobbyId, type);
+        lobbyManager.addUpcommingMinigame(lobbyId);
     }
+
+    @PutMapping("/lobbies/{lobbyId}/minigame")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateScore(@PathVariable long lobbyId, String winnerTeam){
+
+        //updateScore
+        lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeam);
+
+
+        //create next minigame
+
+        lobbyManager.addUpcommingMinigame(lobbyId);
+
+    }
+
+    @GetMapping("/lobbies/{lobbyId}/score")
+
+
+
 
 
 
