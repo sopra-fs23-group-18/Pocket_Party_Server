@@ -93,11 +93,14 @@ public class LobbyController {
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable long lobbyId){
+        lobbyManager.ableToStart(lobbyId);
         MinigameType type = lobbyManager.getNextMinigameType(lobbyId);
 
         //Minigame nextMinigame = minigameService.createMinigame(type);
         lobbyManager.addUpcommingMinigame(lobbyId, type);
     }
+
+
 
     
 
@@ -136,6 +139,7 @@ public class LobbyController {
 
     @MessageMapping("/lobbies/{lobbyId}/assign")
     public void assignPlayer(@DestinationVariable long lobbyId, long playerId, long teamId) {
+
 
         Player player = playerService.getPlayer(playerId);
         lobbyManager.removeFromUnassignedPlayers(lobbyId, player);

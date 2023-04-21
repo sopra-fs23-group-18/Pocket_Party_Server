@@ -60,8 +60,8 @@ public class LobbyManagement {
         List<MinigameType> minigames = minigameService.chosenMinigames();
         newLobby.setMinigamesChoice(minigames);
         List<Team> teams = new ArrayList<Team>();
-        teams.add(teamService.createTeam());
-        teams.add(teamService.createTeam());
+        teams.add(teamService.createTeam("Team1"));
+        teams.add(teamService.createTeam("Team2"));
         newLobby.setTeams(teams);
 
         List<Player> unassignedPlayers = new ArrayList<Player>();
@@ -183,6 +183,18 @@ public class LobbyManagement {
         }
 
         return true;
+      }
+
+      public void ableToStart(Long lobbyId){
+        Lobby lobby = getLobby(lobbyId);
+        List<Team> teams = lobby.getTeams();
+        if (lobby.getUnassignedPlayers().size() == 0){
+          if (teams.get(0).getPlayers().size() > 0 && teams.get(1).getPlayers().size() > 0){
+            return;
+          }
+          throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There are not enough players in the teams to start!");
+        }
+        throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There players that are not assigned yet!");
       }
 
       
