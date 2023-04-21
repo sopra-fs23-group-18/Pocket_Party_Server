@@ -29,7 +29,7 @@ public class Minigame implements Serializable{
     private boolean isFinished = false;
 
     @Column(nullable = true)
-    private Team winner;
+    private String winnerTeamName;
 
     @Column(nullable = false)
     private int scoreToGain;
@@ -97,13 +97,13 @@ public class Minigame implements Serializable{
         this.scoreToGain = scoreToGain;
     }
 
-    public Team getWinner() {
-        return winner;
+    public String getWinner() {
+        return winnerTeamName;
     }
 
-    public void setWinner(Team winner) {
-        this.winner = winner;
-        if (this.winner != null){setIsFinished(true);}
+    public void setWinner(String winnerTeamName) {
+        this.winnerTeamName = winnerTeamName;
+        if (this.winnerTeamName != null){setIsFinished(true);}
     }
 
     public void setIsFinished(boolean isFinished){

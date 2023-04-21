@@ -100,7 +100,7 @@ public class LobbyManagement {
         return minigame;
       }
 
-      public MinigameType getNextMinigameType(Long lobbyId){
+      private MinigameType getNextMinigameType(Long lobbyId){
         Lobby lobby = getLobby(lobbyId);
         List<MinigameType> minigamesChoice = lobby.getMinigamesChoice();
         List<Minigame> minigamesPlayed = lobby.getMinigamesPlayed();
@@ -114,7 +114,8 @@ public class LobbyManagement {
         return nextMinigameType;
       }
 
-      public void addUpcommingMinigame(Long lobbyId, MinigameType type){
+      public void addUpcommingMinigame(Long lobbyId){
+        MinigameType type = getNextMinigameType(lobbyId);
         if (type == null){
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcoming Minigame!");
         }
@@ -135,9 +136,22 @@ public class LobbyManagement {
         lobbyRepository.flush();
       }
 
-      private void addMinigameToPlayedList(Long lobbyId, Minigame startedMinigame){
+      public void finishedMinigameUpdate(Long lobbyId, String winnerTeam){
+        //update minigame
+        updateMinigame(lobbyId, winnerTeam);
+
+        //updateScore of teams
         Lobby lobby = getLobby(lobbyId);
-        lobby.addToMinigamesPlayed(startedMinigame);
+
+        //add next minigame
+        addUpcommingMinigame(lobbyId);
+      }
+
+      private void updateMinigame(Long lobbyId, String winnerTeam){
+        Lobby lobby = getLobby(lobbyId);
+        Long minigameId = lobby.getUpcomingMinigame().getId();
+        Minigame playedMinigame = minigameService.updateAndGetMinigame(minigameId, winnerTeam);
+        lobby.addToMinigamesPlayed(playedMinigame);
       }
 
       public void addToUnassignedPlayers(Long lobbyId, Player newPlayer){

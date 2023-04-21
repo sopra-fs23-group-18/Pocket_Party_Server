@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
@@ -52,6 +54,20 @@ public class MinigameService {
         log.debug("Created Information for Minigame: {}", upcommingMinigame);
         return upcommingMinigame;
     }
+
+    public Minigame getMinigame(Long minigameId){
+        Minigame minigame = minigameRepository.findById(minigameId).
+            orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The Minigame with given Id does not exist!"));
+        return minigame;
+    }
+
+    public Minigame updateAndGetMinigame(Long minigameId, String winnerTeam){
+        Minigame finishedMinigame = getMinigame(minigameId);
+
+        finishedMinigame.setWinner(winnerTeam);
         
-    
+        finishedMinigame = minigameRepository.save(finishedMinigame);
+        minigameRepository.flush();
+        return finishedMinigame;
+    }
 }
