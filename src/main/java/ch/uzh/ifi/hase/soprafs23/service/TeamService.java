@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.repository.TeamRepository;
@@ -28,8 +30,10 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-    public Team createTeam(String name) {
+    public Team createTeam(TeamType color, Lobby lobby, String name) {
         Team newTeam = new Team();
+        newTeam.setLobby(lobby);
+        newTeam.setColor(color);
         newTeam.setName(name);
         newTeam = teamRepository.save(newTeam);
         teamRepository.flush();
@@ -38,22 +42,22 @@ public class TeamService {
         return newTeam;
     }
 
-    public void addPlayer(Long teamId, Player player){
-        if (player == null){
+    public void addPlayer(Lobby lobby, TeamType teamColor, Player player){
+        if (lobby == null || teamColor == null || lobby == null){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
         }
-        Team team = getTeam(teamId);
+        Team team = getByColorAndLobby(lobby, teamColor);
         List<Player> players = team.getPlayers();
         players.add(player);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
-    public void removePlayer(Long teamId, Player player){
+    public void removePlayer(Lobby lobby, TeamType teamColor, Player player){
         if (player == null){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
         }
-        Team team = getTeam(teamId);
+        Team team = getByColorAndLobby(lobby, teamColor);
         List<Player> players = team.getPlayers();
         players.remove(player);
         teamRepository.save(team);
@@ -65,5 +69,15 @@ public class TeamService {
         Team team = teamRepository.findById(teamId).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The team with the given Id does not exist!"));
         return team;
+    }
+
+    public Team getByColorAndLobby(Lobby lobby, TeamType color){
+        List<Team> teams = teamRepository.findByLobby(lobby);
+        for (Team team : teams) {
+            if(team.getColor().ordinal() == color.ordinal()){
+                return team;
+            }
+        }
+        return null;
     }
 }

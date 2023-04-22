@@ -2,11 +2,17 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "PLAYER")
@@ -21,8 +27,10 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
-    // @Column(nullable = false)
-    // private String avatar;
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teamId")
+    private Team team;
 
     @Column(nullable = false)
     private int roundsPlayed = 0;

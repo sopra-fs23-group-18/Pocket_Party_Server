@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 
@@ -59,22 +60,37 @@ public class LobbyManagement {
 
         List<MinigameType> minigames = minigameService.chosenMinigames();
         newLobby.setMinigamesChoice(minigames);
-        List<Team> teams = new ArrayList<Team>();
-        teams.add(teamService.createTeam("Team1"));
-        teams.add(teamService.createTeam("Team2"));
-        newLobby.setTeams(teams);
-
+        
         List<Player> unassignedPlayers = new ArrayList<Player>();
         newLobby.setUnassignedPlayers(unassignedPlayers);
         
+
+        List<Team> teams = new ArrayList<Team>();
+        Team team1 = new Team();
+        team1.setLobby(newLobby);
+        team1.setColor(TeamType.RED);
+        team1.setName("Team Red");
+
+        Team team2 = new Team();
+        team2.setLobby(newLobby);
+        team2.setColor(TeamType.BLUE);
+        team2.setName("Team Blue");
+
+
+        teams.add(team1);
+        teams.add(team2);
+        newLobby.setTeams(teams);
+
+  
         newLobby = lobbyRepository.save(newLobby);
         lobbyRepository.flush();
-    
-        log.debug("Created Information for User: {}", newLobby);
-
-        //ResponseStatusException missing -> TODO: add 
-
         return newLobby;
+    
+        // log.debug("Created Information for User: {}", createdLobby);
+
+        // //ResponseStatusException missing -> TODO: add 
+
+        // return createdLobby;
       }
     
       public Lobby getLobby(Long lobbyId) {
@@ -210,7 +226,4 @@ public class LobbyManagement {
         }
         throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There players that are not assigned yet!");
       }
-
-      
-
 }

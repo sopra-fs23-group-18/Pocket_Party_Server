@@ -33,8 +33,10 @@ import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.TeamService;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerAssignTeamDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerJoinDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerReassignTeamDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.mapper.DTOMapperWebsocket;
 
 @RestController
@@ -157,22 +159,30 @@ public class LobbyController {
     }
 
     @MessageMapping("/lobbies/{lobbyId}/assign")
-    public void assignPlayer(@DestinationVariable long lobbyId, long playerId, long teamId) {
-
-
-        Player player = playerService.getPlayer(playerId);
+    public void assignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO assignData) {
+        Player player = playerService.getPlayer(assignData.getPlayerId());
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
         lobbyManager.removeFromUnassignedPlayers(lobbyId, player);
-        teamService.addPlayer(teamId, player);
+        teamService.addPlayer(lobby, assignData.getTeam(), player);
     }
 
     @MessageMapping("/lobbies/{lobbyId}/unassign")
-    public void unassignPlayer(@DestinationVariable long lobbyId, long playerId, long teamId) {
+    public void unassignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO unassignData) {
 
-        Player player = playerService.getPlayer(playerId);
-        teamService.removePlayer(teamId, player);
+        Player player = playerService.getPlayer(unassignData.getPlayerId());
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        teamService.removePlayer(lobby, unassignData.getTeam(), player);
         lobbyManager.addToUnassignedPlayers(lobbyId, player);
     }
 
+
+    @MessageMapping("/lobbies/{lobbyId}/reassign")
+    public void reassignPlayer(@DestinationVariable long lobbyId, PlayerReassignTeamDTO reassignTeamDTO) {
+        Player player = playerService.getPlayer(reassignTeamDTO.getPlayerId());
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        teamService.removePlayer(lobby, reassignTeamDTO.getFrom(), player);
+        teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
+    }
 
 
 
