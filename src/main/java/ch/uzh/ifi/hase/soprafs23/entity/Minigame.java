@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToOne;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
@@ -19,6 +21,7 @@ public class Minigame implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "minigameId")
     @GeneratedValue
     private Long id;
 
@@ -34,11 +37,11 @@ public class Minigame implements Serializable{
     @Column(nullable = false)
     private int scoreToGain;
 
-    @Column(nullable = false)
-    private String team1Player = "No Player";
+    @OneToOne(cascade = CascadeType.ALL)
+    private Player team1Player;
 
-    @Column(nullable = false)
-    private String team2Player = "No Player";
+    @OneToOne(cascade = CascadeType.ALL)
+    private Player team2Player;
 
     // @Column(nullable = false)
     // protected String name;
@@ -73,19 +76,19 @@ public class Minigame implements Serializable{
         return description;
     }
 
-    public String getTeam2Player() {
+    public Player getTeam2Player() {
         return team2Player;
     }
 
-    public void setTeam2Player(String team2Player) {
+    public void setTeam2Player(Player team2Player) {
         this.team2Player = team2Player;
     }
 
-    public String getTeam1Player() {
+    public Player getTeam1Player() {
         return team1Player;
     }
 
-    public void setTeam1Player(String team1Player) {
+    public void setTeam1Player(Player team1Player) {
         this.team1Player = team1Player;
     }
 
