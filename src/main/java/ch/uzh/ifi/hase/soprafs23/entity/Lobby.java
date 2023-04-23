@@ -33,6 +33,7 @@ public class Lobby implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "lobbyId")
     @GeneratedValue
     private Long id;
 
