@@ -5,6 +5,8 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -136,21 +138,28 @@ public class LobbyManagement {
         lobbyRepository.flush();
       }
 
-      public void finishedMinigameUpdate(Long lobbyId, String winnerTeam){
+      public void finishedMinigameUpdate(Long lobbyId, Team winnerTeamInput){
         //update minigame
-        updateMinigame(lobbyId, winnerTeam);
+        updateMinigame(lobbyId, winnerTeamInput.getName());
+
 
         //updateScore of teams
+        teamService.updateScore(winnerTeamInput);
         Lobby lobby = getLobby(lobbyId);
-
-        //add next minigame
-        addUpcommingMinigame(lobbyId);
+        List<Team> teams =lobby.getTeams();
+        for (Team t : teams){
+          if (!t.getId().equals(winnerTeamInput.getId())){
+            teamService.updateScore(t);
+          }
+        }
       }
+
+      
 
       private void updateMinigame(Long lobbyId, String winnerTeam){
         Lobby lobby = getLobby(lobbyId);
-        Long minigameId = lobby.getUpcomingMinigame().getId();
-        Minigame playedMinigame = minigameService.updateAndGetMinigame(minigameId, winnerTeam);
+        Minigame playedMinigame = lobby.getUpcomingMinigame();
+        minigameService.updateMinigame(playedMinigame.getId(), winnerTeam);
         lobby.addToMinigamesPlayed(playedMinigame);
       }
 

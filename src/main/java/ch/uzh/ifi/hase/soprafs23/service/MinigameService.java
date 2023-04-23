@@ -61,13 +61,12 @@ public class MinigameService {
         return minigame;
     }
 
-    public Minigame updateAndGetMinigame(Long minigameId, String winnerTeam){
+    public void updateMinigame(Long minigameId, String winnerTeam){
         Minigame finishedMinigame = getMinigame(minigameId);
 
         finishedMinigame.setWinner(winnerTeam);
         
         finishedMinigame = minigameRepository.save(finishedMinigame);
         minigameRepository.flush();
-        return finishedMinigame;
     }
 }

@@ -66,4 +66,11 @@ public class TeamService {
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The team with the given Id does not exist!"));
         return team;
     }
+
+    public void updateScore(Team winnerTeamInput){
+        Team team = getTeam(winnerTeamInput.getId());
+        team.setScore(team.getScore() + winnerTeamInput.getScore());
+        teamRepository.save(team);
+        teamRepository.flush();
+    }
 }
