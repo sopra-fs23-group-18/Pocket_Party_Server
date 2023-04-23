@@ -154,7 +154,19 @@ public class LobbyManagement {
         }
       }
 
+      public Team getWinner(Long lobbyId){
+        Lobby lobby = getLobby(lobbyId);
+
+        Team team = Collections.max(lobby.getTeams(), new Comparator<Team>() {
+          public int compare(Team team1, Team team2) {
+              return team1.getScore() - team2.getScore();
+        }});
+        if (team.getScore() >= lobby.getWinningScore()){
+              return team;
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner yet!");
       
+      }
 
       private void updateMinigame(Long lobbyId, String winnerTeam){
         Lobby lobby = getLobby(lobbyId);
