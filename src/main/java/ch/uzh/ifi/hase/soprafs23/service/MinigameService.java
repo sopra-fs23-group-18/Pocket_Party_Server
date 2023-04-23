@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 
 @Service
@@ -36,7 +37,7 @@ public class MinigameService {
         return minigames;
     }
 
-    public Minigame createMinigame(MinigameType nexMinigameType, String player1Name, String player2Name){
+    public Minigame createMinigame(MinigameType nexMinigameType, Player player1Name, Player player2Name){
         String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
         Minigame upcommingMinigame = new Minigame();
         upcommingMinigame.setScoreToGain(500);
