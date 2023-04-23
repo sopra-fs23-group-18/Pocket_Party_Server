@@ -148,27 +148,38 @@ public class LobbyManagement {
 
 
 
-        Minigame nextMinigame = minigameService.createMinigame(type, playerTeam1.getNickname(), playerTeam2.getNickname());
+        Minigame nextMinigame = minigameService.createMinigame(type, playerTeam1, playerTeam2);
         lobby.setUpcomingMinigame(nextMinigame);
         lobbyRepository.save(lobby);
         lobbyRepository.flush();
       }
 
+      @Transactional
       public void finishedMinigameUpdate(Long lobbyId, Team winnerTeamInput){
-        //update minigame
-        updateMinigame(lobbyId, winnerTeamInput.getName());
-
-
-        //updateScore of teams
-        teamService.updateScore(winnerTeamInput);
         Lobby lobby = getLobby(lobbyId);
-        List<Team> teams =lobby.getTeams();
+
+        //update minigame
+        Minigame playedMinigame = lobby.getUpcomingMinigame();
+        minigameService.updateMinigame(playedMinigame.getId(), winnerTeamInput.getName());
+        lobby.addToMinigamesPlayed(playedMinigame);
+
+        //update roundsPlayed of players
+        playerService.updatePlayer(playedMinigame.getTeam1Player().getId());
+        playerService.updatePlayer(playedMinigame.getTeam2Player().getId());
+
+
+        //update score of teams
+        teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
+
+        List<Team> teams = lobby.getTeams();
         for (Team t : teams){
-          if (!t.getId().equals(winnerTeamInput.getId())){
-            teamService.updateScore(t);
+          if (t.getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
+            int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+            teamService.updateScore(lobby, t.getColor(), score);
           }
-        }
+        }      
       }
+    
 
       public Team getWinner(Long lobbyId){
         Lobby lobby = getLobby(lobbyId);
@@ -182,13 +193,6 @@ public class LobbyManagement {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner yet!");
       
-      }
-
-      private void updateMinigame(Long lobbyId, String winnerTeam){
-        Lobby lobby = getLobby(lobbyId);
-        Minigame playedMinigame = lobby.getUpcomingMinigame();
-        minigameService.updateMinigame(playedMinigame.getId(), winnerTeam);
-        lobby.addToMinigamesPlayed(playedMinigame);
       }
 
       public void addToUnassignedPlayers(Long lobbyId, Player newPlayer){

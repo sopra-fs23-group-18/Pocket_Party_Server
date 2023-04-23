@@ -43,9 +43,9 @@ public class PlayerService {
     }
 
     public Player getMinigamePlayer(Team team){
-        int lowestAmountPlayed = 0;
+        int lowestAmountPlayed = -1;
         for (Player p : team.getPlayers()){
-            if (lowestAmountPlayed == 0){
+            if (lowestAmountPlayed == -1){
                 lowestAmountPlayed = p.getRoundsPlayed();
             }
             if (p.getRoundsPlayed() < lowestAmountPlayed){
@@ -64,5 +64,12 @@ public class PlayerService {
             }
         }
         
+    }
+
+    public void updatePlayer(Long playerId){
+        Player player = getPlayer(playerId);
+        player.setRoundsPlayed(player.getRoundsPlayed() + 1);
+        playerRepository.save(player);
+        playerRepository.flush();
     }
 }
