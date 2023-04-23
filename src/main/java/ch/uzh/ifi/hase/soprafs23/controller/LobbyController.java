@@ -119,7 +119,13 @@ public class LobbyController {
 
     }
 
-    
+    @GetMapping("/lobbies/{lobbyId}/scores")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public LobbyGetDTO getScores(@PathVariable long lobbyId) {
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        return DTOMapper.INSTANCE.convertEntityToScoresGetDTO(lobby);
+    }
 
 
 
