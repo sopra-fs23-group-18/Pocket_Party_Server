@@ -28,6 +28,8 @@ import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
@@ -102,10 +104,13 @@ public class LobbyController {
 
     @PutMapping("/lobbies/{lobbyId}/minigame")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateScore(@PathVariable long lobbyId, String winnerTeam){
+    public void updateScore(@PathVariable long lobbyId, WinnerTeamPutDTO winnerTeamPutDTO){
+        //instead of String winnerTeam put the winner TeamDTO and get score of other via total minigame score
+        Team winnerTeamInput = DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
+
 
         //updateScore
-        lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeam);
+        lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeamInput);
 
 
         //create next minigame
@@ -114,7 +119,9 @@ public class LobbyController {
 
     }
 
-    @GetMapping("/lobbies/{lobbyId}/score")
+    
+
+
 
 
 
