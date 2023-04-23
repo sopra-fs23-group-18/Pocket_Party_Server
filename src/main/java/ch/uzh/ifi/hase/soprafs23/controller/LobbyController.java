@@ -127,7 +127,13 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToScoresGetDTO(lobby);
     }
 
-
+    @GetMapping("/lobbies/{lobbyId}/winner")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public TeamGetDTO getWinner(@PathVariable long lobbyId) {
+        Team team = lobbyManager.getWinner(lobbyId);
+        return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
+    }
 
 
 

@@ -67,5 +67,8 @@ public interface DTOMapper {
   @Mapping(source = "score", target = "score")
   Team convertWinnerTeamPutDTOToEntity(WinnerTeamPutDTO winnerTeamPutDTO);
 
-  
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "name", target = "name")
+  @Mapping(source = "score", target = "score")
+  TeamGetDTO convertEntityToTeamGetDTO(Team team); 
 }
