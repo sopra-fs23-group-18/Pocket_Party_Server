@@ -1,8 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+
 public class WinnerTeamPutDTO {
-    private Long id;
     private int score;
+    private TeamType color;
     private String name;
 
     public String getName() {
@@ -13,6 +15,14 @@ public class WinnerTeamPutDTO {
         this.name = name;
     }
 
+    public TeamType getColor() {
+        return color;
+    }
+
+    public void setColor(TeamType color) {
+        this.color = color;
+    }
+
     public int getScore() {
         return score;
     }
@@ -21,11 +31,4 @@ public class WinnerTeamPutDTO {
         this.score = score;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

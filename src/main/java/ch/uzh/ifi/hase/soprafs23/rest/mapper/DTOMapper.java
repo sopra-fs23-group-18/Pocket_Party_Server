@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
@@ -53,7 +54,7 @@ public interface DTOMapper {
 
   @Mapping(source = "winningScore", target = "winningScore")
   @Mapping(source = "teams", target = "teams")
-  LobbyGetDTO convertEntityToScoresGetDTO(Lobby lobby);
+  ScoresGetDTO convertEntityToScoresGetDTO(Lobby lobby);
   
   @Mapping(source = "scoreToGain", target = "scoreToGain")
   @Mapping(source = "type", target = "type")
@@ -62,7 +63,7 @@ public interface DTOMapper {
   @Mapping(source = "team2Player", target = "team2Player")
   MinigameGetDTO convertEntityToMinigameGetDTO(Minigame minigame);
 
-  @Mapping(source = "id", target = "id")
+  @Mapping(source = "color", target = "color")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
   Team convertWinnerTeamPutDTOToEntity(WinnerTeamPutDTO winnerTeamPutDTO);
@@ -70,5 +71,6 @@ public interface DTOMapper {
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
+  @Mapping(source = "color", target = "color")
   TeamGetDTO convertEntityToTeamGetDTO(Team team); 
 }

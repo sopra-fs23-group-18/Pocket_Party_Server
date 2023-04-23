@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -28,6 +29,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
@@ -106,7 +108,7 @@ public class LobbyController {
 
     @PutMapping("/lobbies/{lobbyId}/minigame")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateScore(@PathVariable long lobbyId, WinnerTeamPutDTO winnerTeamPutDTO){
+    public void updateScore(@PathVariable long lobbyId, @RequestBody WinnerTeamPutDTO winnerTeamPutDTO){
         //instead of String winnerTeam put the winner TeamDTO and get score of other via total minigame score
         Team winnerTeamInput = DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
 
@@ -124,7 +126,7 @@ public class LobbyController {
     @GetMapping("/lobbies/{lobbyId}/scores")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public LobbyGetDTO getScores(@PathVariable long lobbyId) {
+    public ScoresGetDTO getScores(@PathVariable long lobbyId) {
         Lobby lobby = lobbyManager.getLobby(lobbyId);
         return DTOMapper.INSTANCE.convertEntityToScoresGetDTO(lobby);
     }
@@ -202,7 +204,6 @@ public class LobbyController {
         teamService.removePlayer(lobby, reassignTeamDTO.getFrom(), player);
         teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
     }
-
 
 
 
