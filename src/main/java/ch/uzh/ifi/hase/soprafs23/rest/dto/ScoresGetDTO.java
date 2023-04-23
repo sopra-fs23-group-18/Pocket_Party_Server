@@ -1,0 +1,30 @@
+package ch.uzh.ifi.hase.soprafs23.rest.dto;
+
+import java.util.List;
+
+import ch.uzh.ifi.hase.soprafs23.entity.Team;
+
+public class ScoresGetDTO {
+    private int winningScore;
+    private List<Team> teams;
+
+   
+
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(List<Team> teams) {
+        this.teams = teams;
+    }
+
+    public int getWinningScore() {
+        return winningScore;
+    }
+
+    public void setWinningScore(int winningScore) {
+        this.winningScore = winningScore;
+    }
+
+    
+}
