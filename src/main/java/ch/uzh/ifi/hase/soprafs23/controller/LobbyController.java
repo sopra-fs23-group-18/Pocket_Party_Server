@@ -49,9 +49,16 @@ public class LobbyController {
 
     private final Logger log = LoggerFactory.getLogger(LobbyManagement.class);
 
+    @Autowired
     private final LobbyManagement lobbyManager;
+
+    @Autowired
     private final TeamService teamService;
+
+    @Autowired
     private final PlayerService playerService;
+
+    @Autowired
     private final MinigameService minigameService;
 
     @Autowired

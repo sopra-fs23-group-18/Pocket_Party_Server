@@ -36,16 +36,18 @@ public class LobbyManagement {
 
     @Autowired
     private final LobbyRepository lobbyRepository;
-
+    @Autowired
     private final MinigameService minigameService;
+    @Autowired
     private final TeamService teamService;
+    @Autowired
     private final PlayerService playerService;
 
 
 
     private Random randomizer = new Random();
     
-
+  
     public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, MinigameService minigameService, TeamService teamService, PlayerService playerService) {
         this.lobbyRepository = lobbyRepository;
         this.minigameService = minigameService;
