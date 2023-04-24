@@ -159,6 +159,103 @@ public class LobbyControllerTest {
             .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void givenLobby_whenGetLobby_thenReturnLobby() throws Exception {
+        Lobby lobby = new Lobby();
+
+        //given
+        lobby.setId(1L);
+        lobby.setWinningScore(500);
+        lobby.setInviteCode(295738);
+        List<MinigameType> minigames = Arrays.asList(MinigameType.values());
+        lobby.setMinigamesChoice(minigames);
+        List<Player> unassignedPlayers = new ArrayList<Player>();
+        lobby.setUnassignedPlayers(unassignedPlayers);
+
+        List<Team> teams = new ArrayList<Team>();
+        Team team1 = new Team();
+        team1.setLobby(lobby);
+        team1.setColor(TeamType.RED);
+        team1.setName("Team Red");
+
+        Team team2 = new Team();
+        team2.setLobby(lobby);
+        team2.setColor(TeamType.BLUE);
+        team2.setName("Team Blue");
+
+        teams.add(team1);
+        teams.add(team2);
+        lobby.setTeams(teams);
+
+
+
+        // this mocks the UserService -> we define above what the userService should
+        // return when getUsers() is called
+        given(lobbyManager.getLobby(Mockito.anyLong())).willReturn(lobby);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/1").contentType(MediaType.APPLICATION_JSON);
+
+
+        // then
+        mockMvc.perform(getRequest).andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(lobby.getId().intValue())))
+            .andExpect(jsonPath("$.inviteCode", is(lobby.getInviteCode())))
+            .andExpect(jsonPath("$.winningScore", is(lobby.getWinningScore())))
+            .andExpect(jsonPath("$.teams[*].color", contains(lobby.getTeams().get(0).getColor().toString(), lobby.getTeams().get(1).getColor().toString())))
+            .andExpect(jsonPath("$.teams[*].name", contains(lobby.getTeams().get(0).getName(), lobby.getTeams().get(1).getName())))
+            .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId(), lobby.getTeams().get(1).getId())))
+            .andExpect(jsonPath("$.teams[*].score", contains(lobby.getTeams().get(0).getScore(), lobby.getTeams().get(1).getScore())))
+            .andExpect(jsonPath("$.teams[*].players[*]", hasSize(0)))
+            .andExpect(jsonPath("$.unassignedPlayers", hasSize(0)));
+    }
+
+    @Test
+    public void givenLobby_whenGetLobby_thenThrowException() throws Exception {
+        Lobby lobby = new Lobby();
+
+        //given
+        lobby.setId(1L);
+        lobby.setWinningScore(500);
+        lobby.setInviteCode(295738);
+        List<MinigameType> minigames = Arrays.asList(MinigameType.values());
+        lobby.setMinigamesChoice(minigames);
+        List<Player> unassignedPlayers = new ArrayList<Player>();
+        lobby.setUnassignedPlayers(unassignedPlayers);
+
+        List<Team> teams = new ArrayList<Team>();
+        Team team1 = new Team();
+        team1.setLobby(lobby);
+        team1.setColor(TeamType.RED);
+        team1.setName("Team Red");
+
+        Team team2 = new Team();
+        team2.setLobby(lobby);
+        team2.setColor(TeamType.BLUE);
+        team2.setName("Team Blue");
+
+        teams.add(team1);
+        teams.add(team2);
+        lobby.setTeams(teams);
+
+
+
+        // this mocks the UserService -> we define above what the userService should
+        // return when getUsers() is called
+        given(lobbyManager.getLobby(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/100").contentType(MediaType.APPLICATION_JSON);
+
+
+        // then
+        mockMvc.perform(getRequest).andExpect(status().isNotFound());
+    }
+
+
+
+
+
 
 
 
