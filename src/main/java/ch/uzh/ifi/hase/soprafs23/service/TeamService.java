@@ -79,6 +79,9 @@ public class TeamService {
 
     public Team getByColorAndLobby(Lobby lobby, TeamType color){
         List<Team> teams = teamRepository.findByLobby(lobby);
+        if (teams == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No team with such a lobby exists!");
+        }
         for (Team team : teams) {
             if(team.getColor().ordinal() == color.ordinal()){
                 return team;

@@ -135,7 +135,7 @@ public class LobbyManagement {
       public void addUpcommingMinigame(Long lobbyId){
         MinigameType type = getNextMinigameType(lobbyId);
         if (type == null){
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcoming Minigame!");
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
         }
 
         // wip
