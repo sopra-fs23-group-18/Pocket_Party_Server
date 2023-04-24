@@ -66,7 +66,7 @@ public class LobbyControllerTest {
      
     
     @Test
-    public void createLobby_lobbyCreated() throws Exception {
+    public void createLobby_validInput_lobbyCreated() throws Exception {
         Lobby lobby = new Lobby();
 
         //given
@@ -116,6 +116,52 @@ public class LobbyControllerTest {
             .andExpect(jsonPath("$.teams[*].players[*]", hasSize(0)))
             .andExpect(jsonPath("$.unassignedPlayers", hasSize(0)));
     }
+
+    @Test
+    public void createLobby_invalidInput_lobbyNotCreated() throws Exception {
+        Lobby lobby = new Lobby();
+
+        //given
+        lobby.setId(1L);
+        lobby.setInviteCode(295738);
+        List<MinigameType> minigames = Arrays.asList(MinigameType.values());
+        lobby.setMinigamesChoice(minigames);
+        List<Player> unassignedPlayers = new ArrayList<Player>();
+        lobby.setUnassignedPlayers(unassignedPlayers);
+
+        List<Team> teams = new ArrayList<Team>();
+        Team team1 = new Team();
+        team1.setLobby(lobby);
+        team1.setColor(TeamType.RED);
+        team1.setName("Team Red");
+
+        Team team2 = new Team();
+        team2.setLobby(lobby);
+        team2.setColor(TeamType.BLUE);
+        team2.setName("Team Blue");
+
+        teams.add(team1);
+        teams.add(team2);
+        lobby.setTeams(teams);
+    
+        LobbyPostDTO lobbyPostDTO = new LobbyPostDTO();
+        lobbyPostDTO.setWinningScore(-500);
+    
+        given(lobbyManager.createLobby(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+    
+        // when/then -> do the request + validate the result
+        MockHttpServletRequestBuilder postRequest = post("/lobbies")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(lobbyPostDTO));
+    
+        // then
+        mockMvc.perform(postRequest)
+            .andExpect(status().isBadRequest());
+    }
+
+
+
+
 
    
     private String asJsonString(final Object object) {
