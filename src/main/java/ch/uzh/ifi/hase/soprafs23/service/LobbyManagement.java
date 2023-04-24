@@ -180,19 +180,30 @@ public class LobbyManagement {
         }      
       }
     
-
-      public Team getWinner(Long lobbyId){
+      private Team getLeadingTeam(Long lobbyId){
         Lobby lobby = getLobby(lobbyId);
 
         Team team = Collections.max(lobby.getTeams(), new Comparator<Team>() {
           public int compare(Team team1, Team team2) {
               return team1.getScore() - team2.getScore();
         }});
+        return team;
+      }
+
+      public Lobby isFinished(Long lobbyId){
+        Team team = getLeadingTeam(lobbyId);
+        Lobby lobby = getLobby(lobbyId);
         if (team.getScore() >= lobby.getWinningScore()){
-              return team;
+              lobby.setIsFinished(true);
         }
+        return lobby;
+      }
+
+      public Team getWinner(Long lobbyId){
+        Lobby lobby = getLobby(lobbyId);
+        Team team = getLeadingTeam(lobbyId);
+        if (lobby.getIsFinished()){return team;}
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner yet!");
-      
       }
 
       public void addToUnassignedPlayers(Long lobbyId, Player newPlayer){

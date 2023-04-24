@@ -43,6 +43,9 @@ public class Lobby implements Serializable {
     @Column(nullable = false)
     private int winningScore;
 
+    @Column(nullable = false)
+    private boolean isFinished = false;
+
     // TODO: define Mapping of entities
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -128,6 +131,14 @@ public class Lobby implements Serializable {
         this.winningScore = winningScore;
     }
 
+    public boolean getIsFinished() {
+        return isFinished;
+    }
+
+    public void setIsFinished(boolean isFinished) {
+        this.isFinished = isFinished;
+    }
+
     // additional methods to add and get single elements
 
     public void addToMinigamesPlayed(Minigame nextMinigame) {
@@ -148,6 +159,9 @@ public class Lobby implements Serializable {
             }
         }
     }
+
+
+
 
     // move these methods into service at a later point
 
