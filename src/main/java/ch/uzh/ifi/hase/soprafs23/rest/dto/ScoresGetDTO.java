@@ -2,19 +2,18 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import java.util.List;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Team;
 
 public class ScoresGetDTO {
     private int winningScore;
-    private List<Team> teams;
+    private List<TeamGetDTO> teams;
 
    
 
-    public List<Team> getTeams() {
+    public List<TeamGetDTO> getTeams() {
         return teams;
     }
 
-    public void setTeams(List<Team> teams) {
+    public void setTeams(List<TeamGetDTO> teams) {
         this.teams = teams;
     }
 
