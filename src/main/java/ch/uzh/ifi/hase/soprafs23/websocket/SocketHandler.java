@@ -30,22 +30,34 @@ public class SocketHandler extends TextWebSocketHandler {
 
         final String payload = message.getPayload();
         SignalDTO signal = mapper.readValue(payload, SignalDTO.class);
-
+        WebSocketSession sendTo;
         switch (signal.getType()) {
             case JOIN:
                 log.debug("Got join signal: %s", signal);
                 sessionMap.put(signal.getSenderId(), session);
                 break;
             case OFFER:
+                sendTo = sessionMap.get(signal.getRecipentId());
                 log.debug("Got offer signal: %s", signal);
-                sessionMap.get(signal.getRecipentId()).sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
+                if (sendTo == null) {
+                    return;
+                }
+                sendTo.sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
                 break;
             case ANSWER:
+                sendTo = sessionMap.get(signal.getRecipentId());
                 log.debug("Got answer signal: %s", signal);
-                sessionMap.get(signal.getRecipentId()).sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
+                if (sendTo == null) {
+                    return;
+                }
+                sendTo.sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
                 break;
             case ICE:
-                sessionMap.get(signal.getRecipentId()).sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
+                sendTo = sessionMap.get(signal.getRecipentId());
+                if (sendTo == null) {
+                    return;
+                }
+                sendTo.sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
                 break;
             default:
                 break;
