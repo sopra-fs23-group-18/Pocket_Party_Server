@@ -125,6 +125,9 @@ public class LobbyController {
 
     }
 
+    /**
+     * @return winning score + both teams (id, score, name, color)
+    */
     @GetMapping("/lobbies/{lobbyId}/scores")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -133,6 +136,9 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToScoresGetDTO(lobby);
     }
 
+    /**
+     * @return boolean; true if a team has achieved the winning score.
+    */
     @GetMapping("/lobbies/{lobbyId}/gameover")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -141,6 +147,9 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(lobby);
     }
 
+    /**
+     * @return winnerTeam (id, score, name, color)
+    */
     @GetMapping("/lobbies/{lobbyId}/winner")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -215,7 +224,27 @@ public class LobbyController {
         teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
     }
 
+    @PutMapping("/lobbies/players/{lobbyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void createPlayer(@PathVariable long lobbyId) {
 
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        for (int i = 1; i < 3; i++){
+            Player newPlayer = new Player();
+            newPlayer.setNickname("test");
+            Player createdPlayer = playerService.createPlayer(newPlayer);
+            teamService.addPlayer(lobby, TeamType.BLUE ,createdPlayer);
+        }
+        for (int i = 1; i < 3; i++){
+            Player newPlayer = new Player();
+            newPlayer.setNickname("test");
+            Player createdPlayer = playerService.createPlayer(newPlayer);
+            teamService.addPlayer(lobby, TeamType.RED, createdPlayer);
+        }
+
+
+
+    }
 
 
 }
