@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
@@ -73,4 +74,7 @@ public interface DTOMapper {
   @Mapping(source = "score", target = "score")
   @Mapping(source = "color", target = "color")
   TeamGetDTO convertEntityToTeamGetDTO(Team team); 
+
+  @Mapping(source = "isFinished", target = "isFinished")
+  GameOverGetDTO convertEntityToGameOverGetDTO(Lobby lobby);
 }

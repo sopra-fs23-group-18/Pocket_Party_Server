@@ -26,6 +26,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
@@ -112,14 +113,15 @@ public class LobbyController {
         //instead of String winnerTeam put the winner TeamDTO and get score of other via total minigame score
         Team winnerTeamInput = DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
 
-
         //updateScore
         lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeamInput);
 
 
         //create next minigame
-
         lobbyManager.addUpcommingMinigame(lobbyId);
+
+        //check if finished
+        lobbyManager.isFinished(lobbyId);
 
     }
 
@@ -129,6 +131,14 @@ public class LobbyController {
     public ScoresGetDTO getScores(@PathVariable long lobbyId) {
         Lobby lobby = lobbyManager.getLobby(lobbyId);
         return DTOMapper.INSTANCE.convertEntityToScoresGetDTO(lobby);
+    }
+
+    @GetMapping("/lobbies/{lobbyId}/gameover")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameOverGetDTO getIsFinished(@PathVariable long lobbyId){
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        return DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(lobby);
     }
 
     @GetMapping("/lobbies/{lobbyId}/winner")
