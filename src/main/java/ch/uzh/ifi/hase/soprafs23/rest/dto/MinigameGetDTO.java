@@ -8,16 +8,15 @@ public class MinigameGetDTO {
     private int scoreToGain;
     private Player team1Player;
     private Player team2Player;
-    private String type;
+    private MinigameType type;
 
 
-    public String getType() {
+    public MinigameType getType() {
         return type;
     }
 
     public void setType(MinigameType type) {
-        String tmp = type.toString();
-        this.type = tmp.replace("_", " ");
+        this.type = type;
     }
 
     public String getDescription() {
