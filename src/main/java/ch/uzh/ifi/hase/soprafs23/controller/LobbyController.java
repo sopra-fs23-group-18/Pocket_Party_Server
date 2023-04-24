@@ -66,6 +66,9 @@ public class LobbyController {
         this.minigameService = minigameService;
     }
 
+    /**
+     * @input winningScore
+    */
     @PostMapping("/lobbies")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -80,6 +83,9 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
     }
 
+    /**
+     * @return lobby; format: id, inviteCode, winningScore, teams, unassignedPlayers
+    */
     @GetMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -88,6 +94,9 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
     }
 
+    /**
+     * @return minigame; format: description, scoreToGain, team1Player, team2Player, type
+    */
     @GetMapping("/lobbies/{lobbyId}/minigame")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -97,6 +106,9 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
+    /**
+     * @change checks if condition met & creates + adds first minigame
+    */
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable long lobbyId){
@@ -107,6 +119,11 @@ public class LobbyController {
         lobbyManager.addUpcommingMinigame(lobbyId);
     }
 
+    /**
+     * @input winner team of minigame; format: score, color, name
+     * @change updates score of teams, add winnerName to minigame, update roundsPlayed of players.
+     * Creates and adds next Minigame & checks if finished.
+    */
     @PutMapping("/lobbies/{lobbyId}/minigame")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateScore(@PathVariable long lobbyId, @RequestBody WinnerTeamPutDTO winnerTeamPutDTO){
