@@ -67,7 +67,15 @@ public class SocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		sessions.remove(session);
-		super.afterConnectionClosed(session, status);	}
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        sessions.remove(session);
+        // remove session from sessionMap
+        for (String key : sessionMap.keySet()) {
+            if (sessionMap.get(key).equals(session)) {
+                sessionMap.remove(key);
+                break;
+            }
+        }
+        super.afterConnectionClosed(session, status);
+    }
 }
