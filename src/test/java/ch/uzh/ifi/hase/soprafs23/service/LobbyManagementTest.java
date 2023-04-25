@@ -426,7 +426,6 @@ public class LobbyManagementTest {
         testLobby.setWinningScore(100);
 
         Player testPlayer = new Player();
-        testPlayer.setId(2L);
         testPlayer.setNickname("test");
 
         // when
@@ -434,7 +433,7 @@ public class LobbyManagementTest {
         lobbyManager.addToUnassignedPlayers(createdLobby.getId(), testPlayer);
 
         assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.ableToStart(1L);
+            lobbyManager.ableToStart(100L);
         });
     }
 
