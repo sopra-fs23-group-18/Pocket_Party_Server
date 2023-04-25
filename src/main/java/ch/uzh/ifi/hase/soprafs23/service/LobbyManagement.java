@@ -59,9 +59,9 @@ public class LobbyManagement {
         if (newLobby.getWinningScore() < 0 || newLobby.getWinningScore() > 100000){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lobby could not be created because the winningScore was invalid!");
         }
-        int inviteCode = new Random().nextInt(900000) + 100000;
+        int inviteCode = randomizer.nextInt(900000) + 100000;
         while (lobbyRepository.findByInviteCode(inviteCode) != null){
-          inviteCode = new Random().nextInt(900000) + 100000;
+          inviteCode = randomizer.nextInt(900000) + 100000;
         }
         newLobby.setInviteCode(inviteCode);
 

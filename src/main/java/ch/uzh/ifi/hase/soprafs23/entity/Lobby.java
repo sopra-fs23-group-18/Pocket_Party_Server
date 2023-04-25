@@ -165,31 +165,31 @@ public class Lobby implements Serializable {
 
     // move these methods into service at a later point
 
-    public void updateScore(Long teamId, int score) {
-        for (Team team : teams) {
-            if (team.getId() == teamId) {
-                team.setScore(team.getScore() + score);
-            }
-        }
-    }
+    // public void updateScore(Long teamId, int score) {
+    //     for (Team team : teams) {
+    //         if (team.getId() == teamId) {
+    //             team.setScore(team.getScore() + score);
+    //         }
+    //     }
+    // }
 
-    public boolean isGameOver() {
-        for (Team team : teams) {
-            if (team.getScore() >= winningScore) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // public boolean isGameOver() {
+    //     for (Team team : teams) {
+    //         if (team.getScore() >= winningScore) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
-    public Team getWinner() {
-        for (Team team : teams) {
-            if (team.getScore() >= winningScore) {
-                return team;
-            }
-        }
-        return null;
-        // TODO: what happens if both are over the winningScore?
-    }
+    // public Team getWinner() {
+    //     for (Team team : teams) {
+    //         if (team.getScore() >= winningScore) {
+    //             return team;
+    //         }
+    //     }
+    //     return null;
+    //     // TODO: what happens if both are over the winningScore?
+    // }
 
 }
