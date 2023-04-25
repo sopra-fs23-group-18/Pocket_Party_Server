@@ -34,7 +34,10 @@ public class SocketHandler extends TextWebSocketHandler {
         switch (signal.getType()) {
             case JOIN:
                 log.debug("Got join signal: %s", signal);
-                sessionMap.put(signal.getSenderId(), session);
+                if(sessionMap.get(signal.getSenderId()) == null){
+                    sessionMap.put(signal.getSenderId(), session);
+                }
+                
                 break;
             case OFFER:
                 sendTo = sessionMap.get(signal.getRecipentId());
@@ -83,7 +86,7 @@ public class SocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
         // remove session from sessionMap
         for (String key : sessionMap.keySet()) {
-            if (sessionMap.get(key).equals(session)) {
+            if (sessionMap.get(key).getId() == session.getId()) {
                 sessionMap.remove(key);
                 break;
             }
