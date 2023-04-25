@@ -36,16 +36,18 @@ public class LobbyManagement {
 
     @Autowired
     private final LobbyRepository lobbyRepository;
-
+    @Autowired
     private final MinigameService minigameService;
+    @Autowired
     private final TeamService teamService;
+    @Autowired
     private final PlayerService playerService;
 
 
 
     private Random randomizer = new Random();
     
-
+  
     public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, MinigameService minigameService, TeamService teamService, PlayerService playerService) {
         this.lobbyRepository = lobbyRepository;
         this.minigameService = minigameService;
@@ -54,6 +56,9 @@ public class LobbyManagement {
       }   
 
     public Lobby createLobby(Lobby newLobby) {
+        if (newLobby.getWinningScore() < 0 || newLobby.getWinningScore() > 100000){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lobby could not be created because the winningScore was invalid!");
+        }
         int inviteCode = new Random().nextInt(900000) + 100000;
         while (lobbyRepository.findByInviteCode(inviteCode) != null){
           inviteCode = new Random().nextInt(900000) + 100000;
@@ -135,7 +140,7 @@ public class LobbyManagement {
       public void addUpcommingMinigame(Long lobbyId){
         MinigameType type = getNextMinigameType(lobbyId);
         if (type == null){
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcoming Minigame!");
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
         }
 
         // wip
