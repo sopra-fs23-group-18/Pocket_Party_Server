@@ -20,7 +20,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 
 @Entity
 @Table(name = "TEAM")
-public class Team implements Serializable{
+public class Team implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -37,8 +37,7 @@ public class Team implements Serializable{
     @JoinColumn(name = "lobbyId")
     private Lobby lobby;
 
-
-    private TeamType color; 
+    private TeamType color;
 
     @Column(nullable = false)
     private String name;
@@ -55,7 +54,7 @@ public class Team implements Serializable{
     }
 
     // public void addPlayer(Player player) {
-    //     this.players.add(player);
+    // this.players.add(player);
     // }
 
     public String getName() {
@@ -69,14 +68,15 @@ public class Team implements Serializable{
     public Long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
-   
+
     public int getScore() {
         return score;
     }
-    
+
     public void setScore(int score) {
         this.score = score;
     }

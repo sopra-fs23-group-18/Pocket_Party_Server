@@ -22,7 +22,6 @@ import ch.uzh.ifi.hase.soprafs23.repository.TeamRepository;
 public class TeamService {
     private final Logger log = LoggerFactory.getLogger(TeamService.class);
 
-
     @Autowired
     private final TeamRepository teamRepository;
 
@@ -42,9 +41,10 @@ public class TeamService {
         return newTeam;
     }
 
-    public void addPlayer(Lobby lobby, TeamType teamColor, Player player){
-        if (lobby == null || teamColor == null || lobby == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
+    public void addPlayer(Lobby lobby, TeamType teamColor, Player player) {
+        if (lobby == null || teamColor == null || player == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+                    "The input was empty, please provide information!");
         }
         Team team = getByColorAndLobby(lobby, teamColor);
         List<Player> players = team.getPlayers();
@@ -53,37 +53,39 @@ public class TeamService {
         teamRepository.flush();
     }
 
-    public void removePlayer(Lobby lobby, TeamType teamColor, Player player){
-        if (player == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "The input was empty, please provide information!");
+    public void removePlayer(Lobby lobby, TeamType teamColor, Player player) {
+        if (player == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+                    "The input was empty, please provide information!");
         }
         Team team = getByColorAndLobby(lobby, teamColor);
         List<Player> players = team.getPlayers();
         players.remove(player);
         teamRepository.save(team);
         teamRepository.flush();
-        //does this work? or do we need to set id again
+        // does this work? or do we need to set id again
     }
-    
+
     public Team getTeam(Long teamId) {
-        Team team = teamRepository.findById(teamId).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The team with the given Id does not exist!"));
+        Team team = teamRepository.findById(teamId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The team with the given Id does not exist!"));
         return team;
     }
-    public void updateScore(Lobby lobby, TeamType color, int score){
+
+    public void updateScore(Lobby lobby, TeamType color, int score) {
         Team team = getByColorAndLobby(lobby, color);
         team.setScore(team.getScore() + score);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
-    public Team getByColorAndLobby(Lobby lobby, TeamType color){
+    public Team getByColorAndLobby(Lobby lobby, TeamType color) {
         List<Team> teams = teamRepository.findByLobby(lobby);
-        if (teams == null){
+        if (teams == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No team with such a lobby exists!");
         }
         for (Team team : teams) {
-            if(team.getColor().ordinal() == color.ordinal()){
+            if (team.getColor().ordinal() == color.ordinal()) {
                 return team;
             }
         }
