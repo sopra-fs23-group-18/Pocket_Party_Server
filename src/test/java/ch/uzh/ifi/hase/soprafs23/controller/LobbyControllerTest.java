@@ -38,6 +38,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
@@ -291,6 +292,148 @@ public class LobbyControllerTest {
         mockMvc.perform(getRequest).andExpect(status().isNotFound());
             
     }
+
+    
+    @Test
+    public void startGame_lessThan2Players_lobbyNotUpdated() throws Exception {
+        
+        willThrow(new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED)).given(lobbyManager).ableToStart(Mockito.anyLong());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isMethodNotAllowed());
+            
+    }
+
+    @Test
+    public void startGame_playersLeftInUnassignedPlayers_lobbyNotUpdated() throws Exception {
+        
+        Player player1 = new Player();
+        player1.setId(4L);
+        player1.setNickname("Test Nickname");
+
+        Player player2 = new Player();
+        player2.setId(5L);
+        player2.setNickname("Test2 Nickname");
+
+        lobby.getUnassignedPlayers().add(player1);
+        lobby.getUnassignedPlayers().add(player2);
+
+        willThrow(new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED)).given(lobbyManager).ableToStart(Mockito.anyLong());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isMethodNotAllowed());
+            
+    }
+
+    @Test
+    public void startGame_lobbyNotFound_lobbyNotUpdated() throws Exception {
+        
+        willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).given(lobbyManager).ableToStart(Mockito.anyLong());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/100")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isNotFound());
+            
+    }
+
+    @Test
+    public void startGame_valid_lobbyUpdated() throws Exception {
+        Minigame minigame = new Minigame();
+
+        //given
+        minigame.setId(8L);
+        minigame.setType(MinigameType.TAPPING_GAME);
+        minigame.setDescription("Tap the screen as fast as you can!");
+        minigame.setScoreToGain(500);
+
+        //get's randomly selected
+        Player player1 = new Player();
+        player1.setId(4L);
+        player1.setNickname("Test Nickname");
+
+        Player player2 = new Player();
+        player2.setId(5L);
+        player2.setNickname("Test2 Nickname");
+
+        lobby.getTeams().get(0).getPlayers().add(player1);
+        lobby.getTeams().get(1).getPlayers().add(player2);
+
+        minigame.setTeam1Player(player1);
+        minigame.setTeam2Player(player2);
+
+        lobby.setUpcomingMinigame(minigame);
+
+
+        doNothing().when(lobbyManager).ableToStart(Mockito.anyLong());
+        doNothing().when(lobbyManager).addUpcommingMinigame(Mockito.anyLong());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isNoContent());
+            
+    }
+
+    @Test
+    public void updateScores_lobbyNotFound_lobbyNotUpdated() throws Exception {
+        
+        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        winnerTeamPutDTO.setColor(TeamType.RED);
+        winnerTeamPutDTO.setName("Team Red");
+        winnerTeamPutDTO.setScore(300);
+
+        willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).given(lobbyManager).finishedMinigameUpdate((Mockito.anyLong()), Mockito.any());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/100/minigame")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(winnerTeamPutDTO));
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isNotFound());
+            
+            
+    }
+
+    @Test
+    public void updateScores_MinigameNotFound_lobbyNotUpdated() throws Exception {
+        
+        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        winnerTeamPutDTO.setColor(TeamType.RED);
+        winnerTeamPutDTO.setName("Team Red");
+        winnerTeamPutDTO.setScore(300);
+        
+        willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).given(lobbyManager).finishedMinigameUpdate((Mockito.anyLong()), Mockito.any());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1/minigame")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(winnerTeamPutDTO));
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isNotFound());
+            
+    }
+
 
 
 
