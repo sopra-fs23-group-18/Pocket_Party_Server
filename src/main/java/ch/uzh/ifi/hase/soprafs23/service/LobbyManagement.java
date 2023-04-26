@@ -151,6 +151,9 @@ public class LobbyManagement {
 
     // update minigame
     Minigame playedMinigame = lobby.getUpcomingMinigame();
+    if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
+    }
     minigameService.updateMinigame(playedMinigame.getId(), winnerTeamInput.getName());
     lobby.addToMinigamesPlayed(playedMinigame);
 

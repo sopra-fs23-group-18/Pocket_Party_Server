@@ -436,6 +436,26 @@ public class LobbyControllerTest {
     }
 
     @Test
+    public void updateScores_invalidScore_lobbyNotUpdated() throws Exception {
+        
+        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        winnerTeamPutDTO.setColor(TeamType.RED);
+        winnerTeamPutDTO.setName("Team Red");
+        winnerTeamPutDTO.setScore(-200);
+        
+        willThrow(new ResponseStatusException(HttpStatus.FORBIDDEN)).given(lobbyManager).finishedMinigameUpdate((Mockito.anyLong()), Mockito.any());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1/minigame")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(winnerTeamPutDTO));
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isForbidden());    
+    }
+
+    @Test
     public void updateScores_PlayerNotFound_lobbyNotUpdated() throws Exception {
         
         Minigame minigame = new Minigame();
