@@ -165,12 +165,14 @@ public class LobbyManagement {
     teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
 
     List<Team> teams = lobby.getTeams();
-    for (Team t : teams) {
-      if (t.getColor().ordinal() != winnerTeamInput.getColor().ordinal()) {
-        int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-        teamService.updateScore(lobby, t.getColor(), score);
-      }
+    if(teams.get(0).getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
+      int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+      teamService.updateScore(lobby, teams.get(0).getColor(), score);
+    }else{
+      int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+      teamService.updateScore(lobby, teams.get(1).getColor(), score);
     }
+   
   }
 
   private Team getLeadingTeam(Long lobbyId) {
