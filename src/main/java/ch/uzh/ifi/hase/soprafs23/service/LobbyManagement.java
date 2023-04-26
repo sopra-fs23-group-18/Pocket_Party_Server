@@ -195,13 +195,12 @@ public class LobbyManagement {
         return team;
       }
 
-      public Lobby isFinished(Long lobbyId){
+      public void isFinished(Long lobbyId){
         Team team = getLeadingTeam(lobbyId);
         Lobby lobby = getLobby(lobbyId);
         if (team.getScore() >= lobby.getWinningScore()){
               lobby.setIsFinished(true);
         }
-        return lobby;
       }
 
       public Team getWinner(Long lobbyId){

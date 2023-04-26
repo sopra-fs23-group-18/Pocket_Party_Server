@@ -83,11 +83,13 @@ public class LobbyControllerTest {
 
         List<Team> teams = new ArrayList<Team>();
         Team team1 = new Team();
+        team1.setId(2L);
         team1.setLobby(lobby);
         team1.setColor(TeamType.RED);
         team1.setName("Team Red");
 
         Team team2 = new Team();
+        team2.setId(3L);
         team2.setLobby(lobby);
         team2.setColor(TeamType.BLUE);
         team2.setName("Team Blue");
@@ -118,7 +120,7 @@ public class LobbyControllerTest {
             .andExpect(jsonPath("$.winningScore", is(lobby.getWinningScore())))
             .andExpect(jsonPath("$.teams[*].color", contains(lobby.getTeams().get(0).getColor().toString(), lobby.getTeams().get(1).getColor().toString())))
             .andExpect(jsonPath("$.teams[*].name", contains(lobby.getTeams().get(0).getName(), lobby.getTeams().get(1).getName())))
-            .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId(), lobby.getTeams().get(1).getId())))
+            .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId().intValue(), lobby.getTeams().get(1).getId().intValue())))
             .andExpect(jsonPath("$.teams[*].score", contains(lobby.getTeams().get(0).getScore(), lobby.getTeams().get(1).getScore())))
             .andExpect(jsonPath("$.teams[*].players[*]", hasSize(0)))
             .andExpect(jsonPath("$.unassignedPlayers", hasSize(0)));
@@ -158,7 +160,7 @@ public class LobbyControllerTest {
             .andExpect(jsonPath("$.winningScore", is(lobby.getWinningScore())))
             .andExpect(jsonPath("$.teams[*].color", contains(lobby.getTeams().get(0).getColor().toString(), lobby.getTeams().get(1).getColor().toString())))
             .andExpect(jsonPath("$.teams[*].name", contains(lobby.getTeams().get(0).getName(), lobby.getTeams().get(1).getName())))
-            .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId(), lobby.getTeams().get(1).getId())))
+            .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId().intValue(), lobby.getTeams().get(1).getId().intValue())))
             .andExpect(jsonPath("$.teams[*].score", contains(lobby.getTeams().get(0).getScore(), lobby.getTeams().get(1).getScore())))
             .andExpect(jsonPath("$.teams[*].players[*]", hasSize(0)))
             .andExpect(jsonPath("$.unassignedPlayers", hasSize(0)));
@@ -430,9 +432,296 @@ public class LobbyControllerTest {
 
         // then
         mockMvc.perform(putRequest)
-            .andExpect(status().isNotFound());
-            
+            .andExpect(status().isNotFound());    
     }
+
+    @Test
+    public void updateScores_PlayerNotFound_lobbyNotUpdated() throws Exception {
+        
+        Minigame minigame = new Minigame();
+
+        //given
+        minigame.setId(8L);
+        minigame.setType(MinigameType.TAPPING_GAME);
+        minigame.setDescription("Tap the screen as fast as you can!");
+        minigame.setScoreToGain(500);
+
+        Player player1 = new Player();
+        player1.setId(4L);
+        player1.setNickname("Test Nickname");
+
+        Player player2 = new Player();
+        player2.setId(5L);
+        player2.setNickname("Test2 Nickname");
+
+        lobby.getTeams().get(0).getPlayers().add(player1);
+        lobby.getTeams().get(1).getPlayers().add(player2);
+
+        lobby.setUpcomingMinigame(minigame);
+
+
+        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        winnerTeamPutDTO.setColor(TeamType.RED);
+        winnerTeamPutDTO.setName("Team Red");
+        winnerTeamPutDTO.setScore(300);
+        
+        willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).given(lobbyManager).finishedMinigameUpdate((Mockito.anyLong()), Mockito.any());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1/minigame")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(winnerTeamPutDTO));
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isNotFound());   
+             
+    }
+
+    @Test
+    public void updateScores_TeamNotFound_lobbyNotUpdated() throws Exception {
+        
+        Minigame minigame = new Minigame();
+
+        //given
+        minigame.setId(8L);
+        minigame.setType(MinigameType.TAPPING_GAME);
+        minigame.setDescription("Tap the screen as fast as you can!");
+        minigame.setScoreToGain(500);
+
+        Player player1 = new Player();
+        player1.setId(4L);
+        player1.setNickname("Test Nickname");
+
+        Player player2 = new Player();
+        player2.setId(5L);
+        player2.setNickname("Test2 Nickname");
+
+        minigame.setTeam1Player(player1);
+        minigame.setTeam2Player(player2);
+
+        lobby.setUpcomingMinigame(minigame);
+
+
+        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        winnerTeamPutDTO.setColor(TeamType.RED);
+        winnerTeamPutDTO.setName("Team Red");
+        winnerTeamPutDTO.setScore(300);
+        
+        willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).given(lobbyManager).finishedMinigameUpdate((Mockito.anyLong()), Mockito.any());
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1/minigame")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(winnerTeamPutDTO));
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isNotFound());   
+             
+    }
+
+    @Test
+    public void updateScores_valid_lobbyUpdated() throws Exception {
+        
+        Minigame minigame = new Minigame();
+
+        //given
+        minigame.setId(8L);
+        minigame.setType(MinigameType.TAPPING_GAME);
+        minigame.setDescription("Tap the screen as fast as you can!");
+        minigame.setScoreToGain(500);
+
+        Player player1 = new Player();
+        player1.setId(4L);
+        player1.setNickname("Test Nickname");
+
+        Player player2 = new Player();
+        player2.setId(5L);
+        player2.setNickname("Test2 Nickname");
+
+        lobby.getTeams().get(0).getPlayers().add(player1);
+        lobby.getTeams().get(1).getPlayers().add(player2);
+
+        minigame.setTeam1Player(player1);
+        minigame.setTeam2Player(player2);
+
+        lobby.setUpcomingMinigame(minigame);
+
+        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        winnerTeamPutDTO.setColor(TeamType.RED);
+        winnerTeamPutDTO.setName("Team Red");
+        winnerTeamPutDTO.setScore(300);
+        
+        doNothing().when(lobbyManager).finishedMinigameUpdate(Mockito.anyLong(), Mockito.any());
+        doNothing().when(lobbyManager).addUpcommingMinigame(Mockito.anyLong());
+        doNothing().when(lobbyManager).isFinished(Mockito.anyLong());
+
+
+        // when
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/1/minigame")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJsonString(winnerTeamPutDTO));
+
+        // then
+        mockMvc.perform(putRequest)
+            .andExpect(status().isNoContent());   
+             
+    }
+
+    @Test
+    public void givenScores_whenGetScores_validLobby_thenReturnScores_() throws Exception {
+        
+        lobby.getTeams().get(0).setScore(300);
+        lobby.getTeams().get(0).setScore(200);
+
+        given(lobbyManager.getLobby(Mockito.anyLong())).willReturn(lobby);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/1/scores")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.winningScore", is(lobby.getWinningScore())))
+            .andExpect(jsonPath("$.teams[*].color", contains(lobby.getTeams().get(0).getColor().toString(), lobby.getTeams().get(1).getColor().toString())))
+            .andExpect(jsonPath("$.teams[*].name", contains(lobby.getTeams().get(0).getName(), lobby.getTeams().get(1).getName())))
+            .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId().intValue(), lobby.getTeams().get(1).getId().intValue())))
+            .andExpect(jsonPath("$.teams[*].score", contains(lobby.getTeams().get(0).getScore(), lobby.getTeams().get(1).getScore())));     
+    }
+
+    @Test
+    public void givenScores_whenGetScores_invalidLobby_thenThrowException_() throws Exception {
+        
+        lobby.getTeams().get(0).setScore(300);
+        lobby.getTeams().get(1).setScore(200);
+
+        given(lobbyManager.getLobby(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/100/scores")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+            .andExpect(status().isNotFound());
+    }
+    
+    @Test
+    public void givenLobby_whenGetIsFinished_validLobby_thenReturnIsFinished_() throws Exception {
+
+        given(lobbyManager.getLobby(Mockito.anyLong())).willReturn(lobby);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/1/gameover")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.isFinished", is(lobby.getIsFinished())));
+    }
+
+    @Test
+    public void givenLobby_whenGetIsFinished_invalidLobby_thenThrowException_() throws Exception {
+        
+        given(lobbyManager.getLobby(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/100/gameover")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void givenLobby_whenGetWinner_validLobby_thenReturnWinner_() throws Exception {
+
+        Player player1 = new Player();
+        player1.setId(4L);
+        player1.setNickname("Test Nickname");
+
+        Player player2 = new Player();
+        player2.setId(5L);
+        player2.setNickname("Test2 Nickname");
+
+        lobby.getTeams().get(0).getPlayers().add(player1);
+        lobby.getTeams().get(1).getPlayers().add(player2);
+
+        Team teamRed = lobby.getTeams().get(0);
+        teamRed.setScore(400);
+        Team teamBlue = lobby.getTeams().get(1);
+        teamBlue.setScore(600);
+
+
+        given(lobbyManager.getWinner(Mockito.anyLong())).willReturn(teamBlue);
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/1/winner")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(teamBlue.getId().intValue())))
+            .andExpect(jsonPath("$.score", is(teamBlue.getScore())))
+            .andExpect(jsonPath("$.name", is(teamBlue.getName())))
+            .andExpect(jsonPath("$.color", is(teamBlue.getColor().toString())));
+
+    }
+
+    @Test
+    public void givenLobby_whenGetWinner_invalidLobby_thenThrowException_() throws Exception {
+        
+        given(lobbyManager.getWinner(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/100/winner")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void givenLobby_whenGetWinner_noWinner_thenThrowException_() throws Exception {
+        
+        Player player1 = new Player();
+        player1.setId(4L);
+        player1.setNickname("Test Nickname");
+
+        Player player2 = new Player();
+        player2.setId(5L);
+        player2.setNickname("Test2 Nickname");
+
+        lobby.getTeams().get(0).getPlayers().add(player1);
+        lobby.getTeams().get(1).getPlayers().add(player2);
+
+        Team teamRed = lobby.getTeams().get(0);
+        teamRed.setScore(400);
+        Team teamBlue = lobby.getTeams().get(1);
+        teamBlue.setScore(400);
+
+        given(lobbyManager.getWinner(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+
+        // when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/1/winner")
+            .contentType(MediaType.APPLICATION_JSON);
+
+        // then
+        mockMvc.perform(getRequest)
+            .andExpect(status().isNotFound());
+    }
+
+
 
 
 
