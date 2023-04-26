@@ -46,8 +46,6 @@ public class Lobby implements Serializable {
     @Column(nullable = false)
     private boolean isFinished = false;
 
-    // TODO: define Mapping of entities
-
     @OneToOne(cascade = CascadeType.ALL)
     private Minigame upcomingMinigame;
 
@@ -159,37 +157,5 @@ public class Lobby implements Serializable {
             }
         }
     }
-
-
-
-
-    // move these methods into service at a later point
-
-    // public void updateScore(Long teamId, int score) {
-    //     for (Team team : teams) {
-    //         if (team.getId() == teamId) {
-    //             team.setScore(team.getScore() + score);
-    //         }
-    //     }
-    // }
-
-    // public boolean isGameOver() {
-    //     for (Team team : teams) {
-    //         if (team.getScore() >= winningScore) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    // public Team getWinner() {
-    //     for (Team team : teams) {
-    //         if (team.getScore() >= winningScore) {
-    //             return team;
-    //         }
-    //     }
-    //     return null;
-    //     // TODO: what happens if both are over the winningScore?
-    // }
 
 }

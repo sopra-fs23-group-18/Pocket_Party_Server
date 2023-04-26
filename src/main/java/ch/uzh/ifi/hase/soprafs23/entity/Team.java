@@ -54,10 +54,6 @@ public class Team implements Serializable {
         return players;
     }
 
-    // public void addPlayer(Player player) {
-    // this.players.add(player);
-    // }
-
     public String getName() {
         return name;
     }

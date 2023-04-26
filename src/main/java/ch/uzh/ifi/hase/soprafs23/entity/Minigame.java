@@ -43,9 +43,6 @@ public class Minigame implements Serializable{
     @OneToOne(cascade = CascadeType.ALL)
     private Player team2Player;
 
-    // @Column(nullable = false)
-    // protected String name;
-
     @Column(nullable = false)
     protected String description;
 

@@ -45,10 +45,6 @@ public class Player implements Serializable{
     public Player() {
     }
 
-    // public Player(String nickname) {
-    //     this.nickname = nickname;
-    // }
-
     public Long getId() {
         return id;
     }
@@ -64,14 +60,6 @@ public class Player implements Serializable{
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-
-    // public String getAvatar() {
-    //     return avatar;
-    // }
-
-    // public void setAvatar(String avatar) {
-    //     this.avatar = avatar;
-    // }
 
     @Override
     public boolean equals(Object obj){
@@ -95,7 +83,6 @@ public class Player implements Serializable{
     @Override
     public int hashCode(){
         return Long.hashCode(id);
-        //don't know if this actually works
     }
 
     

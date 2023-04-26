@@ -189,17 +189,7 @@ public class LobbyController {
 
     
 
-    // TODO when adding settings menu: POST method to create the list of chosen
-    // minigames (currently also handled in POST lobby)
-
-    // belongs to PUT endpoint of team creation
-
-    // Team team1 = teamService.createTeam(new Team());
-    // Team team2 = teamService.createTeam(new Team());
-    // team1.addPlayer(playerService.createPLayer(new Player("bob")));
-    // team2.addPlayer(playerService.createPLayer(new Player("alice")));
-    // List<Team> teams = Arrays.asList(team1, team2);
-    // lobbyInput.setTeams(teams);
+    //WebsocketController
 
     @MessageMapping("/lobbies/{inviteCode}")
     @SendToUser("/queue/join")

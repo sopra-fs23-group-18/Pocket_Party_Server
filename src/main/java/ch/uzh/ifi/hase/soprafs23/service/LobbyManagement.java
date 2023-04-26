@@ -85,9 +85,6 @@ public class LobbyManagement {
     return newLobby;
 
     // log.debug("Created Information for User: {}", createdLobby);
-
-    // //ResponseStatusException missing -> TODO: add
-
     // return createdLobby;
   }
 
@@ -135,7 +132,6 @@ public class LobbyManagement {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
     }
 
-    // wip
     // random player choice
 
     Lobby lobby = getLobby(lobbyId);
