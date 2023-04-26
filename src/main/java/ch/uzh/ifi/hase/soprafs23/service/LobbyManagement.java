@@ -49,16 +49,15 @@ public class LobbyManagement {
     this.playerService = playerService;
   }
 
-  public Lobby createLobby(Lobby newLobby) {
-    if (newLobby.getWinningScore() < 0 || newLobby.getWinningScore() > 100000) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          "Lobby could not be created because the winningScore was invalid!");
-    }
-    int inviteCode = new Random().nextInt(900000) + 100000;
-    while (lobbyRepository.findByInviteCode(inviteCode) != null) {
-      inviteCode = new Random().nextInt(900000) + 100000;
-    }
-    newLobby.setInviteCode(inviteCode);
+    public Lobby createLobby(Lobby newLobby) {
+        if (newLobby.getWinningScore() < 0 || newLobby.getWinningScore() > 100000){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lobby could not be created because the winningScore was invalid!");
+        }
+        int inviteCode = randomizer.nextInt(900000) + 100000;
+        while (lobbyRepository.findByInviteCode(inviteCode) != null){
+          inviteCode = randomizer.nextInt(900000) + 100000;
+        }
+        newLobby.setInviteCode(inviteCode);
 
     List<MinigameType> minigames = minigameService.chosenMinigames();
     newLobby.setMinigamesChoice(minigames);
