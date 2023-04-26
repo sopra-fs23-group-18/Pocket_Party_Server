@@ -108,7 +108,14 @@ Upcoming:
 ## Stefan Schuler
 
 ## Naseem Hassan
-
+- add a picture of the minigame which is played next [#16](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/16):
+  - Depending on the next Minigame a coresponding preview picture is shown in the GamePreview
+  - The pictures are all pong at this point (because we don't have the others yet)
+  - Right now pictures are only shown when running the application local. When deployed the pictures did not show up (still need to fix that).
+- Implement score overview screen for overall score [#14](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/14):
+  - After the winner for a minigame is announced the TeamScoreOverview page is shown
+  - Added a simple animation (bars growing depending on the number of points won)
+- Also did some general cleaning up and styling in the whole frontend
 ## Sven Ringger
 
 ## Guojun Wu
