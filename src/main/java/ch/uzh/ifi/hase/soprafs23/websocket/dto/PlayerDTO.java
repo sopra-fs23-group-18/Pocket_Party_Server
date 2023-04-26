@@ -4,7 +4,16 @@ public class PlayerDTO {
     private String nickname;
     private long id;
     private String avatar;
+    private long lobbyId;
     
+    public long getLobbyId() {
+        return lobbyId;
+    }
+
+    public void setLobbyId(long lobbyId) {
+        this.lobbyId = lobbyId;
+    }
+
     public String getAvatar() {
         return avatar;
     }

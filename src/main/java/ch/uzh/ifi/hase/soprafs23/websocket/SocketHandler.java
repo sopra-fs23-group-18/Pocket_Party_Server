@@ -25,7 +25,7 @@ public class SocketHandler extends TextWebSocketHandler {
     private final Logger log = LoggerFactory.getLogger(SocketHandler.class);
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message)
+    public synchronized void handleTextMessage(WebSocketSession session, TextMessage message)
             throws InterruptedException, IOException {
 
         final String payload = message.getPayload();
@@ -42,7 +42,7 @@ public class SocketHandler extends TextWebSocketHandler {
             case OFFER:
                 sendTo = sessionMap.get(signal.getRecipentId());
                 log.debug("Got offer signal: %s", signal);
-                if (sendTo == null) {
+                if (sendTo == null || !sendTo.isOpen()) {
                     return;
                 }
                 sendTo.sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
@@ -50,14 +50,14 @@ public class SocketHandler extends TextWebSocketHandler {
             case ANSWER:
                 sendTo = sessionMap.get(signal.getRecipentId());
                 log.debug("Got answer signal: %s", signal);
-                if (sendTo == null) {
+                if (sendTo == null || !sendTo.isOpen()) {
                     return;
                 }
                 sendTo.sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
                 break;
             case ICE:
                 sendTo = sessionMap.get(signal.getRecipentId());
-                if (sendTo == null) {
+                if (sendTo == null || !sendTo.isOpen()) {
                     return;
                 }
                 sendTo.sendMessage(new TextMessage(mapper.writeValueAsString(signal)));
@@ -86,7 +86,7 @@ public class SocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
         // remove session from sessionMap
         for (String key : sessionMap.keySet()) {
-            if (sessionMap.get(key).getId() == session.getId()) {
+            if (sessionMap.get(key).getId().equals(session.getId())) {
                 sessionMap.remove(key);
                 break;
             }

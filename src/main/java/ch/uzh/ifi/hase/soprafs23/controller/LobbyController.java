@@ -213,11 +213,13 @@ public class LobbyController {
         lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
         PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
         createdPlayerDTO.setAvatar(player.getAvatar());
+        
         // Get the session ID of the user who sent the message
         // String sessionId = headerAccessor.getSessionId();
         // log.warn("Session Id: {}", sessionId);
         // // Send a message to the user's queue
         messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", joinedLobby.getId()), createdPlayerDTO);
+        createdPlayerDTO.setLobbyId(joinedLobby.getId());
         return createdPlayerDTO;
 
     }
