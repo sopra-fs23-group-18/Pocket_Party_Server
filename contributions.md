@@ -106,6 +106,15 @@ Upcoming:
 ## Nils Grob
 
 ## Stefan Schuler
+- added tests for LobbyController (committed in corresponding issue ([#21](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/21)) or in new issue [#90](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/90))
+    - also smaller changes in older issues, like changing how the Player is stored in the Minigame instance (now Player) [#32](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/32), [#76](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/76)
+- minor change to random player picker (finished now) [#80](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/80)
+- added PUT endpoint + DTO for updating the lobby [#71](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/71)
+- added GET endpoint + DTO for overall scores of teams [#70](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/70)
+- added service methods for updating scores, updating minigame, updating player, update isFinished [#83](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/83)
+- added 2 GET request for determining if a winner exists and getting that winner [#69](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/69)
+- added methods to check if a team has won [#79](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/79)
+- some minor things that have no issue attached like adding error handling, changing some details in dto's and descriptions in controller
 
 ## Naseem Hassan
 - add a picture of the minigame which is played next [#16](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/16):
