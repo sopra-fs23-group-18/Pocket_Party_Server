@@ -101,3 +101,18 @@ Upcoming:
 - Detect tap on smartphone(mobile) [#6](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/6)
 - Design an in game screen (mobile) [#5](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/5)
 
+# 20.04 - 26.04
+
+## Nils Grob
+
+## Stefan Schuler
+
+## Naseem Hassan
+
+## Sven Ringger
+
+## Guojun Wu
+- Send each tap to the web app(mobile) [#4](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/4)
+- Create tap counter on web app & update on received tap(web) [#27](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/27)
+- Show 20second countdown after which the game ends(web) [#30](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/30)
+- Test for service, reposiroty, and rest mapper
