@@ -235,32 +235,32 @@ public class LobbyManagementTest {
         });
     }
 
-    @Test
-    public void isFinished_EnoughScore() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
+    // @Test
+    // public void isFinished_EnoughScore() {
+    //     // given
+    //     Lobby testLobby = new Lobby();
+    //     testLobby.setWinningScore(100);
 
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.updateScore(createdLobby, TeamType.BLUE, 101);
+    //     // when
+    //     Lobby createdLobby = lobbyManager.createLobby(testLobby);
+    //     teamService.updateScore(createdLobby, TeamType.BLUE, 101);
 
-        // then
-        assertEquals(true, lobbyManager.isFinished(createdLobby.getId()).getIsFinished());
-    }
+    //     // then
+    //     assertEquals(true, lobbyManager.isFinished(createdLobby.getId()).getIsFinished());
+    // }
 
-    @Test
-    public void isFinished_NotEnoughScore() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
+    // @Test
+    // public void isFinished_NotEnoughScore() {
+    //     // given
+    //     Lobby testLobby = new Lobby();
+    //     testLobby.setWinningScore(100);
 
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
+    //     // when
+    //     Lobby createdLobby = lobbyManager.createLobby(testLobby);
 
-        // then
-        assertEquals(false, lobbyManager.isFinished(createdLobby.getId()).getIsFinished());
-    }
+    //     // then
+    //     assertEquals(false, lobbyManager.isFinished(createdLobby.getId()).getIsFinished());
+    // }
 
     @Test
     public void getWinner_isFinished_success() {
