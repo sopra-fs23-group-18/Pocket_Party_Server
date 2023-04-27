@@ -172,6 +172,8 @@ public class LobbyManagement {
       int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
       teamService.updateScore(lobby, teams.get(1).getColor(), score);
     }
+    lobbyRepository.save(lobby);
+    lobbyRepository.flush();
    
   }
 
