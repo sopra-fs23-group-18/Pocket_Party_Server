@@ -104,6 +104,11 @@ Upcoming:
 # 20.04 - 26.04
 
 ## Nils Grob
+- Refactored WebRTC stuff (currently not working as intended)
+- Changed the input reading from using WebRTC to STOMP websockets.
+- Finished Timing Game
+- Made Github Action to build an android apk on release
+- Handled mobile app navigation [#16](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/16)
 
 ## Stefan Schuler
 - added tests for LobbyController (committed in corresponding issue ([#21](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/21)) or in new issue [#90](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/90))
