@@ -36,6 +36,13 @@ public class LobbyManagementTest {
     @Autowired
     private TeamService teamService;
 
+    @BeforeEach
+    public void setup() {
+        lobbyRepository.deleteAll();
+        teamRepository.deleteAll();
+        lobbyRepository.deleteAll();
+    }
+
     @Test
     public void createLobby_validWinningScore_success() {
         // given
