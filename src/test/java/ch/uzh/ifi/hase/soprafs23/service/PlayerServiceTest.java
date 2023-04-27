@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import org.junit.jupiter.api.Test;
@@ -15,17 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-
 @WebAppConfiguration
 @SpringBootTest
 public class PlayerServiceTest {
 
     @Autowired
     private PlayerService playerService;
-
-    @Autowired
-    private PlayerRepository playerRepository;
 
     @Test
     public void createPlayer_success() {
