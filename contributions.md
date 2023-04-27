@@ -131,7 +131,14 @@ Upcoming:
   - Added a simple animation (bars growing depending on the number of points won)
 - Also did some general cleaning up and styling in the whole frontend
 ## Sven Ringger
-
+- Implement HotPotato Game #40
+- Add Routing (loop so that game runs indefinitely until WinningScore is reached)
+- Game logic API calls
+- A lot of fixes not related to any issues
+- Implement redirect to WinnerScreen #17
+- Complete show winner on host device #13
+- Implement show Gamewinning screen #9
+- Implement TeamScoreOverview screen for current game #13 
 ## Guojun Wu
 - Send each tap to the web app(mobile) [#4](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/4)
 - Create tap counter on web app & update on received tap(web) [#27](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/27)
