@@ -40,7 +40,6 @@ public class LobbyManagementTest {
     public void setup() {
         lobbyRepository.deleteAll();
         teamRepository.deleteAll();
-        lobbyRepository.deleteAll();
     }
 
     @Test
