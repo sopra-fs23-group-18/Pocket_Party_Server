@@ -148,14 +148,14 @@ public class Lobby implements Serializable {
     }
 
     // Player names in each lobby need to be unique (per lobby)
-    public void removeFromUnassignedPlayers(String playerName) {
-        Player removedPlayer;
-        for (Player player : unassignedPlayers) {
-            if (player.getNickname().equals(playerName)) {
-                removedPlayer = player;
-                unassignedPlayers.remove(removedPlayer);
-            }
-        }
-    }
+    // public void removeFromUnassignedPlayers(String playerName) {
+    // Player removedPlayer;
+    // for (Player player : unassignedPlayers) {
+    // if (player.getNickname().equals(playerName)) {
+    // removedPlayer = player;
+    // unassignedPlayers.remove(removedPlayer);
+    // }
+    // }
+    // }
 
 }
