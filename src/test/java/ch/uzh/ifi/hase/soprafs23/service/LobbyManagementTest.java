@@ -105,7 +105,7 @@ public class LobbyManagementTest {
     public void getLobby_invalidId_throwsException() {
         // when
         assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.getLobby(1L);
+            lobbyManager.getLobby(1000L);
         });
     }
 
@@ -164,7 +164,7 @@ public class LobbyManagementTest {
     public void getMinigame_invalidId_throwsException() {
         // when
         assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.getMinigame(1L);
+            lobbyManager.getMinigame(1000L);
         });
     }
 

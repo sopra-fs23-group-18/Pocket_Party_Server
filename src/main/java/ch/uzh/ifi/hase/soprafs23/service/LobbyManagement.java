@@ -151,6 +151,9 @@ public class LobbyManagement {
 
     // update minigame
     Minigame playedMinigame = lobby.getUpcomingMinigame();
+    if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
+    }
     minigameService.updateMinigame(playedMinigame.getId(), winnerTeamInput.getName());
     lobby.addToMinigamesPlayed(playedMinigame);
 
@@ -162,12 +165,16 @@ public class LobbyManagement {
     teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
 
     List<Team> teams = lobby.getTeams();
-    for (Team t : teams) {
-      if (t.getColor().ordinal() != winnerTeamInput.getColor().ordinal()) {
-        int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-        teamService.updateScore(lobby, t.getColor(), score);
-      }
+    if(teams.get(0).getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
+      int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+      teamService.updateScore(lobby, teams.get(0).getColor(), score);
+    }else{
+      int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+      teamService.updateScore(lobby, teams.get(1).getColor(), score);
     }
+    lobbyRepository.save(lobby);
+    lobbyRepository.flush();
+   
   }
 
   private Team getLeadingTeam(Long lobbyId) {
