@@ -67,18 +67,26 @@ public class PlayerServiceTest {
     @Test
     public void getMinigamePlayer_success() {
         // given
-        Player player = new Player();
-        player.setNickname("test");
+        Player player1 = new Player();
+        player1.setId(1L);
+        player1.setNickname("test1");
+        Player player2 = new Player();
+        player2.setId(2L);
+        player2.setNickname("test2");
+
+        List<String> nicknames = List.of(player1.getNickname(), player2.getNickname());
+        List<Long> ids = List.of(player1.getId(), player2.getId());
 
         Team team = new Team();
-        team.setPlayers(List.of(player));
+        team.setPlayers(List.of(player1, player2));
 
         // when
         Player chosenPlayer = playerService.getMinigamePlayer(team);
 
         // then
         assertNotNull(chosenPlayer);
-        assertEquals(player.getNickname(), chosenPlayer.getNickname());
+        assertEquals(true, ids.contains(chosenPlayer.getId()));
+        assertEquals(true, nicknames.contains(chosenPlayer.getNickname()));
     }
 
     @Test
