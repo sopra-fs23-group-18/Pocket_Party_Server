@@ -101,3 +101,55 @@ Upcoming:
 - Detect tap on smartphone(mobile) [#6](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/6)
 - Design an in game screen (mobile) [#5](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/5)
 
+# 20.04 - 26.04
+
+## Nils Grob
+- Refactored WebRTC stuff (currently not working as intended)
+- Changed the input reading from using WebRTC to STOMP websockets.
+- Finished Timing Game
+- Made Github Action to build an android apk on release
+- Handled mobile app navigation [#16](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/16)
+
+## Stefan Schuler
+- added tests for LobbyController (committed in corresponding issue ([#21](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/21)) or in new issue [#90](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/90))
+    - also smaller changes in older issues, like changing how the Player is stored in the Minigame instance (now Player) [#32](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/32), [#76](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/76)
+- minor change to random player picker (finished now) [#80](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/80)
+- added PUT endpoint + DTO for updating the lobby [#71](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/71)
+- added GET endpoint + DTO for overall scores of teams [#70](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/70)
+- added service methods for updating scores, updating minigame, updating player, update isFinished [#83](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/83)
+- added 2 GET request for determining if a winner exists and getting that winner [#69](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/69)
+- added methods to check if a team has won [#79](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/79)
+- some minor things that have no issue attached like adding error handling, changing some details in dto's and descriptions in controller
+
+## Naseem Hassan
+- add a picture of the minigame which is played next [#16](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/16):
+  - Depending on the next Minigame a coresponding preview picture is shown in the GamePreview
+  - The pictures are all pong at this point (because we don't have the others yet)
+  - Right now pictures are only shown when running the application local. When deployed the pictures did not show up (still need to fix that).
+- Implement score overview screen for overall score [#14](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/14):
+  - After the winner for a minigame is announced the TeamScoreOverview page is shown
+  - Added a simple animation (bars growing depending on the number of points won)
+- Also did some general cleaning up and styling in the whole frontend
+## Sven Ringger
+- Implement HotPotato Game #40
+- Add Routing (loop so that game runs indefinitely until WinningScore is reached)
+- Game logic API calls
+- A lot of fixes not related to any issues
+- Implement redirect to WinnerScreen #17
+- Complete show winner on host device #13
+- Implement show Gamewinning screen #9
+- Implement TeamScoreOverview screen for current game #13 
+## Guojun Wu
+- Send each tap to the web app(mobile) [#4](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/4)
+- Create tap counter on web app & update on received tap(web) [#27](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/27)
+- Show 20second countdown after which the game ends(web) [#30](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/30)
+- Test for service, reposiroty, and rest mapper
+
+# 27.04 - 04.05
+## Nils Grob
+## Stefan Schuler
+## Naseem Hassan
+## Guojun Wu
+## Sven Ringger
+- Implemented game logic for hot potato in web, still needs backend for me to continue [#62](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/62)
+- Unify web for better responsiveness [#64](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/64)

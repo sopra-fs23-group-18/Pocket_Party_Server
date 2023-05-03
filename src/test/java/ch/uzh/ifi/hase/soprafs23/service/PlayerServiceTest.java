@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import org.junit.jupiter.api.Test;
@@ -16,17 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-
 @WebAppConfiguration
 @SpringBootTest
 public class PlayerServiceTest {
 
     @Autowired
     private PlayerService playerService;
-
-    @Autowired
-    private PlayerRepository playerRepository;
 
     @Test
     public void createPlayer_success() {
@@ -68,18 +62,26 @@ public class PlayerServiceTest {
     @Test
     public void getMinigamePlayer_success() {
         // given
-        Player player = new Player();
-        player.setNickname("test");
+        Player player1 = new Player();
+        player1.setId(1L);
+        player1.setNickname("test1");
+        player1.setRoundsPlayed(10);
+        Player player2 = new Player();
+        player2.setId(2L);
+        player2.setNickname("test2");
+        player2.setRoundsPlayed(5);
 
         Team team = new Team();
-        team.setPlayers(List.of(player));
+        team.setPlayers(List.of(player1, player2));
 
         // when
+        // since player1 has played more rounds, player2 should be chosen
         List<Player> chosenPlayers = playerService.getMinigamePlayers(team, 1);
 
         // then
         assertNotNull(chosenPlayers);
-        assertEquals(player.getNickname(), chosenPlayers.get(0).getNickname());
+        assertEquals(player2.getId(), chosenPlayers.get(0).getId());
+        assertEquals(player2.getNickname(), chosenPlayers.get(0).getNickname());
     }
 
     @Test

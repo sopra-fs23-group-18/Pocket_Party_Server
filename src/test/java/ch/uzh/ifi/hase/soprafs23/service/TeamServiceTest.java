@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.repository.TeamRepository;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,9 +21,6 @@ public class TeamServiceTest {
 
     @Autowired
     private TeamService teamService;
-
-    @Autowired
-    private TeamRepository teamRepository;
 
     @Autowired
     private LobbyManagement lobbyManager;
@@ -128,8 +122,6 @@ public class TeamServiceTest {
         // given
         Lobby lobby = new Lobby();
         lobby.setWinningScore(100);
-        Lobby createdLobby = lobbyManager.createLobby(lobby);
-
         // when
         // then
         assertThrows(ResponseStatusException.class, () -> {
@@ -176,13 +168,11 @@ public class TeamServiceTest {
         // given
         Lobby lobby = new Lobby();
         lobby.setWinningScore(100);
-        Lobby createdLobby = lobbyManager.createLobby(lobby);
-
         // when
         // then
         assertThrows(ResponseStatusException.class, () -> {
             teamService.getByColorAndLobby(null, TeamType.BLUE);
-            
+
         });
     }
 

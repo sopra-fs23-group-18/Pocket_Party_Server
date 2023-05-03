@@ -29,17 +29,17 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-    public Team createTeam(TeamType color, Lobby lobby, String name) {
-        Team newTeam = new Team();
-        newTeam.setLobby(lobby);
-        newTeam.setColor(color);
-        newTeam.setName(name);
-        newTeam = teamRepository.save(newTeam);
-        teamRepository.flush();
+    // public Team createTeam(TeamType color, Lobby lobby, String name) {
+    // Team newTeam = new Team();
+    // newTeam.setLobby(lobby);
+    // newTeam.setColor(color);
+    // newTeam.setName(name);
+    // newTeam = teamRepository.save(newTeam);
+    // teamRepository.flush();
 
-        log.debug("Created Information for User: {}", newTeam);
-        return newTeam;
-    }
+    // log.debug("Created Information for User: {}", newTeam);
+    // return newTeam;
+    // }
 
     public void addPlayer(Lobby lobby, TeamType teamColor, Player player) {
         if (lobby == null || teamColor == null || player == null) {
