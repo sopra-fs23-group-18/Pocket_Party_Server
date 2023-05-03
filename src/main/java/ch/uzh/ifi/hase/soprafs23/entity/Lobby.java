@@ -4,13 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -18,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Internal Lobby representation
@@ -37,33 +32,40 @@ public class Lobby implements Serializable {
     @GeneratedValue
     private Long id;
 
+    // FOREIGN KEY TO GAME
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "gameId")
+    private Game game;
+
     @Column(nullable = false, unique = true)
     private int inviteCode;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Team> teams = new ArrayList<Team>();
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Player> unassignedPlayers = new ArrayList<Player>();
+
+
 
     @Column(nullable = false)
     private int winningScore;
 
-    @Column(nullable = false)
-    private boolean isFinished = false;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Minigame upcomingMinigame;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Team> teams = new ArrayList<Team>();
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "MinigameType", joinColumns = @JoinColumn(name = "id"))
-    @Enumerated(EnumType.STRING)
-    private List<MinigameType> minigamesChoice = new ArrayList<MinigameType>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Minigame> minigamesPlayed = new ArrayList<Minigame>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Player> unassignedPlayers = new ArrayList<Player>();
 
     // getters & setters
+
+
+    public int getWinningScore() {
+        return winningScore;
+    }
+
+    public void setWinningScore(int winningScore) {
+        this.winningScore = winningScore;
+    }
+
+
+
 
     public List<Player> getUnassignedPlayers() {
         return unassignedPlayers;
@@ -71,30 +73,6 @@ public class Lobby implements Serializable {
 
     public void setUnassignedPlayers(List<Player> unassignedPlayers) {
         this.unassignedPlayers = unassignedPlayers;
-    }
-
-    public Minigame getUpcomingMinigame() {
-        return upcomingMinigame;
-    }
-
-    public void setUpcomingMinigame(Minigame upcomingMinigame) {
-        this.upcomingMinigame = upcomingMinigame;
-    }
-
-    public List<MinigameType> getMinigamesChoice() {
-        return minigamesChoice;
-    }
-
-    public void setMinigamesChoice(List<MinigameType> minigamesChoice) {
-        this.minigamesChoice = minigamesChoice;
-    }
-
-    public List<Minigame> getMinigamesPlayed() {
-        return minigamesPlayed;
-    }
-
-    public void setMinigamesPlayed(List<Minigame> minigamesPlayed) {
-        this.minigamesPlayed = minigamesPlayed;
     }
 
     public List<Team> getTeams() {
@@ -121,27 +99,7 @@ public class Lobby implements Serializable {
         this.inviteCode = inviteCode;
     }
 
-    public int getWinningScore() {
-        return winningScore;
-    }
-
-    public void setWinningScore(int winningScore) {
-        this.winningScore = winningScore;
-    }
-
-    public boolean getIsFinished() {
-        return isFinished;
-    }
-
-    public void setIsFinished(boolean isFinished) {
-        this.isFinished = isFinished;
-    }
-
     // additional methods to add and get single elements
-
-    public void addToMinigamesPlayed(Minigame nextMinigame) {
-        minigamesPlayed.add(nextMinigame);
-    }
 
     public void addToUnassignedPlayers(Player player) {
         unassignedPlayers.add(player);

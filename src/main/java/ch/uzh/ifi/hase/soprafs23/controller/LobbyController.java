@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -30,6 +31,7 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
+import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
@@ -58,15 +60,19 @@ public class LobbyController {
     private final MinigameService minigameService;
 
     @Autowired
+    private final GameService gameService;
+
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
 
     LobbyController(LobbyManagement lobbyManager, TeamService teamService, PlayerService playerService,
-            MinigameService minigameService) {
+            MinigameService minigameService, GameService gameService) {
         this.lobbyManager = lobbyManager;
         this.teamService = teamService;
         this.playerService = playerService;
         this.minigameService = minigameService;
+        this.gameService = gameService;
     }
 
     /**
@@ -86,6 +92,8 @@ public class LobbyController {
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
     }
 
+    
+
     /**
      * @return lobby; format: id, inviteCode, winningScore, teams, unassignedPlayers
     */
@@ -104,8 +112,8 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public MinigameGetDTO getMinigame(@PathVariable long lobbyId) {
-
-        Minigame nextMinigame = lobbyManager.getMinigame(lobbyId);
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        Minigame nextMinigame = gameService.getMinigame(lobby);
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
@@ -117,9 +125,9 @@ public class LobbyController {
     public void startGame(@PathVariable long lobbyId){
         lobbyManager.ableToStart(lobbyId);
         
-
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
         //Minigame nextMinigame = minigameService.createMinigame(type);
-        lobbyManager.addUpcommingMinigame(lobbyId);
+        gameService.addUpcommingMinigame(lobby);
     }
 
     /**
@@ -136,12 +144,12 @@ public class LobbyController {
         //updateScore
         lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeamInput);
 
-
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
         //create next minigame
-        lobbyManager.addUpcommingMinigame(lobbyId);
+        gameService.addUpcommingMinigame(lobby);
 
         //check if finished
-        lobbyManager.isFinished(lobbyId);
+        gameService.isFinished(lobby);
 
     }
 
@@ -164,7 +172,8 @@ public class LobbyController {
     @ResponseBody
     public GameOverGetDTO getIsFinished(@PathVariable long lobbyId){
         Lobby lobby = lobbyManager.getLobby(lobbyId);
-        return DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(lobby);
+        Game game = gameService.getGame(lobby);
+        return DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(game);
     }
 
     /**
@@ -174,7 +183,8 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public TeamGetDTO getWinner(@PathVariable long lobbyId) {
-        Team team = lobbyManager.getWinner(lobbyId);
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        Team team = gameService.getWinner(lobby);
         return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
     }
 }

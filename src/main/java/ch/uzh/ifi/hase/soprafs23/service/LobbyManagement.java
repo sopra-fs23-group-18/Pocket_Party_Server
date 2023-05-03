@@ -38,15 +38,18 @@ public class LobbyManagement {
   private final TeamService teamService;
   @Autowired
   private final PlayerService playerService;
+  @Autowired
+  private final GameService gameService;
 
   private Random randomizer = new Random();
 
   public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, MinigameService minigameService,
-      TeamService teamService, PlayerService playerService) {
+      TeamService teamService, PlayerService playerService, GameService gameService) {
     this.lobbyRepository = lobbyRepository;
     this.minigameService = minigameService;
     this.teamService = teamService;
     this.playerService = playerService;
+    this.gameService = gameService;
   }
 
     public Lobby createLobby(Lobby newLobby) {
@@ -59,34 +62,31 @@ public class LobbyManagement {
         }
         newLobby.setInviteCode(inviteCode);
 
-    List<MinigameType> minigames = minigameService.chosenMinigames();
-    newLobby.setMinigamesChoice(minigames);
+        List<Player> unassignedPlayers = new ArrayList<Player>();
+        newLobby.setUnassignedPlayers(unassignedPlayers);
 
-    List<Player> unassignedPlayers = new ArrayList<Player>();
-    newLobby.setUnassignedPlayers(unassignedPlayers);
+        List<Team> teams = new ArrayList<Team>();
+        Team team1 = new Team();
+        team1.setLobby(newLobby);
+        team1.setColor(TeamType.RED);
+        team1.setName("Team Red");
 
-    List<Team> teams = new ArrayList<Team>();
-    Team team1 = new Team();
-    team1.setLobby(newLobby);
-    team1.setColor(TeamType.RED);
-    team1.setName("Team Red");
+        Team team2 = new Team();
+        team2.setLobby(newLobby);
+        team2.setColor(TeamType.BLUE);
+        team2.setName("Team Blue");
 
-    Team team2 = new Team();
-    team2.setLobby(newLobby);
-    team2.setColor(TeamType.BLUE);
-    team2.setName("Team Blue");
+        teams.add(team1);
+        teams.add(team2);
+        newLobby.setTeams(teams);
 
-    teams.add(team1);
-    teams.add(team2);
-    newLobby.setTeams(teams);
-
-    newLobby = lobbyRepository.save(newLobby);
-    lobbyRepository.flush();
-    return newLobby;
+        newLobby = lobbyRepository.save(newLobby);
+        lobbyRepository.flush();
+        return newLobby;
 
     // log.debug("Created Information for User: {}", createdLobby);
     // return createdLobby;
-  }
+    }
 
   public Lobby getLobby(Long lobbyId) {
     Lobby lobby = lobbyRepository.findById(lobbyId).orElseThrow(
@@ -102,79 +102,13 @@ public class LobbyManagement {
     return lobby;
   }
 
-  public Minigame getMinigame(Long lobbyId) {
-    Lobby lobby = getLobby(lobbyId);
-    Minigame minigame = lobby.getUpcomingMinigame();
-    if (minigame == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcomming Minigame was found!");
-    }
-    return minigame;
-  }
-
-  private MinigameType getNextMinigameType(Long lobbyId) {
-    Lobby lobby = getLobby(lobbyId);
-    List<MinigameType> minigamesChoice = lobby.getMinigamesChoice();
-    List<Minigame> minigamesPlayed = lobby.getMinigamesPlayed();
-
-    int index = randomizer.nextInt(minigamesChoice.size());
-    MinigameType nextMinigameType = minigamesChoice.get(index);
-    if (minigamesPlayed.size() != 0) {
-      while (nextMinigameType.equals(minigamesPlayed.get(minigamesPlayed.size() - 1).getType())) {
-        nextMinigameType = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
-      }
-    }
-    return nextMinigameType;
-  }
-
-  public void addUpcommingMinigame(Long lobbyId) {
-    MinigameType type = getNextMinigameType(lobbyId);
-    if (type == null) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
-    }
-
-    // random player choice
-
-    Lobby lobby = getLobby(lobbyId);
-    List<Team> teams = lobby.getTeams();
   
-    List<Player> team1Players = new ArrayList<Player>();
-    List<Player> team2Players = new ArrayList<Player>();
-    Minigame nextMinigame;
-    //hardcoded until better method implemented:
-    if (false/*type.equals(MinigameType.HOT_POTATO)*/){
-      //team1Players = playerService.getMinigamePlayers(teams.get(0), teams.get(0).getPlayers().size());
-      //team2Players = playerService.getMinigamePlayers(teams.get(1), teams.get(1).getPlayers().size());
-
-      // for (Player p : teams.get(0).getPlayers()){
-      //   team1Players.add(p);
-      // }
-      // for (Player p : teams.get(1).getPlayers()){
-      //   team2Players.add(p);
-      // }
-    }
-    else{
-      team1Players = playerService.getMinigamePlayers(teams.get(0),1);
-      team2Players = playerService.getMinigamePlayers(teams.get(1),1);
-    }
-    
-    nextMinigame = minigameService.createMinigame(type, team1Players, team2Players);
-
-    lobby.setUpcomingMinigame(nextMinigame);
-    lobbyRepository.save(lobby);
-    lobbyRepository.flush();
-  }
 
   @Transactional
   public void finishedMinigameUpdate(Long lobbyId, Team winnerTeamInput) {
     Lobby lobby = getLobby(lobbyId);
 
-    // update minigame
-    Minigame playedMinigame = lobby.getUpcomingMinigame();
-    if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
-    }
-    minigameService.updateMinigame(playedMinigame.getId(), winnerTeamInput.getName());
-    lobby.addToMinigamesPlayed(playedMinigame);
+    Minigame playedMinigame = gameService.updateMinigame(lobby, winnerTeamInput);
 
     // update roundsPlayed of players
     playerService.updatePlayers(playedMinigame.getTeam1Players());
@@ -196,7 +130,7 @@ public class LobbyManagement {
    
   }
 
-  private Team getLeadingTeam(Long lobbyId) {
+  public Team getLeadingTeam(Long lobbyId) {
     Lobby lobby = getLobby(lobbyId);
 
     Team team = Collections.max(lobby.getTeams(), new Comparator<Team>() {
@@ -205,23 +139,6 @@ public class LobbyManagement {
       }
     });
     return team;
-  }
-
-      public void isFinished(Long lobbyId){
-        Team team = getLeadingTeam(lobbyId);
-        Lobby lobby = getLobby(lobbyId);
-        if (team.getScore() >= lobby.getWinningScore()){
-              lobby.setIsFinished(true);
-        }
-      }
-
-  public Team getWinner(Long lobbyId) {
-    Lobby lobby = getLobby(lobbyId);
-    Team team = getLeadingTeam(lobbyId);
-    if (lobby.getIsFinished()) {
-      return team;
-    }
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner yet!");
   }
 
   public void addToUnassignedPlayers(Long lobbyId, Player newPlayer) {

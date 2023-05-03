@@ -1,0 +1,103 @@
+package ch.uzh.ifi.hase.soprafs23.entity;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.JoinColumn;
+
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+
+@Entity
+@Table(name = "GAME")
+public class Game implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @Column(name = "gameId")
+    @GeneratedValue
+    private Long id;
+
+    // FOREIGN KEY TO LOBBY
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "lobbyId")
+    private Lobby lobby;
+
+    
+
+    @Column(nullable = false)
+    private boolean isFinished = false;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Minigame upcomingMinigame;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "MinigameType", joinColumns = @JoinColumn(name = "id"))
+    @Enumerated(EnumType.STRING)
+    private List<MinigameType> minigamesChoice = new ArrayList<MinigameType>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Minigame> minigamesPlayed = new ArrayList<Minigame>();
+
+    //getters & setters
+
+    public Minigame getUpcomingMinigame() {
+        return upcomingMinigame;
+    }
+
+    public void setUpcomingMinigame(Minigame upcomingMinigame) {
+        this.upcomingMinigame = upcomingMinigame;
+    }
+
+    public List<MinigameType> getMinigamesChoice() {
+        return minigamesChoice;
+    }
+
+    public void setMinigamesChoice(List<MinigameType> minigamesChoice) {
+        this.minigamesChoice = minigamesChoice;
+    }
+
+    public List<Minigame> getMinigamesPlayed() {
+        return minigamesPlayed;
+    }
+
+    public void setMinigamesPlayed(List<Minigame> minigamesPlayed) {
+        this.minigamesPlayed = minigamesPlayed;
+    }
+
+    
+
+    public boolean getIsFinished() {
+        return isFinished;
+    }
+
+    public void setIsFinished(boolean isFinished) {
+        this.isFinished = isFinished;
+    }
+
+    // additional methods to add and get single elements
+
+    public void addToMinigamesPlayed(Minigame nextMinigame) {
+        minigamesPlayed.add(nextMinigame);
+    }
+
+
+}
