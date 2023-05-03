@@ -4,10 +4,13 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 enum GameSignal {
     START,
-    STOP
+    STOP,
+    PLAY
 }
 
 public class GameStartStopDTO {
+    private Object data;
+    
     private MinigameType minigame;
     private GameSignal signal;
 
@@ -23,5 +26,12 @@ public class GameStartStopDTO {
     }
     public void setSignal(GameSignal signal) {
         this.signal = signal;
+    }
+
+    public Object getData() {
+        return data;
+    }
+    public void setData(Object data) {
+        this.data = data;
     }
 }
