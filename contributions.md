@@ -152,13 +152,12 @@ Upcoming:
   - Commanded the replay of vibration from the web app through the stomp connection [#59](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/59)
   - Made an visual representation for each vibration pattern and animated them according to the pattern [#58](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/58)
 ## Stefan Schuler
-Server:
+- added the basic useState and empty layout of the settings page to write down what it needs to show. [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53)
+
 - added enums for the settings, for the gameMode (Single, team) & for the decision how many players a minigame needs [#125](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/125) [#124](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/124)
 - updated service methods & restored all tests to include the change that a minigame can have more than 1 player and tried to implement all players option for potato game [#142](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/142)
 - started with splitting lobby into lobby & game which is also directly linked to refactoring the backend & methods [#103](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/103)
 - while doing this also started to set up some DTO's for the creation of the game & to include settings [#122](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/122)
-
-- added the basic useState and empty layout of the settings page to write down what it needs to show. [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53)
 
 ## Naseem Hassan
 - Redirect web app to initial game settings [#10](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/10):
