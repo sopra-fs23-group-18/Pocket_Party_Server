@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -140,8 +141,15 @@ public class DTOMapperTest {
     minigame.setScoreToGain(100);
     minigame.setType(MinigameType.TIMING_GAME);
     minigame.setDescription("test");
-    minigame.setTeam1Player(new Player());
-    minigame.setTeam2Player(new Player());
+    Player player1 = new Player();
+    Player player2 = new Player();
+
+    List<Player> team1Players = new ArrayList<Player>();
+    team1Players.add(player1);
+    List<Player> team2Players = new ArrayList<Player>();
+    team2Players.add(player2);
+    minigame.setTeam1Players(team1Players);
+    minigame.setTeam2Players(team2Players);
 
     // MAP -> Create MinigameGetDTO
     MinigameGetDTO minigameGetDTO = DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(minigame);
@@ -150,8 +158,8 @@ public class DTOMapperTest {
     assertEquals(minigame.getScoreToGain(), minigameGetDTO.getScoreToGain());
     assertEquals(minigame.getType(), minigameGetDTO.getType());
     assertEquals(minigame.getDescription(), minigameGetDTO.getDescription());
-    assertEquals(minigame.getTeam1Player(), minigameGetDTO.getTeam1Player());
-    assertEquals(minigame.getTeam2Player(), minigameGetDTO.getTeam2Player());
+    assertEquals(minigame.getTeam1Players(), minigameGetDTO.getTeam1Players());
+    assertEquals(minigame.getTeam2Players(), minigameGetDTO.getTeam2Players());
   }
 
   @Test

@@ -193,16 +193,20 @@ public class LobbyControllerTest {
         Player player1 = new Player();
         player1.setId(4L);
         player1.setNickname("Test Nickname");
+        List<Player> team1Players = new ArrayList<Player>();
+        team1Players.add(player1);
 
         Player player2 = new Player();
         player2.setId(5L);
         player2.setNickname("Test2 Nickname");
+        List<Player> team2Players = new ArrayList<Player>();
+        team2Players.add(player2);
 
         lobby.getTeams().get(0).getPlayers().add(player1);
         lobby.getTeams().get(1).getPlayers().add(player2);
 
-        minigame.setTeam1Player(player1);
-        minigame.setTeam2Player(player2);
+        minigame.setTeam1Players(team1Players);
+        minigame.setTeam2Players(team2Players);
 
         lobby.setUpcomingMinigame(minigame);
 
@@ -217,13 +221,15 @@ public class LobbyControllerTest {
             .andExpect(jsonPath("$.description", is(minigame.getDescription())))
             .andExpect(jsonPath("$.scoreToGain", is(minigame.getScoreToGain())))
             .andExpect(jsonPath("$.type", is(minigame.getType().toString())))
-            .andExpect(jsonPath("$.team1Player.id", is(minigame.getTeam1Player().getId().intValue())))
-            .andExpect(jsonPath("$.team1Player.nickname", is(minigame.getTeam1Player().getNickname())))
-            .andExpect(jsonPath("$.team1Player.roundsPlayed", is(minigame.getTeam1Player().getRoundsPlayed())))
-            .andExpect(jsonPath("$.team2Player.id", is(minigame.getTeam2Player().getId().intValue())))
-            .andExpect(jsonPath("$.team2Player.nickname", is(minigame.getTeam2Player().getNickname())))
-            .andExpect(jsonPath("$.team2Player.roundsPlayed", is(minigame.getTeam2Player().getRoundsPlayed())));
+            .andExpect(jsonPath("$.team1Players[*].id", contains(minigame.getTeam1Players().get(0).getId().intValue())))
+            .andExpect(jsonPath("$.team1Players[*].nickname", contains(minigame.getTeam1Players().get(0).getNickname())))
+            .andExpect(jsonPath("$.team1Players[*].roundsPlayed", contains(minigame.getTeam1Players().get(0).getRoundsPlayed())))
+            .andExpect(jsonPath("$.team2Players[*].id", contains(minigame.getTeam2Players().get(0).getId().intValue())))
+            .andExpect(jsonPath("$.team2Players[*].nickname", contains(minigame.getTeam2Players().get(0).getNickname())))
+            .andExpect(jsonPath("$.team2Players[*].roundsPlayed", contains(minigame.getTeam2Players().get(0).getRoundsPlayed())));
     }
+
+    //add test for more than 1 player minigames
 
     @Test
     public void givenMinigame_whenGetMinigame_thenThrowException() throws Exception {
@@ -239,16 +245,20 @@ public class LobbyControllerTest {
         Player player1 = new Player();
         player1.setId(4L);
         player1.setNickname("Test Nickname");
+        List<Player> team1Players = new ArrayList<Player>();
+        team1Players.add(player1);
 
         Player player2 = new Player();
         player2.setId(5L);
         player2.setNickname("Test2 Nickname");
+        List<Player> team2Players = new ArrayList<Player>();
+        team2Players.add(player2);
 
         lobby.getTeams().get(0).getPlayers().add(player1);
         lobby.getTeams().get(1).getPlayers().add(player2);
 
-        minigame.setTeam1Player(player1);
-        minigame.setTeam2Player(player2);
+        minigame.setTeam1Players(team1Players);
+        minigame.setTeam2Players(team2Players);
 
         given(lobbyManager.getMinigame(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -274,16 +284,20 @@ public class LobbyControllerTest {
         Player player1 = new Player();
         player1.setId(4L);
         player1.setNickname("Test Nickname");
+        List<Player> team1Players = new ArrayList<Player>();
+        team1Players.add(player1);
 
         Player player2 = new Player();
         player2.setId(5L);
         player2.setNickname("Test2 Nickname");
+        List<Player> team2Players = new ArrayList<Player>();
+        team2Players.add(player2);
 
         lobby.getTeams().get(0).getPlayers().add(player1);
         lobby.getTeams().get(1).getPlayers().add(player2);
 
-        minigame.setTeam1Player(player1);
-        minigame.setTeam2Player(player2);
+        minigame.setTeam1Players(team1Players);
+        minigame.setTeam2Players(team2Players);
 
         given(lobbyManager.getMinigame(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -371,11 +385,16 @@ public class LobbyControllerTest {
         player2.setId(5L);
         player2.setNickname("Test2 Nickname");
 
+        List<Player> team1Players = new ArrayList<Player>();
+        team1Players.add(player1);
+        List<Player> team2Players = new ArrayList<Player>();
+        team2Players.add(player2);
+
         lobby.getTeams().get(0).getPlayers().add(player1);
         lobby.getTeams().get(1).getPlayers().add(player2);
 
-        minigame.setTeam1Player(player1);
-        minigame.setTeam2Player(player2);
+        minigame.setTeam1Players(team1Players);
+        minigame.setTeam2Players(team2Players);
 
         lobby.setUpcomingMinigame(minigame);
 
@@ -517,8 +536,13 @@ public class LobbyControllerTest {
         player2.setId(5L);
         player2.setNickname("Test2 Nickname");
 
-        minigame.setTeam1Player(player1);
-        minigame.setTeam2Player(player2);
+        List<Player> team1Players = new ArrayList<Player>();
+        team1Players.add(player1);
+        List<Player> team2Players = new ArrayList<Player>();
+        team2Players.add(player2);
+
+        minigame.setTeam1Players(team1Players);
+        minigame.setTeam2Players(team2Players);
 
         lobby.setUpcomingMinigame(minigame);
 
@@ -563,8 +587,13 @@ public class LobbyControllerTest {
         lobby.getTeams().get(0).getPlayers().add(player1);
         lobby.getTeams().get(1).getPlayers().add(player2);
 
-        minigame.setTeam1Player(player1);
-        minigame.setTeam2Player(player2);
+        List<Player> team1Players = new ArrayList<Player>();
+        team1Players.add(player1);
+        List<Player> team2Players = new ArrayList<Player>();
+        team2Players.add(player2);
+
+        minigame.setTeam1Players(team1Players);
+        minigame.setTeam2Players(team2Players);
 
         lobby.setUpcomingMinigame(minigame);
 
