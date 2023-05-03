@@ -153,6 +153,16 @@ Upcoming:
   - Made an visual representation for each vibration pattern and animated them according to the pattern [#58](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/58)
 ## Stefan Schuler
 ## Naseem Hassan
+- Redirect web app to initial game settings [#10](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/10):
+  - Added a Button in WinnerScreen which onClick redirects to /createLobby
+  - OnClick should also delete the lobby (not implemented yet)
+- Display winning score [#8](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/8):
+  - Added the Winning score in WinnerScreen
+- Changed the TeamScoreOverview to Update Scores and redirect to WinnerScreen. 
+  - MinigameWon now just displays the winner of the Minigame and then redirects to TeamScoreOverview. Now the score update is also shown if a team has reached the winningScore before redirecting to the WinnerScreen.
+- TODO: WinnerScreen styling
+
+
 ## Guojun Wu
 ## Sven Ringger
 - Implemented game logic for hot potato in web, still needs backend for me to continue [#62](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/62)
