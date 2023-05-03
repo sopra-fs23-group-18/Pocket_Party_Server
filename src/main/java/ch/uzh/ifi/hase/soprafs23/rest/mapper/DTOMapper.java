@@ -1,10 +1,13 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
@@ -76,5 +79,10 @@ public interface DTOMapper {
   TeamGetDTO convertEntityToTeamGetDTO(Team team); 
 
   @Mapping(source = "isFinished", target = "isFinished")
-  GameOverGetDTO convertEntityToGameOverGetDTO(Lobby lobby);
+  GameOverGetDTO convertEntityToGameOverGetDTO(Game game);
+
+  @Mapping(source = "minigamesChoice", target = "minigamesChoice")
+  Game convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
+
+  GameGetDTO convertEntityToGameGetDTO(Game game);
 }
