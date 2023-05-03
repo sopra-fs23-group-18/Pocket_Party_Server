@@ -147,6 +147,10 @@ Upcoming:
 
 # 27.04 - 04.05
 ## Nils Grob
+- Started implementing the Vibration Game 
+  - Made three vibration patterns and play them on mobile [#22](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/22)
+  - Commanded the replay of vibration from the web app through the stomp connection [#59](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/59)
+  - Made an visual representation for each vibration pattern and animated them according to the pattern [#58](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/58)
 ## Stefan Schuler
 ## Naseem Hassan
 ## Guojun Wu
