@@ -136,10 +136,26 @@ public class LobbyManagement {
 
     Lobby lobby = getLobby(lobbyId);
     List<Team> teams = lobby.getTeams();
-    Player playerTeam1 = playerService.getMinigamePlayer(teams.get(0));
-    Player playerTeam2 = playerService.getMinigamePlayer(teams.get(1));
+  
+    List<Player> team1Players = new ArrayList<Player>();
+    List<Player> team2Players = new ArrayList<Player>();
+    Minigame nextMinigame;
+    //hardcoded until better method implemented:
+    if (type == MinigameType.HOT_POTATO){
+      for (Player p : teams.get(0).getPlayers()){
+        team1Players.add(p);
+      }
+      for (Player p : teams.get(1).getPlayers()){
+        team2Players.add(p);
+      }
+    }
+    else{
+      team1Players = playerService.getMinigamePlayers(teams.get(0),1);
+      team2Players = playerService.getMinigamePlayers(teams.get(1),1);
+    }
+    
+    nextMinigame = minigameService.createMinigame(type, team1Players, team2Players);
 
-    Minigame nextMinigame = minigameService.createMinigame(type, playerTeam1, playerTeam2);
     lobby.setUpcomingMinigame(nextMinigame);
     lobbyRepository.save(lobby);
     lobbyRepository.flush();
@@ -158,8 +174,8 @@ public class LobbyManagement {
     lobby.addToMinigamesPlayed(playedMinigame);
 
     // update roundsPlayed of players
-    playerService.updatePlayer(playedMinigame.getTeam1Player().getId());
-    playerService.updatePlayer(playedMinigame.getTeam2Player().getId());
+    playerService.updatePlayers(playedMinigame.getTeam1Players());
+    playerService.updatePlayers(playedMinigame.getTeam2Players());
 
     // update score of teams
     teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());

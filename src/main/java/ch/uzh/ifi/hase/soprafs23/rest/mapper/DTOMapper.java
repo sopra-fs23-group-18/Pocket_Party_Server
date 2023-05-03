@@ -60,8 +60,8 @@ public interface DTOMapper {
   @Mapping(source = "scoreToGain", target = "scoreToGain")
   @Mapping(source = "type", target = "type")
   @Mapping(source = "description", target = "description")
-  @Mapping(source = "team1Player", target = "team1Player")
-  @Mapping(source = "team2Player", target = "team2Player")
+  @Mapping(source = "team1Players", target = "team1Players")
+  @Mapping(source = "team2Players", target = "team2Players")
   MinigameGetDTO convertEntityToMinigameGetDTO(Minigame minigame);
 
   @Mapping(source = "color", target = "color")

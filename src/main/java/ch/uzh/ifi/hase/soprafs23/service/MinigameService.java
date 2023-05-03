@@ -37,7 +37,7 @@ public class MinigameService {
         return minigames;
     }
 
-    public Minigame createMinigame(MinigameType nexMinigameType, Player player1Name, Player player2Name){
+    public Minigame createMinigame(MinigameType nexMinigameType, List<Player> team1Players, List<Player> team2Players){
         String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
         Minigame upcommingMinigame = new Minigame();
         upcommingMinigame.setScoreToGain(500);
@@ -45,8 +45,8 @@ public class MinigameService {
         upcommingMinigame.setDescription(description);
 
         // wip
-        upcommingMinigame.setTeam1Player(player1Name);
-        upcommingMinigame.setTeam2Player(player2Name);
+        upcommingMinigame.setTeam1Players(team1Players);
+        upcommingMinigame.setTeam2Players(team2Players);
 
 
 
