@@ -144,3 +144,12 @@ Upcoming:
 - Create tap counter on web app & update on received tap(web) [#27](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/27)
 - Show 20second countdown after which the game ends(web) [#30](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/30)
 - Test for service, reposiroty, and rest mapper
+
+# 27.04 - 04.05
+## Nils Grob
+## Stefan Schuler
+## Naseem Hassan
+## Guojun Wu
+## Sven Ringger
+- Implemented game logic for hot potato in web, still needs backend for me to continue [#62](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/62)
+- Unify web for better responsiveness [#64](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/64)
