@@ -81,7 +81,7 @@ public class PlayerService {
             Player player = getPlayer(p.getId());
             player.setRoundsPlayed(player.getRoundsPlayed() + 1);
             playerRepository.save(player);
-            playerRepository.flush();
         }
+        playerRepository.flush();
     }
 }
