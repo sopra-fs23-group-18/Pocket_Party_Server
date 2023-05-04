@@ -137,25 +137,29 @@ public class LobbyManagement {
     Lobby lobby = getLobby(lobbyId);
     List<Team> teams = lobby.getTeams();
   
-    List<Player> team1Players = new ArrayList<Player>();
-    List<Player> team2Players = new ArrayList<Player>();
+    List<Player> team1Players;
+    List<Player> team2Players;
     Minigame nextMinigame;
     //hardcoded until better method implemented:
-    if (false/*type.equals(MinigameType.HOT_POTATO)*/){
-      //team1Players = playerService.getMinigamePlayers(teams.get(0), teams.get(0).getPlayers().size());
-      //team2Players = playerService.getMinigamePlayers(teams.get(1), teams.get(1).getPlayers().size());
+    // if (false/*type.equals(MinigameType.HOT_POTATO)*/){
+    //   //team1Players = playerService.getMinigamePlayers(teams.get(0), teams.get(0).getPlayers().size());
+    //   //team2Players = playerService.getMinigamePlayers(teams.get(1), teams.get(1).getPlayers().size());
 
-      // for (Player p : teams.get(0).getPlayers()){
-      //   team1Players.add(p);
-      // }
-      // for (Player p : teams.get(1).getPlayers()){
-      //   team2Players.add(p);
-      // }
-    }
-    else{
-      team1Players = playerService.getMinigamePlayers(teams.get(0),1);
-      team2Players = playerService.getMinigamePlayers(teams.get(1),1);
-    }
+    //   // for (Player p : teams.get(0).getPlayers()){
+    //   //   team1Players.add(p);
+    //   // }
+    //   // for (Player p : teams.get(1).getPlayers()){
+    //   //   team2Players.add(p);
+    //   // }
+    // }
+    // else{
+    //   team1Players = playerService.getMinigamePlayers(teams.get(0),1);
+    //   team2Players = playerService.getMinigamePlayers(teams.get(1),1);
+    // }
+
+    team1Players = playerService.getMinigamePlayers(teams.get(0),1);
+    team2Players = playerService.getMinigamePlayers(teams.get(1),1);
+
     
     nextMinigame = minigameService.createMinigame(type, team1Players, team2Players);
 
