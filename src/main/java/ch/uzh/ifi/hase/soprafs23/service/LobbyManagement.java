@@ -137,8 +137,8 @@ public class LobbyManagement {
     Lobby lobby = getLobby(lobbyId);
     List<Team> teams = lobby.getTeams();
   
-    List<Player> team1Players;
-    List<Player> team2Players;
+    List<Player> team1Players = new ArrayList<Player>();
+    List<Player> team2Players = new ArrayList<Player>();
     Minigame nextMinigame;
     //hardcoded until better method implemented:
     // if (false/*type.equals(MinigameType.HOT_POTATO)*/){
@@ -181,8 +181,11 @@ public class LobbyManagement {
     lobby.addToMinigamesPlayed(playedMinigame);
 
     // update roundsPlayed of players
-    playerService.updatePlayers(playedMinigame.getTeam1Players());
-    playerService.updatePlayers(playedMinigame.getTeam2Players());
+    List<Player> team1Players = minigameService.getTeam1Players(playedMinigame.getId());
+    List<Player> team2Players = minigameService.getTeam2Players(playedMinigame.getId());
+
+    playerService.updatePlayers(team1Players);
+    playerService.updatePlayers(team2Players);
 
     // update score of teams
     teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());

@@ -70,4 +70,14 @@ public class MinigameService {
         finishedMinigame = minigameRepository.save(finishedMinigame);
         minigameRepository.flush();
     }
+
+    public List<Player> getTeam1Players(Long minigameId){
+        Minigame minigame = getMinigame(minigameId);
+        return minigame.getTeam1Players();
+    }
+
+    public List<Player> getTeam2Players(Long minigameId){
+        Minigame minigame = getMinigame(minigameId);
+        return minigame.getTeam2Players();
+    }
 }
