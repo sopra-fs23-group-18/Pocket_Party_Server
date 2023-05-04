@@ -91,4 +91,17 @@ public class TeamService {
         }
         return null;
     }
+
+    public List<Player> getPlayersByColorAndLobby(Lobby lobby, TeamType color) {
+        List<Team> teams = teamRepository.findByLobby(lobby);
+        if (teams.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No team with such a lobby exists!");
+        }
+        for (Team team : teams) {
+            if (team.getColor().ordinal() == color.ordinal()) {
+                return team.getPlayers();
+            }
+        }
+        return null;
+    }
 }

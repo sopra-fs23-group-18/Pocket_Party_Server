@@ -44,8 +44,8 @@ public class PlayerService {
         return player;
     }
 
-    public List<Player> getMinigamePlayers(Team team, int amountOfPlayers){
-        List<Player> minigamePlayers = new ArrayList<Player>();
+    public List<Long> getMinigamePlayers(Team team, int amountOfPlayers){
+        List<Long> minigamePlayers = new ArrayList<Long>();
         int lowestAmountPlayed = -1;
         for (Player p : team.getPlayers()){
             if (lowestAmountPlayed == -1){
@@ -64,11 +64,11 @@ public class PlayerService {
                 continue;
             }
             else{
-                if (minigamePlayers.contains(player)){
+                if (minigamePlayers.contains(player.getId())){
                     continue;
                 }
                 else{
-                    minigamePlayers.add(player);
+                    minigamePlayers.add(player.getId());
                     playersAdded++;
                 }
             }
