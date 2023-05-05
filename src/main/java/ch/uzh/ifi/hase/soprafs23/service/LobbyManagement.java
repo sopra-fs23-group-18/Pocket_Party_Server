@@ -139,29 +139,22 @@ public class LobbyManagement {
   
     List<Player> team1Players = new ArrayList<Player>();
     List<Player> team2Players = new ArrayList<Player>();
-    Minigame nextMinigame;
+
     //hardcoded until better method implemented:
-    // if (false/*type.equals(MinigameType.HOT_POTATO)*/){
-    //   //team1Players = playerService.getMinigamePlayers(teams.get(0), teams.get(0).getPlayers().size());
-    //   //team2Players = playerService.getMinigamePlayers(teams.get(1), teams.get(1).getPlayers().size());
-
-    //   // for (Player p : teams.get(0).getPlayers()){
-    //   //   team1Players.add(p);
-    //   // }
-    //   // for (Player p : teams.get(1).getPlayers()){
-    //   //   team2Players.add(p);
-    //   // }
-    // }
-    // else{
-    //   team1Players = playerService.getMinigamePlayers(teams.get(0),1);
-    //   team2Players = playerService.getMinigamePlayers(teams.get(1),1);
-    // }
-
-    team1Players = playerService.getMinigamePlayers(teams.get(0),1);
-    team2Players = playerService.getMinigamePlayers(teams.get(1),1);
-
+    if (type.equals(MinigameType.HOT_POTATO)){
+      for (Player p : teams.get(0).getPlayers()){
+        team1Players.add(p);
+      }
+      for (Player p : teams.get(1).getPlayers()){
+        team2Players.add(p);
+      }
+    }
+    else{
+      team1Players = playerService.getMinigamePlayers(teams.get(0),1);
+      team2Players = playerService.getMinigamePlayers(teams.get(1),1);
+    }
     
-    nextMinigame = minigameService.createMinigame(type, team1Players, team2Players);
+    Minigame nextMinigame = minigameService.createMinigame(type, team1Players, team2Players);
 
     lobby.setUpcomingMinigame(nextMinigame);
     lobbyRepository.save(lobby);
@@ -181,11 +174,9 @@ public class LobbyManagement {
     lobby.addToMinigamesPlayed(playedMinigame);
 
     // update roundsPlayed of players
-    List<Player> team1Players = minigameService.getTeam1Players(playedMinigame.getId());
-    List<Player> team2Players = minigameService.getTeam2Players(playedMinigame.getId());
 
-    playerService.updatePlayers(team1Players);
-    playerService.updatePlayers(team2Players);
+    playerService.updatePlayers(playedMinigame.getTeam1Players());
+    playerService.updatePlayers(playedMinigame.getTeam2Players());
 
     // update score of teams
     teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
