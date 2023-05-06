@@ -56,9 +56,9 @@ public interface DTOMapper {
   @Mapping(source = "unassignedPlayers", target = "unassignedPlayers")
   LobbyGetDTO convertEntityToLobbyGetDTO(Lobby lobby);
 
-  //@Mapping(source = "winningScore", target = "winningScore")
-  @Mapping(source = "teams", target = "teams")
-  ScoresGetDTO convertEntityToScoresGetDTO(Lobby lobby);
+  @Mapping(source = "lobby.teams", target = "teams")
+  @Mapping(source = "game.winningScore", target = "winningScore")
+  ScoresGetDTO convertEntitiesToScoresGetDTO(Lobby lobby, Game game);
   
   @Mapping(source = "scoreToGain", target = "scoreToGain")
   @Mapping(source = "type", target = "type")
@@ -85,5 +85,8 @@ public interface DTOMapper {
   @Mapping(source = "winningScore", target = "winningScore")
   Game convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
 
+  @Mapping(source = "winningScore", target = "winningScore")
+  @Mapping(source = "id", target = "id")
   GameGetDTO convertEntityToGameGetDTO(Game game);
+  
 }

@@ -62,9 +62,6 @@ public class Lobby implements Serializable {
     }
     
 
-
-
-
     public List<Player> getUnassignedPlayers() {
         return unassignedPlayers;
     }

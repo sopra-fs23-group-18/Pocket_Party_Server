@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
-import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.TeamService;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerAssignTeamDTO;
@@ -37,18 +36,13 @@ public class WebsocketController {
     private final PlayerService playerService;
 
     @Autowired
-    private final MinigameService minigameService;
-
-    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
 
-    WebsocketController(LobbyManagement lobbyManager, TeamService teamService, PlayerService playerService,
-            MinigameService minigameService) {
+    WebsocketController(LobbyManagement lobbyManager, TeamService teamService, PlayerService playerService) {
         this.lobbyManager = lobbyManager;
         this.teamService = teamService;
         this.playerService = playerService;
-        this.minigameService = minigameService;
     }
 
     @MessageMapping("/lobbies/{inviteCode}")
