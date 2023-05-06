@@ -66,14 +66,6 @@ public class GameService {
         return game;
     }
 
-    public Game createGame(Game game){
-        List<MinigameType> minigames = minigameService.chosenMinigames();
-        game.setMinigamesChoice(minigames);
-        game = gameRepository.save(game);
-        gameRepository.flush();
-        return game;
-    }
-
     public Minigame getMinigame(Lobby lobby) {
         Game game = getGame(lobby);
         Minigame minigame = game.getUpcomingMinigame();
@@ -151,7 +143,7 @@ public class GameService {
     public void isFinished(Lobby lobby){
         Team team = lobbyManager.getLeadingTeam(lobby.getId());
         Game game = getGame(lobby);
-        if (team.getScore() >= lobby.getWinningScore()){
+        if (team.getScore() >= game.getWinningScore()){
               game.setIsFinished(true);
         }
     }
@@ -167,6 +159,21 @@ public class GameService {
         return playedMinigame;
     }
 
+
+    //new
+    public Game createGame(Game newGame, Long lobbyId){
+      if (newGame.getWinningScore() < 0 || newGame.getWinningScore() > 100000){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lobby could not be created because the winningScore was invalid!");
+      }
+      List<MinigameType> minigames = minigameService.chosenMinigames();
+      newGame.setMinigamesChoice(minigames);
+      newGame = gameRepository.save(newGame);
+      gameRepository.flush();
+      lobbyManager.addGame(newGame, lobbyId);
+      return newGame;
+    }
+
+    
 
 
 

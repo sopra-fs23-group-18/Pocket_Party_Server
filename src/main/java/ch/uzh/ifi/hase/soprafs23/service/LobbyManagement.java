@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 
@@ -52,10 +53,9 @@ public class LobbyManagement {
     this.gameService = gameService;
   }
 
-    public Lobby createLobby(Lobby newLobby) {
-        if (newLobby.getWinningScore() < 0 || newLobby.getWinningScore() > 100000){
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lobby could not be created because the winningScore was invalid!");
-        }
+    public Lobby createLobby() {
+        Lobby newLobby = new Lobby();
+  
         int inviteCode = randomizer.nextInt(900000) + 100000;
         while (lobbyRepository.findByInviteCode(inviteCode) != null){
           inviteCode = randomizer.nextInt(900000) + 100000;
@@ -199,5 +199,14 @@ public class LobbyManagement {
           "There are not enough players in the teams to start!");
     }
     throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There players that are not assigned yet!");
+  }
+
+  //new
+
+  public void addGame(Game game, Long lobbyId){
+    Lobby lobby = getLobby(lobbyId);
+    lobby.setGame(game);
+    lobbyRepository.save(lobby);
+    lobbyRepository.flush();
   }
 }
