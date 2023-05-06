@@ -72,20 +72,20 @@ public class GameController {
         this.gameService = gameService;
     }
 
-    // /**
-    //  * @input chosenMinigames
-    // */
-    // @PostMapping("/games")
-    // @ResponseStatus(HttpStatus.CREATED)
-    // @ResponseBody
-    // public GameGetDTO createGame(@RequestBody GamePostDTO gamePostDTO) {
-    //     // convert API user to internal representation
-    //     Game game = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(gamePostDTO);
+    /**
+     * @input winningScore, chosenMinigames
+    */
+    @PostMapping("/lobbies/{lobbyId}/games")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public GameGetDTO createGame(@PathVariable long lobbyId, @RequestBody GamePostDTO gamePostDTO) {
+        // convert API user to internal representation
+        Game game = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
         
-    //     // create user
-    //     Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
+        // create user
+        Game createdGame = gameService.createGame(game, lobbyId);
 
-    //     // convert internal representation of user back to API
-    //     return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
-    // }
+        // convert internal representation of user back to API
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(createdGame);
+    }
 }

@@ -76,21 +76,22 @@ public class LobbyController {
     }
 
     /**
-     * @input winningScore
+     * @input none
     */
     @PostMapping("/lobbies")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public LobbyGetDTO createLobby(@RequestBody LobbyPostDTO lobbyPostDTO) {
-        // convert API user to internal representation
-        Lobby lobbyInput = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(lobbyPostDTO);
-        
-        // create user
-        Lobby createdLobby = lobbyManager.createLobby(lobbyInput);
+    public LobbyGetDTO createLobby() {
+                
+        // create lobby
+        Lobby createdLobby = lobbyManager.createLobby();
 
-        // convert internal representation of user back to API
+        // convert internal representation of lobby back to API
         return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
     }
+
+    //NOTE: create lobbyy and return it (in here a game instance also gets created that has empty values at first)
+    //this empty game is then updated when the settings are set via a put method for the game
 
     
 
