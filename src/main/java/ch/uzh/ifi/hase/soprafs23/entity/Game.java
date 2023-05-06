@@ -41,7 +41,8 @@ public class Game implements Serializable{
     @JoinColumn(name = "lobbyId")
     private Lobby lobby;
 
-    
+    @Column(nullable = false)
+    private int winningScore;    
 
     @Column(nullable = false)
     private boolean isFinished = false;
@@ -58,6 +59,14 @@ public class Game implements Serializable{
     private List<Minigame> minigamesPlayed = new ArrayList<Minigame>();
 
     //getters & setters
+
+    public Lobby getLobby() {
+        return lobby;
+    }
+
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
+    }
 
     public Minigame getUpcomingMinigame() {
         return upcomingMinigame;
@@ -83,6 +92,14 @@ public class Game implements Serializable{
         this.minigamesPlayed = minigamesPlayed;
     }
 
+    public int getWinningScore() {
+        return winningScore;
+    }
+
+    public void setWinningScore(int winningScore) {
+        this.winningScore = winningScore;
+    }
+
     
 
     public boolean getIsFinished() {
@@ -99,5 +116,7 @@ public class Game implements Serializable{
         minigamesPlayed.add(nextMinigame);
     }
 
+
+    
 
 }

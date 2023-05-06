@@ -48,21 +48,19 @@ public class Lobby implements Serializable {
     private List<Player> unassignedPlayers = new ArrayList<Player>();
 
 
-
-    @Column(nullable = false)
-    private int winningScore;
+    
 
 
     // getters & setters
 
-
-    public int getWinningScore() {
-        return winningScore;
+    public Game getGame() {
+        return game;
     }
 
-    public void setWinningScore(int winningScore) {
-        this.winningScore = winningScore;
+    public void setGame(Game game) {
+        this.game = game;
     }
+    
 
 
 
