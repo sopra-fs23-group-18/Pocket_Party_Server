@@ -12,8 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToMany;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
@@ -40,10 +39,10 @@ public class Minigame implements Serializable{
     @Column(nullable = false)
     private int scoreToGain;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Player> team1Players = new ArrayList<Player>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Player> team2Players = new ArrayList<Player>();
 
     @Column(nullable = false)

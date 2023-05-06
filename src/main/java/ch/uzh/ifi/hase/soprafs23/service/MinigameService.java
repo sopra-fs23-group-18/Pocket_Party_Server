@@ -37,23 +37,19 @@ public class MinigameService {
         return minigames;
     }
 
-    public Minigame createMinigame(MinigameType nexMinigameType, List<Player> team1Players, List<Player> team2Players){
+    public Minigame createMinigame(MinigameType nexMinigameType){
         String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
-        Minigame upcommingMinigame = new Minigame();
-        upcommingMinigame.setScoreToGain(500);
-        upcommingMinigame.setType(nexMinigameType);
-        upcommingMinigame.setDescription(description);
+        Minigame upcomingMinigame = new Minigame();
+        //needs to be calculated via linear exponential
+        //maybe also set minigame scoretogain in settings of game
+        upcomingMinigame.setScoreToGain(500);
+        upcomingMinigame.setType(nexMinigameType);
+        upcomingMinigame.setDescription(description);
 
-        // wip
-        upcommingMinigame.setTeam1Players(team1Players);
-        upcommingMinigame.setTeam2Players(team2Players);
-
-
-
-        upcommingMinigame = minigameRepository.save(upcommingMinigame);
+        upcomingMinigame = minigameRepository.save(upcomingMinigame);
         minigameRepository.flush();
-        log.debug("Created Information for Minigame: {}", upcommingMinigame);
-        return upcommingMinigame;
+        log.debug("Created Information for Minigame: {}", upcomingMinigame);
+        return upcomingMinigame;
     }
 
     public Minigame getMinigame(Long minigameId){
@@ -68,6 +64,14 @@ public class MinigameService {
         finishedMinigame.setWinner(winnerTeam);
         
         finishedMinigame = minigameRepository.save(finishedMinigame);
+        minigameRepository.flush();
+    }
+
+    public void addPlayersToMinigame(Minigame minigame, List<Player> team1Players, List<Player> team2Players){
+        Minigame upcomingMinigame = getMinigame(minigame.getId());
+        upcomingMinigame.setTeam1Players(team1Players);
+        upcomingMinigame.setTeam2Players(team2Players);
+        minigameRepository.save(upcomingMinigame);
         minigameRepository.flush();
     }
 }

@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 
@@ -102,36 +100,44 @@ public class LobbyManagement {
     return lobby;
   }
 
-  
-
-  @Transactional
-  public void finishedMinigameUpdate(Long lobbyId, Team winnerTeamInput) {
-    Lobby lobby = getLobby(lobbyId);
-
-    Minigame playedMinigame = gameService.updateMinigame(lobby, winnerTeamInput);
-
-    // update roundsPlayed of players
-    playerService.updatePlayers(playedMinigame.getTeam1Players());
-    playerService.updatePlayers(playedMinigame.getTeam2Players());
-
-    // update score of teams
-    teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
-
-    List<Team> teams = lobby.getTeams();
-    if(teams.get(0).getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
-      int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-      teamService.updateScore(lobby, teams.get(0).getColor(), score);
-    }else{
-      int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-      teamService.updateScore(lobby, teams.get(1).getColor(), score);
+  public Lobby getLobby(Game game) {
+    Lobby lobby = lobbyRepository.findByGame(game);
+    if (lobby == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby with the given game does not exist!");
     }
-    lobbyRepository.save(lobby);
-    lobbyRepository.flush();
-   
+    return lobby;
   }
 
-  public Team getLeadingTeam(Long lobbyId) {
-    Lobby lobby = getLobby(lobbyId);
+  
+
+  // @Transactional
+  // public void finishedMinigameUpdate(Long lobbyId, Team winnerTeamInput) {
+  //   Lobby lobby = getLobby(lobbyId);
+
+  //   Minigame playedMinigame = gameService.updateMinigame(lobby, winnerTeamInput);
+
+  //   // update roundsPlayed of players
+  //   playerService.updatePlayers(playedMinigame.getTeam1Players());
+  //   playerService.updatePlayers(playedMinigame.getTeam2Players());
+
+  //   // update score of teams
+  //   teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
+
+  //   List<Team> teams = lobby.getTeams();
+  //   if(teams.get(0).getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
+  //     int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+  //     teamService.updateScore(lobby, teams.get(0).getColor(), score);
+  //   }else{
+  //     int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+  //     teamService.updateScore(lobby, teams.get(1).getColor(), score);
+  //   }
+  //   lobbyRepository.save(lobby);
+  //   lobbyRepository.flush();
+   
+  // }
+
+  public Team getLeadingTeam(Game game) {
+    Lobby lobby = getLobby(game);
 
     Team team = Collections.max(lobby.getTeams(), new Comparator<Team>() {
       public int compare(Team team1, Team team2) {
