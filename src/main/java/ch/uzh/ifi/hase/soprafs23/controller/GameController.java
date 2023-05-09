@@ -32,7 +32,7 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 @RestController
 public class GameController {
 
-    private final Logger log = LoggerFactory.getLogger(LobbyManagement.class);
+    private final Logger log = LoggerFactory.getLogger(GameService.class);
 
     @Autowired
     private final LobbyManagement lobbyManager;

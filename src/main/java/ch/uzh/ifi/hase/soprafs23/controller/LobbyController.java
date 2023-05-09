@@ -13,12 +13,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
+import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
+import ch.uzh.ifi.hase.soprafs23.service.TeamService;
 
 
 @RestController
@@ -30,11 +34,19 @@ public class LobbyController {
     private final LobbyManagement lobbyManager;
 
     @Autowired
+    private final PlayerService playerService;
+
+    @Autowired
+    private final TeamService teamService;
+
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
 
-    LobbyController(LobbyManagement lobbyManager) {
+    LobbyController(LobbyManagement lobbyManager, PlayerService playerService, TeamService teamService) {
         this.lobbyManager = lobbyManager;
+        this.playerService = playerService;
+        this.teamService = teamService;
     }
 
     /**
@@ -108,5 +120,27 @@ public class LobbyController {
     //     Lobby lobby = lobbyManager.getLobby(lobbyId);
     //     Team team = gameService.getWinner(lobby);
     //     return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
+    // }
+
+    // @PutMapping("/lobbies/players/{lobbyId}")
+    // @ResponseStatus(HttpStatus.NO_CONTENT)
+    // public void createPlayer(@PathVariable long lobbyId) {
+
+    //     Lobby lobby = lobbyManager.getLobby(lobbyId);
+    //     for (int i = 1; i < 3; i++){
+    //         Player newPlayer = new Player();
+    //         newPlayer.setNickname("test");
+    //         Player createdPlayer = playerService.createPlayer(newPlayer);
+    //         teamService.addPlayer(lobby, TeamType.BLUE ,createdPlayer);
+    //     }
+    //     for (int i = 1; i < 3; i++){
+    //         Player newPlayer = new Player();
+    //         newPlayer.setNickname("test");
+    //         Player createdPlayer = playerService.createPlayer(newPlayer);
+    //         teamService.addPlayer(lobby, TeamType.RED, createdPlayer);
+    //     }
+
+
+
     // }
 }
