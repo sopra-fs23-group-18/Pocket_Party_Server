@@ -200,7 +200,7 @@ public class LobbyManagement {
   public void addGame(Game game, Long lobbyId){
     Lobby lobby = getLobby(lobbyId);
     lobby.setGame(game);
-    lobbyRepository.save(lobby);
-    lobbyRepository.flush();
+    // lobbyRepository.save(lobby);
+    // lobbyRepository.flush();
   }
 }
