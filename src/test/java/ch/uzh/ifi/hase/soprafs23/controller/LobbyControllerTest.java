@@ -39,6 +39,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
@@ -67,6 +68,8 @@ public class LobbyControllerTest {
     @MockBean
     private PlayerService playerService;
     @MockBean
+    private GameService gameService;
+    @MockBean
     private SimpMessagingTemplate messagingTemplate;
     private Lobby lobby = new Lobby();
      
@@ -74,10 +77,7 @@ public class LobbyControllerTest {
     public void setup() {
         //given
         lobby.setId(1L);
-        lobby.setWinningScore(500);
         lobby.setInviteCode(295738);
-        List<MinigameType> minigames = Arrays.asList(MinigameType.values());
-        lobby.setMinigamesChoice(minigames);
         List<Player> unassignedPlayers = new ArrayList<Player>();
         lobby.setUnassignedPlayers(unassignedPlayers);
 
@@ -103,9 +103,8 @@ public class LobbyControllerTest {
     public void createLobby_validInput_lobbyCreated() throws Exception {
             
         LobbyPostDTO lobbyPostDTO = new LobbyPostDTO();
-        lobbyPostDTO.setWinningScore(500);
     
-        given(lobbyManager.createLobby(Mockito.any())).willReturn(lobby);
+        given(lobbyManager.createLobby()).willReturn(lobby);
     
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/lobbies")
@@ -117,7 +116,6 @@ public class LobbyControllerTest {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id", is(lobby.getId().intValue())))
             .andExpect(jsonPath("$.inviteCode", is(lobby.getInviteCode())))
-            .andExpect(jsonPath("$.winningScore", is(lobby.getWinningScore())))
             .andExpect(jsonPath("$.teams[*].color", contains(lobby.getTeams().get(0).getColor().toString(), lobby.getTeams().get(1).getColor().toString())))
             .andExpect(jsonPath("$.teams[*].name", contains(lobby.getTeams().get(0).getName(), lobby.getTeams().get(1).getName())))
             .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId().intValue(), lobby.getTeams().get(1).getId().intValue())))
@@ -130,9 +128,8 @@ public class LobbyControllerTest {
     public void createLobby_invalidInput_lobbyNotCreated() throws Exception {
            
         LobbyPostDTO lobbyPostDTO = new LobbyPostDTO();
-        lobbyPostDTO.setWinningScore(-500);
     
-        given(lobbyManager.createLobby(Mockito.any())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        given(lobbyManager.createLobby()).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
     
         // when/then -> do the request + validate the result
         MockHttpServletRequestBuilder postRequest = post("/lobbies")
@@ -157,7 +154,6 @@ public class LobbyControllerTest {
         mockMvc.perform(getRequest).andExpect(status().isOk())
             .andExpect(jsonPath("$.id", is(lobby.getId().intValue())))
             .andExpect(jsonPath("$.inviteCode", is(lobby.getInviteCode())))
-            .andExpect(jsonPath("$.winningScore", is(lobby.getWinningScore())))
             .andExpect(jsonPath("$.teams[*].color", contains(lobby.getTeams().get(0).getColor().toString(), lobby.getTeams().get(1).getColor().toString())))
             .andExpect(jsonPath("$.teams[*].name", contains(lobby.getTeams().get(0).getName(), lobby.getTeams().get(1).getName())))
             .andExpect(jsonPath("$.teams[*].id", contains(lobby.getTeams().get(0).getId().intValue(), lobby.getTeams().get(1).getId().intValue())))
