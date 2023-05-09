@@ -155,7 +155,7 @@ public class GameController {
     /**
      * @return winning score + both teams (id, score, name, color)
     */
-    @GetMapping("/lobbies/{lobbyId}/scores")
+    @GetMapping("/lobbies/{lobbyId}/games/{gameId}/scores")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public ScoresGetDTO getScores(@PathVariable long lobbyId) {
