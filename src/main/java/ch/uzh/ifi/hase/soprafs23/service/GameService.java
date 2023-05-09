@@ -27,7 +27,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Team;
 @Transactional
 public class GameService {
     
-    private final Logger log = LoggerFactory.getLogger(LobbyManagement.class);
+    private final Logger log = LoggerFactory.getLogger(GameService.class);
 
     @Autowired
     private final GameRepository gameRepository;

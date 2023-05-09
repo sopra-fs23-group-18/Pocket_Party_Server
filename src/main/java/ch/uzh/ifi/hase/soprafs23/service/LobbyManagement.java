@@ -31,24 +31,12 @@ public class LobbyManagement {
 
   @Autowired
   private final LobbyRepository lobbyRepository;
-  @Autowired
-  private final MinigameService minigameService;
-  @Autowired
-  private final TeamService teamService;
-  @Autowired
-  private final PlayerService playerService;
-  @Autowired
-  private final GameService gameService;
+  
 
   private Random randomizer = new Random();
 
-  public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, MinigameService minigameService,
-      TeamService teamService, PlayerService playerService, GameService gameService) {
+  public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository) {
     this.lobbyRepository = lobbyRepository;
-    this.minigameService = minigameService;
-    this.teamService = teamService;
-    this.playerService = playerService;
-    this.gameService = gameService;
   }
 
     public Lobby createLobby() {
