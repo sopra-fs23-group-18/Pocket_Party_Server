@@ -83,6 +83,7 @@ public interface DTOMapper {
 
   @Mapping(source = "minigamesChoice", target = "minigamesChoice")
   @Mapping(source = "winningScore", target = "winningScore")
+  @Mapping(source = "playerChoice", target = "playerChoice")
   Game convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
 
   @Mapping(source = "winningScore", target = "winningScore")
