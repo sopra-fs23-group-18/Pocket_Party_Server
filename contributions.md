@@ -211,6 +211,14 @@ Upcoming:
 ## Nils Grob
 
 ## Stefan Schuler
+- added some buttons and the create Game call in the settings page [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53)
+- fixed the list of players not working properly (database primary key error) [#142](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/142)
+- moved winningScore into game and according changes + added forgotten setters & getters [#103](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/103)
+- redesigned controller methods, added some endpoints and moved them into controller that fits more [#104](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/104)
+- changed a small test to try something [#147](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/147)
+- redesigned service methods, added some and moved them into service that fits more + repo calls (not 100% finished yet) [#145](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/145)
+
+
 ## Naseem Hassan
 
 - Added settings layout [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53):
