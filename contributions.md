@@ -203,5 +203,12 @@ Upcoming:
 
 ## Sven Ringger
 
--   Implemented game logic for hot potato in web, still needs backend for me to continue [#62](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/62)
+-   Implement game logic for hot potato in web, still needs backend for me to continue [#62](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/62)
 -   Unify web for better responsiveness [#64](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/64)
+
+# 05.05 - 11.05
+
+## Sven Ringger
+
+- Implement ErrorScreen for web [#68](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/68)
+- Implement ErrorScreen for mobile [#26](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/26)
