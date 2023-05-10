@@ -208,6 +208,18 @@ Upcoming:
 
 # 05.05 - 11.05
 
+## Nils Grob
+
+## Stefan Schuler
+## Naseem Hassan
+
+- Added settings layout [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53):
+  - Added styling/layout for Settings page. Now one can easily add more options in the settings page.
+
+- Added settings options for game duration [#70](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/70):
+  - Added three options for the duration of game: short, normal and long. When clicking one of the three options the winningScore is automaitcally updated.
+
+## Guojun Wu
 ## Sven Ringger
 
 - Implement ErrorScreen for web [#68](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/68)
