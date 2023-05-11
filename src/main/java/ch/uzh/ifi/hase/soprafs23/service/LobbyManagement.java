@@ -120,8 +120,7 @@ public class LobbyManagement {
   //     teamService.updateScore(lobby, teams.get(1).getColor(), score);
   //   }
   //   lobbyRepository.save(lobby);
-  //   lobbyRepository.flush();
-   
+  //   lobbyRepository.flush();   
   // }
 
   public Team getLeadingTeam(Game game) {
