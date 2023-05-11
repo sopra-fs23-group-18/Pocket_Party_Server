@@ -88,6 +88,8 @@ public class LobbyController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void startGame(@PathVariable long lobbyId){
         lobbyManager.ableToStart(lobbyId);
+        //teamname update
+
         //TODO:
         //maybe do something in lobby to set it to be fixed or similar
     }

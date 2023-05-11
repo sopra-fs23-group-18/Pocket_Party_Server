@@ -96,8 +96,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public MinigameGetDTO addMinigame(@PathVariable long gameId){
-        Game game = gameService.getGame(gameId);
-        Minigame nextMinigame = gameService.addUpcomingMinigame(game);
+        Minigame nextMinigame = gameService.addUpcomingMinigame(gameId);
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 

@@ -92,7 +92,8 @@ public class GameService {
         return nextMinigameType;
     }
 
-    public Minigame addUpcomingMinigame(Game game) {
+    public Minigame addUpcomingMinigame(Long gameId) {
+        Game game = getGame(gameId);
         MinigameType type = getNextMinigameType(game);
         if (type == null) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
@@ -126,8 +127,11 @@ public class GameService {
       if (newGame.getWinningScore() <= 0 || newGame.getWinningScore() > 100000){
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because the winningScore was invalid!");
       }
+      if (newGame.getPlayerChoice() == null){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because playerChoice was not set!");
+      }
       List<MinigameType> minigames;
-      if (newGame.getMinigamesChoice() == null){
+      if (newGame.getMinigamesChoice() == null || newGame.getMinigamesChoice().isEmpty()){
         minigames = minigameService.chosenMinigames();
         newGame.setMinigamesChoice(minigames);
       }
@@ -141,8 +145,11 @@ public class GameService {
     public Minigame updateMinigame(Lobby lobby, Team winnerTeamInput){
       Game game = getGame(lobby);
       Minigame playedMinigame = game.getUpcomingMinigame();
+      if (playedMinigame.getIsFinished() == true){
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores can only be updated once!");
+      }
       if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
-      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
       }
       minigameService.updateMinigame(playedMinigame.getId(), winnerTeamInput.getName());
       game.addToMinigamesPlayed(playedMinigame);
