@@ -228,6 +228,10 @@ Upcoming:
   - Added three options for the duration of game: short, normal and long. When clicking one of the three options the winningScore is automaitcally updated.
 
 ## Guojun Wu
+
+- Command of Pong game to mobile from web app [#66](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/66)
+- Motion detection for Pong [#25](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/25)
+- Scoring for Pong game [#67](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/67)
 ## Sven Ringger
 
 - Implement ErrorScreen for web [#68](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/68)
