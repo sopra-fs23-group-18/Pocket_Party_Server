@@ -209,6 +209,9 @@ Upcoming:
 # 05.05 - 11.05
 
 ## Nils Grob
+- Continued with the vibration game:
+    - Made the vibration selection screen on mobile [#23](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/23)
+- Adjusted frontend api calls to the backend changes which occured on the splitting branch  [#69](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/69)
 
 ## Stefan Schuler
 - added some buttons and the create Game call in the settings page [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53)
