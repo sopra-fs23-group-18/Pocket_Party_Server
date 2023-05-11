@@ -93,4 +93,10 @@ public class WebsocketController {
         teamService.removePlayer(lobby, reassignTeamDTO.getFrom(), player);
         teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
     }
+
+    // @MessageMapping("/lobbies/{lobbyId}/voting")
+    // @SendToUser("")
+    // public void votingChoice(@DestinationVariable long lobbyId) {
+        
+    // }
 }

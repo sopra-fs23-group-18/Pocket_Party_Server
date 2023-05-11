@@ -92,7 +92,7 @@ public class GameService {
         return nextMinigameType;
     }
 
-    public void addUpcomingMinigame(Game game) {
+    public Minigame addUpcomingMinigame(Game game) {
         MinigameType type = getNextMinigameType(game);
         if (type == null) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
@@ -101,7 +101,8 @@ public class GameService {
     
         game.setUpcomingMinigame(nextMinigame);
         gameRepository.save(game);
-        gameRepository.flush();        
+        gameRepository.flush();
+        return nextMinigame;        
     }
 
     public Team getWinner(Long gameId) {
@@ -135,7 +136,6 @@ public class GameService {
       Game createdGame = gameRepository.save(newGame);
       gameRepository.flush();
       return createdGame;
-
     }
 
     public Minigame updateMinigame(Lobby lobby, Team winnerTeamInput){

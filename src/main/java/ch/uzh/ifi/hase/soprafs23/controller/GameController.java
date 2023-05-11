@@ -95,10 +95,10 @@ public class GameController {
     @PostMapping("/lobbies/{lobbyId}/games/{gameId}/minigames")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public void addMinigame(@PathVariable long gameId){
-       
+    public MinigameGetDTO addMinigame(@PathVariable long gameId){
         Game game = gameService.getGame(gameId);
-        gameService.addUpcomingMinigame(game);
+        Minigame nextMinigame = gameService.addUpcomingMinigame(game);
+        return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
     /**
