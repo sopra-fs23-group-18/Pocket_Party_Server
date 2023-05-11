@@ -1,12 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 public class GamePostDTO {
-    private List<MinigameType> minigamesChoice = new ArrayList<MinigameType>();
+    private List<MinigameType> minigamesChoice;
     private int winningScore;
 
     public int getWinningScore() {

@@ -126,7 +126,7 @@ public class GameService {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because the winningScore was invalid!");
       }
       List<MinigameType> minigames;
-      if (newGame.getMinigamesChoice() == null){
+      if (newGame.getMinigamesChoice() == null || newGame.getMinigamesChoice().isEmpty()){
         minigames = minigameService.chosenMinigames();
         newGame.setMinigamesChoice(minigames);
       }
