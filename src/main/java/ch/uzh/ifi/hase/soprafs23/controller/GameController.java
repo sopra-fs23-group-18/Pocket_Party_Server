@@ -23,7 +23,8 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
@@ -118,9 +119,9 @@ public class GameController {
     */
     @PutMapping("/lobbies/{lobbyId}/games/{gameId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateScore(@PathVariable long gameId, @RequestBody WinnerTeamPutDTO winnerTeamPutDTO){
+    public void updateScore(@PathVariable long gameId, @RequestBody MinigameWinnerTeamPutDTO winnerTeamPutDTO){
         //instead of String winnerTeam put the winner TeamDTO and get score of other via total minigame score
-        Team winnerTeamInput = DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
+        Team winnerTeamInput = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
 
         //updateScore
         gameService.finishedMinigameUpdate(gameId, winnerTeamInput);
@@ -145,9 +146,9 @@ public class GameController {
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/winner")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public TeamGetDTO getWinner(@PathVariable long gameId) {
+    public WinnerTeamGetDTO getWinner(@PathVariable long gameId) {
         Team team = gameService.getWinner(gameId);
-        return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
+        return DTOMapper.INSTANCE.convertEntityToWinnerTeamGetDTO(team);
     }
 
 

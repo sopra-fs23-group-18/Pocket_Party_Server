@@ -13,9 +13,13 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamNamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
+
+import java.util.List;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -70,13 +74,20 @@ public interface DTOMapper {
   @Mapping(source = "color", target = "color")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
-  Team convertWinnerTeamPutDTOToEntity(WinnerTeamPutDTO winnerTeamPutDTO);
+  Team convertMinigameWinnerTeamPutDTOToEntity(MinigameWinnerTeamPutDTO winnerTeamPutDTO);
 
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
   @Mapping(source = "color", target = "color")
   TeamGetDTO convertEntityToTeamGetDTO(Team team); 
+
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "name", target = "name")
+  @Mapping(source = "score", target = "score")
+  @Mapping(source = "color", target = "color")
+  @Mapping(source = "players", target = "players")
+  WinnerTeamGetDTO convertEntityToWinnerTeamGetDTO(Team team); 
 
   @Mapping(source = "isFinished", target = "isFinished")
   GameOverGetDTO convertEntityToGameOverGetDTO(Game game);
@@ -89,5 +100,9 @@ public interface DTOMapper {
   @Mapping(source = "winningScore", target = "winningScore")
   @Mapping(source = "id", target = "id")
   GameGetDTO convertEntityToGameGetDTO(Game game);
+
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "name", target = "name")
+  Team convertTeamNamePutDTOToEntity(TeamNamePutDTO teamNamePutDTO);
   
 }
