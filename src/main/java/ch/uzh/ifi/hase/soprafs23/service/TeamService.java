@@ -118,6 +118,16 @@ public class TeamService {
         return players;
     }
 
+    public void updateNames(Lobby lobby, List<Team> teamNames){
+        //check if both names unique, maybe via getByNameAndLobby and see if already in there (if null then doesn't exist)
+        for (Team update : teamNames){
+            Team team = getTeam(update.getId());
+            team.setName(update.getName());
+            //if something doesnt work, throw error
+        }
+    }
+
+
     
 
 
