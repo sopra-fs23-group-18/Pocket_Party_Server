@@ -73,7 +73,7 @@ public class WebsocketController {
         Player player = playerService.getPlayer(assignData.getPlayerId());
         Lobby lobby = lobbyManager.getLobby(lobbyId);
         lobbyManager.removeFromUnassignedPlayers(lobbyId, player);
-        teamService.addPlayer(lobby, assignData.getTeam(), player);
+        teamService.addPlayer(lobby, assignData.getName(), player);
     }
 
     @MessageMapping("/lobbies/{lobbyId}/unassign")
@@ -81,7 +81,7 @@ public class WebsocketController {
 
         Player player = playerService.getPlayer(unassignData.getPlayerId());
         Lobby lobby = lobbyManager.getLobby(lobbyId);
-        teamService.removePlayer(lobby, unassignData.getTeam(), player);
+        teamService.removePlayer(lobby, unassignData.getName(), player);
         lobbyManager.addToUnassignedPlayers(lobbyId, player);
     }
 

@@ -4,14 +4,21 @@ import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 
 public class PlayerAssignTeamDTO {
     private long playerId;
-    private TeamType team;
+    //private TeamType team;
+    private String name;
    
-    public TeamType getTeam() {
-        return team;
+    public String getName() {
+        return name;
     }
-    public void setTeam(TeamType team) {
-        this.team = team;
+    public void setName(String name) {
+        this.name = name;
     }
+    // public TeamType getTeam() {
+    //     return team;
+    // }
+    // public void setTeam(TeamType team) {
+    //     this.team = team;
+    // }
     public long getPlayerId() {
         return playerId;
     }

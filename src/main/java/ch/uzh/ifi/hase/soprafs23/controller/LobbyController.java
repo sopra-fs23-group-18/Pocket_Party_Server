@@ -141,4 +141,26 @@ public class LobbyController {
     //     return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
     // }
 
+    @PutMapping("/lobbies/players/{lobbyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void createPlayer(@PathVariable long lobbyId) {
+
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        for (int i = 1; i < 3; i++){
+            Player newPlayer = new Player();
+            newPlayer.setNickname("test");
+            Player createdPlayer = playerService.createPlayer(newPlayer);
+            teamService.addPlayer(lobby, "Team Blue" ,createdPlayer);
+        }
+        for (int i = 1; i < 3; i++){
+            Player newPlayer = new Player();
+            newPlayer.setNickname("test");
+            Player createdPlayer = playerService.createPlayer(newPlayer);
+            teamService.addPlayer(lobby, "Team Red", createdPlayer);
+        }
+
+
+
+    }
+
 }
