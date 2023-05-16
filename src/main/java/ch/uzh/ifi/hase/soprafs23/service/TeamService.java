@@ -47,24 +47,24 @@ public class TeamService {
     // return newTeam;
     // }
 
-    public void addPlayer(Lobby lobby, TeamType teamColor, Player player) {
-        if (lobby == null || teamColor == null || player == null) {
+    public void addPlayer(Lobby lobby, String teamName, Player player) {
+        if (lobby == null || teamName == null || player == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT,
                     "The input was empty, please provide information!");
         }
-        Team team = getByColorAndLobby(lobby, teamColor);
+        Team team = getByNameAndLobby(lobby, teamName);
         List<Player> players = team.getPlayers();
         players.add(player);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
-    public void removePlayer(Lobby lobby, TeamType teamColor, Player player) {
+    public void removePlayer(Lobby lobby, String teamName, Player player) {
         if (player == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT,
                     "The input was empty, please provide information!");
         }
-        Team team = getByColorAndLobby(lobby, teamColor);
+        Team team = getByNameAndLobby(lobby, teamName);
         List<Player> players = team.getPlayers();
         players.remove(player);
         teamRepository.save(team);
@@ -78,17 +78,27 @@ public class TeamService {
         return team;
     }
 
-    public void updateScore(Lobby lobby, TeamType color, int score) {
-        Team team = getByColorAndLobby(lobby, color);
+    public void updateScore(Lobby lobby, String teamName, int score) {
+        Team team = getByNameAndLobby(lobby, teamName);
         team.setScore(team.getScore() + score);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
-    public Team getByColorAndLobby(Lobby lobby, TeamType color) {
+    // public Team getByColorAndLobby(Lobby lobby, TeamType color) {
+    //     List<Team> teams = getTeams(lobby);
+    //     for (Team team : teams) {
+    //         if (team.getColor().ordinal() == color.ordinal()) {
+    //             return team;
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    public Team getByNameAndLobby(Lobby lobby, String name) {
         List<Team> teams = getTeams(lobby);
         for (Team team : teams) {
-            if (team.getColor().ordinal() == color.ordinal()) {
+            if (team.getName().equals(name)) {
                 return team;
             }
         }
@@ -103,10 +113,10 @@ public class TeamService {
         return teams;
     }
 
-    public List<Player> randomPlayerChoice(TeamType color, Lobby lobby, MinigamePlayers amount){
+    public List<Player> randomPlayerChoice(String teamName, Lobby lobby, MinigamePlayers amount){
 
         List<Player> players = new ArrayList<Player>();
-        Team team = getByColorAndLobby(lobby, color);
+        Team team = getByNameAndLobby(lobby, teamName);
         if (amount.equals(MinigamePlayers.ALL)){
             for (Player p :team.getPlayers()){
             players.add(p);

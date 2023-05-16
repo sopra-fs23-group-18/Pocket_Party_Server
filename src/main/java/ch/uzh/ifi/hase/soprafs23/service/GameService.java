@@ -169,15 +169,15 @@ public class GameService {
       playerService.updatePlayers(playedMinigame.getTeam2Players());
 
       // update score of teams
-      teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
+      teamService.updateScore(lobby, winnerTeamInput.getName(), winnerTeamInput.getScore());
 
       List<Team> teams = lobby.getTeams();
-      if(teams.get(0).getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
+      if(!teams.get(0).getName().equals(winnerTeamInput.getName())){
         int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-        teamService.updateScore(lobby, teams.get(0).getColor(), score);
+        teamService.updateScore(lobby, teams.get(0).getName(), score);
       }else{
         int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-        teamService.updateScore(lobby, teams.get(1).getColor(), score);
+        teamService.updateScore(lobby, teams.get(1).getName(), score);
       }
       isFinished(game);
       gameRepository.save(game);
@@ -188,13 +188,15 @@ public class GameService {
       Game game = getGame(gameId);
       Minigame upcomingMinigame = game.getUpcomingMinigame();
       Lobby lobby = lobbyManager.getLobby(game);
+
+      List<Team> teams = lobby.getTeams();
       
       MinigamePlayers amount = MinigamePlayers.ONE;
       if (upcomingMinigame.getType().equals(MinigameType.HOT_POTATO)){
         amount = MinigamePlayers.ALL;
       }
-      List<Player> team1Players = teamService.randomPlayerChoice(TeamType.RED, lobby, amount);
-      List<Player> team2Players = teamService.randomPlayerChoice(TeamType.BLUE, lobby, amount);
+      List<Player> team1Players = teamService.randomPlayerChoice(teams.get(0).getName(), lobby, amount);
+      List<Player> team2Players = teamService.randomPlayerChoice(teams.get(1).getName(), lobby, amount);
 
       minigameService.addPlayersToMinigame(upcomingMinigame, team1Players, team2Players);
 

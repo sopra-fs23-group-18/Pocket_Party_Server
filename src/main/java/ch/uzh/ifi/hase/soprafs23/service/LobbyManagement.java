@@ -54,12 +54,12 @@ public class LobbyManagement {
         List<Team> teams = new ArrayList<Team>();
         Team team1 = new Team();
         team1.setLobby(newLobby);
-        team1.setColor(TeamType.RED);
+        //team1.setColor(TeamType.RED);
         team1.setName("Team Red");
 
         Team team2 = new Team();
         team2.setLobby(newLobby);
-        team2.setColor(TeamType.BLUE);
+        //team2.setColor(TeamType.BLUE);
         team2.setName("Team Blue");
 
         teams.add(team1);
