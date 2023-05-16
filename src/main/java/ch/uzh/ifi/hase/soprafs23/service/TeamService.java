@@ -118,13 +118,28 @@ public class TeamService {
         return players;
     }
 
+    @Transactional
     public void updateNames(Lobby lobby, List<Team> teamNames){
+        if (teamNames.get(0).getName().equals(teamNames.get(1).getName())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The names are equal!");
+        }
         //check if both names unique, maybe via getByNameAndLobby and see if already in there (if null then doesn't exist)
         for (Team update : teamNames){
+            if (update.getName().strip().equals("")){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This name is invalid");
+            }
             Team team = getTeam(update.getId());
+
+            if (team.getName().equals(update.getName())){continue;}
+            // if (getByNameAndLobby(lobby, update.getName()) == null){
+            //     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "null")
+            // }
             team.setName(update.getName());
+
+            teamRepository.save(team);
             //if something doesnt work, throw error
         }
+        teamRepository.flush();
     }
 
 

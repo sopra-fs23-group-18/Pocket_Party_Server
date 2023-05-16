@@ -22,6 +22,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyNamesPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamNamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
@@ -92,16 +93,17 @@ public class LobbyController {
     */
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void startGame(@PathVariable long lobbyId, @RequestBody List<TeamNamePutDTO> teamNamesPutDTO){
+    public void startGame(@PathVariable long lobbyId, @RequestBody LobbyNamesPutDTO lobbyNamesPutDTO){
         lobbyManager.ableToStart(lobbyId);
         //teamname update
         Lobby lobby = lobbyManager.getLobby(lobbyId);
-        List<Team> teams = new ArrayList<Team>();
-        for (TeamNamePutDTO teamPutDTO : teamNamesPutDTO){
-            Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOToEntity(teamPutDTO);
-            teams.add(team);
-        }
+        // List<Team> teams = new ArrayList<Team>();
+        // for (TeamNamePutDTO teamPutDTO : teamNamesPutDTO){
+        //     Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOToEntity(teamPutDTO);
+        //     teams.add(team);
+        // }
 
+        List<Team> teams = DTOMapper.INSTANCE.convertLobbyNamesPutDTOtoEntity(lobbyNamesPutDTO).getTeams();
         teamService.updateNames(lobby, teams);
         
 

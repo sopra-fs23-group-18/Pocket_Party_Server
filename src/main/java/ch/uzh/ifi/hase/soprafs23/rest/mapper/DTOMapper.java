@@ -9,6 +9,7 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyNamesPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
@@ -104,5 +105,8 @@ public interface DTOMapper {
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
   Team convertTeamNamePutDTOToEntity(TeamNamePutDTO teamNamePutDTO);
+
+  @Mapping(source = "teams", target = "teams")
+  Lobby convertLobbyNamesPutDTOtoEntity(LobbyNamesPutDTO lobbyNamesPutDTO);
   
 }
