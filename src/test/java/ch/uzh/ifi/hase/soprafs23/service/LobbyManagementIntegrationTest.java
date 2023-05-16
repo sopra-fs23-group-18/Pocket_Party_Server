@@ -20,7 +20,7 @@ import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.TeamRepository;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 
 @WebAppConfiguration
 @SpringBootTest

@@ -38,7 +38,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
@@ -411,7 +411,7 @@ public class LobbyControllerTest {
     @Test
     public void updateScores_lobbyNotFound_lobbyNotUpdated() throws Exception {
         
-        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
         winnerTeamPutDTO.setColor(TeamType.RED);
         winnerTeamPutDTO.setName("Team Red");
         winnerTeamPutDTO.setScore(300);
@@ -433,7 +433,7 @@ public class LobbyControllerTest {
     @Test
     public void updateScores_MinigameNotFound_lobbyNotUpdated() throws Exception {
         
-        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
         winnerTeamPutDTO.setColor(TeamType.RED);
         winnerTeamPutDTO.setName("Team Red");
         winnerTeamPutDTO.setScore(300);
@@ -453,7 +453,7 @@ public class LobbyControllerTest {
     @Test
     public void updateScores_invalidScore_lobbyNotUpdated() throws Exception {
         
-        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
         winnerTeamPutDTO.setColor(TeamType.RED);
         winnerTeamPutDTO.setName("Team Red");
         winnerTeamPutDTO.setScore(-200);
@@ -495,7 +495,7 @@ public class LobbyControllerTest {
         lobby.setUpcomingMinigame(minigame);
 
 
-        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
         winnerTeamPutDTO.setColor(TeamType.RED);
         winnerTeamPutDTO.setName("Team Red");
         winnerTeamPutDTO.setScore(300);
@@ -543,7 +543,7 @@ public class LobbyControllerTest {
         lobby.setUpcomingMinigame(minigame);
 
 
-        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
         winnerTeamPutDTO.setColor(TeamType.RED);
         winnerTeamPutDTO.setName("Team Red");
         winnerTeamPutDTO.setScore(300);
@@ -593,7 +593,7 @@ public class LobbyControllerTest {
 
         lobby.setUpcomingMinigame(minigame);
 
-        WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+        MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
         winnerTeamPutDTO.setColor(TeamType.RED);
         winnerTeamPutDTO.setName("Team Red");
         winnerTeamPutDTO.setScore(300);

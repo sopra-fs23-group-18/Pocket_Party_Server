@@ -16,7 +16,7 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -165,13 +165,13 @@ public class DTOMapperTest {
   @Test
   public void testGetWinnerTeam_fromWinnerTeamPutDTO_toTeam_success() {
     // create WinnerTeamPutDTO
-    WinnerTeamPutDTO winnerTeamPutDTO = new WinnerTeamPutDTO();
+    MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
     winnerTeamPutDTO.setColor(TeamType.RED);
     winnerTeamPutDTO.setName("test");
     winnerTeamPutDTO.setScore(100);
 
     // MAP -> Create Team
-    Team team = DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
+    Team team = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
 
     // check content
     assertEquals(winnerTeamPutDTO.getColor(), team.getColor());

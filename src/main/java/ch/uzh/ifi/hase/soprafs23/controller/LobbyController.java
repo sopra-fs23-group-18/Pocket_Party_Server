@@ -1,5 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamNamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
@@ -86,9 +92,18 @@ public class LobbyController {
     */
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void startGame(@PathVariable long lobbyId){
+    public void startGame(@PathVariable long lobbyId, @RequestBody List<TeamNamePutDTO> teamNamesPutDTO){
         lobbyManager.ableToStart(lobbyId);
         //teamname update
+        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        List<Team> teams = new ArrayList<Team>();
+        for (TeamNamePutDTO teamPutDTO : teamNamesPutDTO){
+            Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOToEntity(teamPutDTO);
+            teams.add(team);
+        }
+
+        teamService.updateNames(lobby, teams);
+        
 
         //TODO:
         //maybe do something in lobby to set it to be fixed or similar
