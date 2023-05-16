@@ -1,18 +1,25 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamNamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
+
+import java.util.List;
 
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -43,19 +50,19 @@ public interface DTOMapper {
   @Mapping(source = "status", target = "status")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
-  @Mapping(source = "winningScore", target = "winningScore")
-  Lobby convertLobbyPostDTOtoEntity(LobbyPostDTO lobbyPostDTO);
+  // @Mapping(source = "winningScore", target = "winningScore")
+  // Lobby convertLobbyPostDTOtoEntity(LobbyPostDTO lobbyPostDTO);
 
   @Mapping(source = "id", target = "id")
-  @Mapping(source = "winningScore", target = "winningScore")
+  //@Mapping(source = "winningScore", target = "winningScore")
   @Mapping(source = "inviteCode", target = "inviteCode")
   @Mapping(source = "teams", target = "teams")
   @Mapping(source = "unassignedPlayers", target = "unassignedPlayers")
   LobbyGetDTO convertEntityToLobbyGetDTO(Lobby lobby);
 
-  @Mapping(source = "winningScore", target = "winningScore")
-  @Mapping(source = "teams", target = "teams")
-  ScoresGetDTO convertEntityToScoresGetDTO(Lobby lobby);
+  @Mapping(source = "lobby.teams", target = "teams")
+  @Mapping(source = "game.winningScore", target = "winningScore")
+  ScoresGetDTO convertEntitiesToScoresGetDTO(Lobby lobby, Game game);
   
   @Mapping(source = "scoreToGain", target = "scoreToGain")
   @Mapping(source = "type", target = "type")
@@ -67,7 +74,7 @@ public interface DTOMapper {
   @Mapping(source = "color", target = "color")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
-  Team convertWinnerTeamPutDTOToEntity(WinnerTeamPutDTO winnerTeamPutDTO);
+  Team convertMinigameWinnerTeamPutDTOToEntity(MinigameWinnerTeamPutDTO winnerTeamPutDTO);
 
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
@@ -75,6 +82,27 @@ public interface DTOMapper {
   @Mapping(source = "color", target = "color")
   TeamGetDTO convertEntityToTeamGetDTO(Team team); 
 
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "name", target = "name")
+  @Mapping(source = "score", target = "score")
+  @Mapping(source = "color", target = "color")
+  @Mapping(source = "players", target = "players")
+  WinnerTeamGetDTO convertEntityToWinnerTeamGetDTO(Team team); 
+
   @Mapping(source = "isFinished", target = "isFinished")
-  GameOverGetDTO convertEntityToGameOverGetDTO(Lobby lobby);
+  GameOverGetDTO convertEntityToGameOverGetDTO(Game game);
+
+  @Mapping(source = "minigamesChoice", target = "minigamesChoice")
+  @Mapping(source = "winningScore", target = "winningScore")
+  @Mapping(source = "playerChoice", target = "playerChoice")
+  Game convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
+
+  @Mapping(source = "winningScore", target = "winningScore")
+  @Mapping(source = "id", target = "id")
+  GameGetDTO convertEntityToGameGetDTO(Game game);
+
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "name", target = "name")
+  Team convertTeamNamePutDTOToEntity(TeamNamePutDTO teamNamePutDTO);
+  
 }

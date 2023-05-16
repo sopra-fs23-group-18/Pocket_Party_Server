@@ -203,5 +203,39 @@ Upcoming:
 
 ## Sven Ringger
 
--   Implemented game logic for hot potato in web, still needs backend for me to continue [#62](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/62)
+-   Implement game logic for hot potato in web, still needs backend for me to continue [#62](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/62)
 -   Unify web for better responsiveness [#64](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/64)
+
+# 05.05 - 11.05
+
+## Nils Grob
+- Continued with the vibration game:
+    - Made the vibration selection screen on mobile [#23](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/23)
+- Adjusted frontend api calls to the backend changes which occured on the splitting branch  [#69](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/69)
+
+## Stefan Schuler
+- added some buttons and the create Game call in the settings page [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53)
+- fixed the list of players not working properly (database primary key error) [#142](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/142)
+- moved winningScore into game and according changes + added forgotten setters & getters [#103](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/103)
+- redesigned controller methods, added some endpoints and moved them into controller that fits more [#104](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/104)
+- changed a small test to try something [#147](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/147)
+- redesigned service methods, added some and moved them into service that fits more + repo calls (not 100% finished yet) [#145](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/145)
+
+
+## Naseem Hassan
+
+- Added settings layout [#53](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/53):
+  - Added styling/layout for Settings page. Now one can easily add more options in the settings page.
+
+- Added settings options for game duration [#70](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/70):
+  - Added three options for the duration of game: short, normal and long. When clicking one of the three options the winningScore is automaitcally updated.
+
+## Guojun Wu
+
+- Command of Pong game to mobile from web app [#66](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/66)
+- Motion detection for Pong [#25](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/25)
+- Scoring for Pong game [#67](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/67)
+## Sven Ringger
+
+- Implement ErrorScreen for web [#68](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/68)
+- Implement ErrorScreen for mobile [#26](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/26)

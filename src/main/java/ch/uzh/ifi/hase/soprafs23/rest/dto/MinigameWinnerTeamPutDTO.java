@@ -2,7 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 
-public class WinnerTeamPutDTO {
+public class MinigameWinnerTeamPutDTO {
     private int score;
     private TeamType color;
     private String name;

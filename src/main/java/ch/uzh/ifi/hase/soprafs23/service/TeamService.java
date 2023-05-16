@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -25,8 +27,12 @@ public class TeamService {
     @Autowired
     private final TeamRepository teamRepository;
 
-    public TeamService(@Qualifier("teamRepository") TeamRepository teamRepository) {
+    @Autowired
+    private final PlayerService playerService;
+
+    public TeamService(@Qualifier("teamRepository") TeamRepository teamRepository, PlayerService playerService) {
         this.teamRepository = teamRepository;
+        this.playerService = playerService;
     }
 
     // public Team createTeam(TeamType color, Lobby lobby, String name) {
@@ -80,10 +86,7 @@ public class TeamService {
     }
 
     public Team getByColorAndLobby(Lobby lobby, TeamType color) {
-        List<Team> teams = teamRepository.findByLobby(lobby);
-        if (teams.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No team with such a lobby exists!");
-        }
+        List<Team> teams = getTeams(lobby);
         for (Team team : teams) {
             if (team.getColor().ordinal() == color.ordinal()) {
                 return team;
@@ -91,4 +94,41 @@ public class TeamService {
         }
         return null;
     }
+
+    public List<Team> getTeams(Lobby lobby){
+        List<Team> teams = teamRepository.findByLobby(lobby);
+        if (teams.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No team with such a lobby exists!");
+        }
+        return teams;
+    }
+
+    public List<Player> randomPlayerChoice(TeamType color, Lobby lobby, MinigamePlayers amount){
+
+        List<Player> players = new ArrayList<Player>();
+        Team team = getByColorAndLobby(lobby, color);
+        if (amount.equals(MinigamePlayers.ALL)){
+            for (Player p :team.getPlayers()){
+            players.add(p);
+            }
+        }
+        else{
+        players = playerService.getMinigamePlayers(team, 1);
+        }
+        return players;
+    }
+
+    public void updateNames(Lobby lobby, List<Team> teamNames){
+        //check if both names unique, maybe via getByNameAndLobby and see if already in there (if null then doesn't exist)
+        for (Team update : teamNames){
+            Team team = getTeam(update.getId());
+            team.setName(update.getName());
+            //if something doesnt work, throw error
+        }
+    }
+
+
+    
+
+
 }

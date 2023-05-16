@@ -5,9 +5,8 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository("lobbyRepository")
-public interface LobbyRepository extends JpaRepository<Lobby, Long> {
-  Lobby findById(long id);
-  Lobby findByInviteCode(int inviteCode);
-  Lobby findByGame(Game game);
+@Repository("gameRepository")
+public interface GameRepository extends JpaRepository<Game, Long> {
+  Game findById(long id);
+  Game findByLobby(Lobby lobby);
 }
