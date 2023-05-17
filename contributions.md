@@ -239,3 +239,10 @@ Upcoming:
 
 - Implement ErrorScreen for web [#68](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/68)
 - Implement ErrorScreen for mobile [#26](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/26)
+
+# 12.05 - 18.05
+## Sven Ringger
+- Create Info component
+- Add Info component to lobby with corresponding text [#80](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/80)
+- Add Info component to CreateLobby with corresponding text [#84](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/84), used to be [#166](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/166) before it was moved.
+- Add button in GamePreview instead of timer [#54](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/54)
