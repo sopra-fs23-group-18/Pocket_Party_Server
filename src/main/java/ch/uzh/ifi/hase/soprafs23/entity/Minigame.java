@@ -13,12 +13,13 @@ import javax.persistence.Inheritance;
 
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Minigame implements Serializable{
+public abstract class Minigame implements Serializable{
     
     private static final long serialVersionUID = 1L;
 
@@ -28,7 +29,7 @@ public class Minigame implements Serializable{
     private Long id;
 
     @Column(nullable = false)
-    private MinigameType type;
+    private final MinigameType type;
 
     @Column(nullable = false)
     private boolean isFinished = false;
@@ -36,8 +37,8 @@ public class Minigame implements Serializable{
     @Column(nullable = true)
     private String winnerTeamName;
 
-    @Column(nullable = false)
-    private int scoreToGain;
+    @Transient
+    private final int scoreToGain = 500;
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Player> team1Players = new ArrayList<Player>();
@@ -45,10 +46,12 @@ public class Minigame implements Serializable{
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Player> team2Players = new ArrayList<Player>();
 
-    @Column(nullable = false)
-    protected String description;
+    @Transient
+    private final String description;
 
-    public Minigame() {
+    public Minigame(MinigameType type, String description) {
+        this.type = type;
+        this.description = description;
     }
 
     public Long getId() {
@@ -63,13 +66,13 @@ public class Minigame implements Serializable{
         return type;
     }
 
-    public void setType(MinigameType type) {
-        this.type = type;
-    }
+    // public void setType(MinigameType type){
+    //     this.type = type;
+    // }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    // public void setDescription(String description) {
+    //     this.description = description;
+    // }
 
     public String getDescription() {
         return description;
@@ -95,9 +98,9 @@ public class Minigame implements Serializable{
         return scoreToGain;
     }
 
-    public void setScoreToGain(int scoreToGain){
-        this.scoreToGain = scoreToGain;
-    }
+    // public void setScoreToGain(int scoreToGain){
+    //     this.scoreToGain = scoreToGain;
+    // }
 
     public String getWinner() {
         return winnerTeamName;

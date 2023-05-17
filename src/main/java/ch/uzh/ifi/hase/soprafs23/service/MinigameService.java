@@ -1,6 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,7 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
+//import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -38,13 +42,27 @@ public class MinigameService {
     }
 
     public Minigame createMinigame(MinigameType nexMinigameType){
-        String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
-        Minigame upcomingMinigame = new Minigame();
+        //String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
+
+        //EnumMap<MinigameType, Minigame> minigameMapper = new EnumMap<MinigameType, Minigame>(null)
+
+        Minigame upcomingMinigame;
+
+
+        Class<? extends Minigame> minigameClass = MinigameMapper.getMinigameMapper().get(nexMinigameType);
+        try {
+            upcomingMinigame = minigameClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException| NoSuchMethodException | InvocationTargetException e) {
+            throw new RuntimeException("Unable to create minigame instance", e);
+        }
+
+
+        //Minigame upcomingMinigame = new Minigame();
         //needs to be calculated via linear exponential
         //maybe also set minigame scoretogain in settings of game
-        upcomingMinigame.setScoreToGain(500);
-        upcomingMinigame.setType(nexMinigameType);
-        upcomingMinigame.setDescription(description);
+        // upcomingMinigame.setScoreToGain(500);
+        // upcomingMinigame.setType(nexMinigameType);
+        // upcomingMinigame.setDescription(description);
 
         upcomingMinigame = minigameRepository.save(upcomingMinigame);
         minigameRepository.flush();
