@@ -1,4 +1,4 @@
-package ch.uzh.ifi.hase.soprafs23.entity;
+package ch.uzh.ifi.hase.soprafs23.entity.minigame;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

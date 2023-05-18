@@ -18,8 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 //import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
-import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 
 @Service

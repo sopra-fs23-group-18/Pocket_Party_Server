@@ -1,4 +1,4 @@
-package ch.uzh.ifi.hase.soprafs23.entity;
+package ch.uzh.ifi.hase.soprafs23.entity.minigame;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import javax.persistence.ManyToMany;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
-public class Pong extends Minigame{
+public class HotPotato extends Minigame{
 
-    public Pong() {
-        super(MinigameType.PONG_GAME, "test");
+    public HotPotato() {
+        super(MinigameType.HOT_POTATO, "The players toss a potato to each other while time is counting down. The player who is holding the object when the timer reaches 0 is eliminated.");
     }
 
     

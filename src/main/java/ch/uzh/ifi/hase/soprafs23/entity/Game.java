@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 
 @Entity
 @Table(name = "GAME")

@@ -13,9 +13,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
-import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;

@@ -3,13 +3,13 @@ package ch.uzh.ifi.hase.soprafs23.constant;
 import java.util.EnumMap;
 import java.util.Map;
 
-import ch.uzh.ifi.hase.soprafs23.entity.HotPotato;
-import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
-import ch.uzh.ifi.hase.soprafs23.entity.Pong;
-import ch.uzh.ifi.hase.soprafs23.entity.RPS;
-import ch.uzh.ifi.hase.soprafs23.entity.TappingGame;
-import ch.uzh.ifi.hase.soprafs23.entity.TimingGame;
-import ch.uzh.ifi.hase.soprafs23.entity.Vibration;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Pong;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.RPS;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.TappingGame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.TimingGame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Vibration;
 
 public final class MinigameMapper {
 

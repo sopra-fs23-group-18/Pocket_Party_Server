@@ -1,4 +1,4 @@
-package ch.uzh.ifi.hase.soprafs23.entity;
+package ch.uzh.ifi.hase.soprafs23.entity.minigame;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import javax.persistence.ManyToMany;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
-public class TimingGame extends Minigame{
+public class Pong extends Minigame{
 
-    public TimingGame() {
-        super(MinigameType.TIMING_GAME, "Shake your phone at the right time to catch the objects falling from the sky!");
+    public Pong() {
+        super(MinigameType.PONG_GAME, "test");
     }
 
     

@@ -1,4 +1,4 @@
-package ch.uzh.ifi.hase.soprafs23.entity;
+package ch.uzh.ifi.hase.soprafs23.entity.minigame;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import javax.persistence.ManyToMany;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
-public class Vibration extends Minigame{
+public class TappingGame extends Minigame{
 
-    public Vibration() {
-        super(MinigameType.VIBRATION_GAME, "test");
+    public TappingGame() {
+        super(MinigameType.TAPPING_GAME, "Tap the screen as fast as you can!");
     }
 
     

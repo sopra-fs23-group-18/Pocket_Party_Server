@@ -1,7 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
