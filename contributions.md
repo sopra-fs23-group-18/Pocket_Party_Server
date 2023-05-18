@@ -241,6 +241,21 @@ Upcoming:
 - Implement ErrorScreen for mobile [#26](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/26)
 
 # 12.05 - 18.05
+## Nils Grob
+
+## Stefan Schuler
+
+## Naseem Hassan
+- Added input field for the team names [#73](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/73):
+  - Teams can now choose their own name in the Lobby screen on the Host device. 
+
+- Added settings options for player choice [#72](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/72):
+  - Added two options for how the competing players are chosen before each minigame:
+  Random and Voting. (Voting is not implemented yet)
+
+- Started with VotingScreen implementation. (WIP)
+
+## Guojun Wu
 ## Sven Ringger
 - Create Info component
 - Add Info component to lobby with corresponding text [#80](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/80)
