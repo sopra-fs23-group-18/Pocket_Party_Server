@@ -20,7 +20,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 public class Pong extends Minigame{
 
     public Pong() {
-        super(MinigameType.PONG_GAME, "test");
+        super(MinigameType.PONG_GAME, "test", 500);
     }
 
     

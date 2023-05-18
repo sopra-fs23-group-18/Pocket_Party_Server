@@ -39,7 +39,7 @@ public abstract class Minigame implements Serializable{
     private String winnerTeamName;
 
     @Transient
-    private final int scoreToGain = 500;
+    private final int scoreToGain;
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Player> team1Players = new ArrayList<Player>();
@@ -50,9 +50,10 @@ public abstract class Minigame implements Serializable{
     @Transient
     private final String description;
 
-    public Minigame(MinigameType type, String description) {
+    public Minigame(MinigameType type, String description, int scoreToGain) {
         this.type = type;
         this.description = description;
+        this.scoreToGain = scoreToGain;
     }
 
     public Long getId() {

@@ -20,7 +20,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 public class Vibration extends Minigame{
 
     public Vibration() {
-        super(MinigameType.VIBRATION_GAME, "test");
+        super(MinigameType.VIBRATION_GAME, "test", 200);
     }
 
     

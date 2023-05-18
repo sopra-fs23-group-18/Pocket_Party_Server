@@ -20,7 +20,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 public class TappingGame extends Minigame{
 
     public TappingGame() {
-        super(MinigameType.TAPPING_GAME, "Tap the screen as fast as you can!");
+        super(MinigameType.TAPPING_GAME, "Tap the screen as fast as you can!", 500);
     }
 
     

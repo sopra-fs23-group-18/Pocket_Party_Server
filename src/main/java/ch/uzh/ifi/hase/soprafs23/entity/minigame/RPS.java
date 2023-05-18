@@ -20,7 +20,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 public class RPS extends Minigame{
 
     public RPS() {
-        super(MinigameType.RPS_GAME, "test");
+        super(MinigameType.RPS_GAME, "test", 500);
     }
 
     
