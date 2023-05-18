@@ -249,7 +249,7 @@ Upcoming:
 - add another DTO for overall winnerTeam (with players) [#145](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/145)
 - updated put lobby endpoint to include team name changes (+ DTO & service) [#155](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/155)
 - exchanged TeamColor functionality with TeamName [#105](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/105)
-- 
+
 ## Naseem Hassan
 - Added input field for the team names [#73](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/73):
   - Teams can now choose their own name in the Lobby screen on the Host device. 
