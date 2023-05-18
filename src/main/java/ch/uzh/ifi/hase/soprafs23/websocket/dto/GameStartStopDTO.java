@@ -5,7 +5,8 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 enum GameSignal {
     START,
     STOP,
-    PLAY
+    PLAY,
+    VOTE
 }
 
 public class GameStartStopDTO {

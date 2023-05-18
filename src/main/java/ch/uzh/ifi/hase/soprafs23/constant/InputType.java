@@ -6,5 +6,6 @@ public enum InputType {
     PONG,
     RPS,
     ACCELEROMETER,
-    GYROSCOPE
+    GYROSCOPE,
+    VIBRATION_VOTE
 }
