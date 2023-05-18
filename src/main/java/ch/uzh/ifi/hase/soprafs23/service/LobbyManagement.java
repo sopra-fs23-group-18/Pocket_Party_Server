@@ -199,6 +199,15 @@ public class LobbyManagement {
   public void addGame(Game game, Long lobbyId){
     Lobby lobby = getLobby(lobbyId);
     lobby.setGame(game);
+    if (lobby.getGame() != null){
+      for (Team t : lobby.getTeams()){
+        t.setScore(0);
+        for (Player p : t.getPlayers()){
+          p.setRoundsPlayed(0);
+        }
+      }
+    }
+    
     // lobbyRepository.save(lobby);
     // lobbyRepository.flush();
   }

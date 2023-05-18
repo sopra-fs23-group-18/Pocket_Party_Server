@@ -55,13 +55,13 @@ public class GameService {
         this.lobbyManager = lobbyManager;
     }
 
-    public Game getGame(Lobby lobby) {
-        Game game = gameRepository.findByLobby(lobby);
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The game with the given Lobby does not exist!");
-        }
-        return game;
-    }
+    // public Game getGame(Lobby lobby) {
+    //     Game game = gameRepository.findByLobby(lobby);
+    //     if (game == null) {
+    //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The game with the given Lobby does not exist!");
+    //     }
+    //     return game;
+    // }
 
     public Game getGame(Long gameId) {
       Game game = gameRepository.findById(gameId).orElseThrow(
@@ -69,8 +69,8 @@ public class GameService {
       return game;
   }
 
-    public Minigame getMinigame(Lobby lobby) {
-        Game game = getGame(lobby);
+    public Minigame getMinigame(Long gameId) {
+        Game game = getGame(gameId);
         Minigame minigame = game.getUpcomingMinigame();
         if (minigame == null) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcoming Minigame was found!");
@@ -119,6 +119,8 @@ public class GameService {
         Team team = lobbyManager.getLeadingTeam(game);
         if (team.getScore() >= game.getWinningScore()){
               game.setIsFinished(true);
+              Lobby lobby = lobbyManager.getLobby(game);
+              lobby.getFinishedGames().add(lobby.getGame());
         }
     }
 
@@ -142,8 +144,7 @@ public class GameService {
       return createdGame;
     }
 
-    public Minigame updateMinigame(Lobby lobby, Team winnerTeamInput){
-      Game game = getGame(lobby);
+    public Minigame updateMinigame(Game game, Team winnerTeamInput){
       Minigame playedMinigame = game.getUpcomingMinigame();
       if (playedMinigame.getIsFinished() == true){
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores can only be updated once!");
@@ -162,7 +163,7 @@ public class GameService {
       Lobby lobby = lobbyManager.getLobby(game);
 
       //maybe remove this method
-      Minigame playedMinigame = updateMinigame(lobby, winnerTeamInput);
+      Minigame playedMinigame = updateMinigame(game, winnerTeamInput);
 
       // update roundsPlayed of players
       playerService.updatePlayers(playedMinigame.getTeam1Players());

@@ -84,9 +84,8 @@ public class GameController {
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/minigame")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public MinigameGetDTO getMinigame(@PathVariable long lobbyId) {
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        Minigame nextMinigame = gameService.getMinigame(lobby);
+    public MinigameGetDTO getMinigame(@PathVariable long gameId) {
+        Minigame nextMinigame = gameService.getMinigame(gameId);
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
@@ -158,9 +157,9 @@ public class GameController {
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/scores")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ScoresGetDTO getScores(@PathVariable long lobbyId) {
+    public ScoresGetDTO getScores(@PathVariable long lobbyId, @PathVariable long gameId) {
         Lobby lobby = lobbyManager.getLobby(lobbyId);
-        Game game = gameService.getGame(lobby);
+        Game game = gameService.getGame(gameId);
         return DTOMapper.INSTANCE.convertEntitiesToScoresGetDTO(lobby, game);
     }
 

@@ -26,10 +26,10 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teamId")
-    private Team team;
+    // @JsonIgnore
+    // @ManyToOne(cascade = CascadeType.ALL)
+    // @JoinColumn(name = "teamId")
+    // private Team team;
 
     @Column(nullable = false)
     private int roundsPlayed = 0;
