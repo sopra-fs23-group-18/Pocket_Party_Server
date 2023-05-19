@@ -242,7 +242,10 @@ Upcoming:
 
 # 12.05 - 18.05
 ## Nils Grob
-
+- Finished the vibration game:
+    - Made the voting system for selecting a vibration pattern [#61](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/61)
+    - Implemented the choosing of a winner [#60](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/60)
+    - Started implementing the voting system together with Naseem
 ## Stefan Schuler
 - added the missing settings option in DTO & game entity [#122](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/122)
 - fixed some errors & error handling for methods plus adapted game creation for settings options [#123](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/123)
