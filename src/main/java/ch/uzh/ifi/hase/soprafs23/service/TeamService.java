@@ -80,6 +80,9 @@ public class TeamService {
 
     public void updateScore(Lobby lobby, String teamName, int score) {
         Team team = getByNameAndLobby(lobby, teamName);
+        if (team == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Team with such name exists");
+        }
         team.setScore(team.getScore() + score);
         teamRepository.save(team);
         teamRepository.flush();

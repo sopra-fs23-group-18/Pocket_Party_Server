@@ -159,7 +159,7 @@ public class LobbyManagement {
     Lobby lobby = getLobby(inviteCode);
     int cnt = 0;
     for (Player p : lobby.getUnassignedPlayers()) {
-      if (p.getNickname().equals(playerToCreate.getNickname())) {
+      if (p.getNickname().toUpperCase().equals(playerToCreate.getNickname().toUpperCase())) {
         throw new ResponseStatusException(HttpStatus.CONFLICT,
             "Player with this Nickname already exists in this lobby!");
       }
@@ -167,7 +167,7 @@ public class LobbyManagement {
     }
     for (Team t : lobby.getTeams()) {
       for (Player p : t.getPlayers()) {
-        if (p.getNickname().equals(playerToCreate.getNickname())) {
+        if (p.getNickname().toUpperCase().equals(playerToCreate.getNickname().toUpperCase())) {
           throw new ResponseStatusException(HttpStatus.CONFLICT,
               "Player with this Nickname already exists in this lobby!");
         }

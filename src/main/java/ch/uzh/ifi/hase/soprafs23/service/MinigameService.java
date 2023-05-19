@@ -46,15 +46,7 @@ public class MinigameService {
 
         //EnumMap<MinigameType, Minigame> minigameMapper = new EnumMap<MinigameType, Minigame>(null)
 
-        Minigame upcomingMinigame;
-
-
-        Class<? extends Minigame> minigameClass = MinigameMapper.getMinigameMapper().get(nexMinigameType);
-        try {
-            upcomingMinigame = minigameClass.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException| NoSuchMethodException | InvocationTargetException e) {
-            throw new RuntimeException("Unable to create minigame instance", e);
-        }
+        Minigame upcomingMinigame = getMinigameInstance(nexMinigameType);
 
 
         //Minigame upcomingMinigame = new Minigame();
@@ -68,6 +60,15 @@ public class MinigameService {
         minigameRepository.flush();
         log.debug("Created Information for Minigame: {}", upcomingMinigame);
         return upcomingMinigame;
+    }
+
+    private Minigame getMinigameInstance(MinigameType nexMinigameType) {
+        Class<? extends Minigame> minigameClass = MinigameMapper.getMinigameMapper().get(nexMinigameType);
+        try {
+            return minigameClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            throw new RuntimeException("Unable to create minigame instance", e);
+        }
     }
 
     public Minigame getMinigame(Long minigameId){

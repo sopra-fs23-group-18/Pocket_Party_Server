@@ -161,6 +161,7 @@ public class GameService {
     public void finishedMinigameUpdate(Long gameId, Team winnerTeamInput) {
       Game game = getGame(gameId);
       Lobby lobby = lobbyManager.getLobby(game);
+      
 
       //maybe remove this method
       Minigame playedMinigame = updateMinigame(game, winnerTeamInput);
@@ -169,15 +170,27 @@ public class GameService {
       playerService.updatePlayers(playedMinigame.getTeam1Players());
       playerService.updatePlayers(playedMinigame.getTeam2Players());
 
+      //new:
+      //TODO: add check if score is 0 then award no points
+      if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Score was out of bounds!");
+      }
+
       // update score of teams
       teamService.updateScore(lobby, winnerTeamInput.getName(), winnerTeamInput.getScore());
 
       List<Team> teams = lobby.getTeams();
+
+      //NEW
+      //also check if input is valid first
+      int score = 0;
+      if (winnerTeamInput.getScore() != 0){
+        score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+      }
+
       if(!teams.get(0).getName().equals(winnerTeamInput.getName())){
-        int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
         teamService.updateScore(lobby, teams.get(0).getName(), score);
       }else{
-        int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
         teamService.updateScore(lobby, teams.get(1).getName(), score);
       }
       isFinished(game);
