@@ -264,6 +264,8 @@ Upcoming:
 - Started with VotingScreen implementation. (WIP)
 
 ## Guojun Wu
+- Display Rock-Paper-Scissors game on the Web [#74](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/74)
+- In game screen for Rock-Paper-Scissors [#27](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/27)
 ## Sven Ringger
 - Create Info component
 - Add Info component to lobby with corresponding text [#80](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/80)
