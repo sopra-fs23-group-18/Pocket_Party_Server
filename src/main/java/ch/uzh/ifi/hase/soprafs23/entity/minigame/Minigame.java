@@ -15,6 +15,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 
@@ -41,6 +42,11 @@ public abstract class Minigame implements Serializable{
     @Transient
     private final int scoreToGain;
 
+    @Transient
+    private final MinigamePlayers[] amntPlayersOptions;
+
+    //actual amount of players:
+
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Player> team1Players = new ArrayList<Player>();
 
@@ -50,10 +56,11 @@ public abstract class Minigame implements Serializable{
     @Transient
     private final String description;
 
-    public Minigame(MinigameType type, String description, int scoreToGain) {
+    public Minigame(MinigameType type, String description, int scoreToGain, MinigamePlayers[] amntMinigamePlayers) {
         this.type = type;
         this.description = description;
         this.scoreToGain = scoreToGain;
+        this.amntPlayersOptions = amntMinigamePlayers;
     }
 
     public Long getId() {
@@ -66,6 +73,10 @@ public abstract class Minigame implements Serializable{
 
     public MinigameType getType() {
         return type;
+    }
+
+    public MinigamePlayers[] getAmntPlayersOptions() {
+        return amntPlayersOptions;
     }
 
     // public void setType(MinigameType type){

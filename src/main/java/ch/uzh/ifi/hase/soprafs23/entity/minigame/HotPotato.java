@@ -14,13 +14,19 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
 public class HotPotato extends Minigame{
 
     public HotPotato() {
-        super(MinigameType.HOT_POTATO, "The players toss a potato to each other while time is counting down. The player who is holding the object when the timer reaches 0 is eliminated.", 500);
+        super(
+            MinigameType.HOT_POTATO, 
+            "The players toss a potato to each other while time is counting down. The player who is holding the object when the timer reaches 0 is eliminated.", 
+            500,
+            new MinigamePlayers[] {MinigamePlayers.ALL}
+        );
     }
 
     

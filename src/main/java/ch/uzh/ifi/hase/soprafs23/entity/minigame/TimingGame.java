@@ -14,13 +14,19 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
 public class TimingGame extends Minigame{
 
     public TimingGame() {
-        super(MinigameType.TIMING_GAME, "Shake your phone at the right time to catch the objects falling from the sky!", 500);
+        super(
+            MinigameType.TIMING_GAME, 
+            "Shake your phone at the right time to catch the objects falling from the sky!", 
+            500,
+            new MinigamePlayers[] {MinigamePlayers.ONE}
+        );
     }
 
     

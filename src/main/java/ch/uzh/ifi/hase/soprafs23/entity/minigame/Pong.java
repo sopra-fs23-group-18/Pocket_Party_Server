@@ -14,13 +14,19 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
 public class Pong extends Minigame{
 
     public Pong() {
-        super(MinigameType.PONG_GAME, "test", 500);
+        super(
+            MinigameType.PONG_GAME, 
+            "test", 
+            500,
+            new MinigamePlayers[] {MinigamePlayers.ONE}
+        );
     }
 
     
