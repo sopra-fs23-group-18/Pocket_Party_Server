@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
@@ -35,17 +36,14 @@ public class TeamService {
         this.playerService = playerService;
     }
 
-    // public Team createTeam(TeamType color, Lobby lobby, String name) {
-    // Team newTeam = new Team();
-    // newTeam.setLobby(lobby);
-    // newTeam.setColor(color);
-    // newTeam.setName(name);
-    // newTeam = teamRepository.save(newTeam);
-    // teamRepository.flush();
+    public Team createTeam(Lobby lobby, String name) {
+        Team newTeam = new Team();
+        newTeam.setLobby(lobby);
+        newTeam.setName(name);
 
-    // log.debug("Created Information for User: {}", newTeam);
-    // return newTeam;
-    // }
+        log.debug("Created Information for User: {}", newTeam);
+        return newTeam;
+    }
 
     public void addPlayer(Lobby lobby, String teamName, Player player) {
         if (lobby == null || teamName == null || player == null) {
@@ -120,13 +118,16 @@ public class TeamService {
 
         List<Player> players = new ArrayList<Player>();
         Team team = getByNameAndLobby(lobby, teamName);
+
+        //mapper that maps ONE, TWO to 1,2
+
         if (amount.equals(MinigamePlayers.ALL)){
             for (Player p :team.getPlayers()){
             players.add(p);
             }
         }
         else{
-        players = playerService.getMinigamePlayers(team, 1);
+            players = playerService.getMinigamePlayers(team, 1);
         }
         return players;
     }

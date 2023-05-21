@@ -31,7 +31,7 @@ public class MinigameServiceTest {
         List<MinigameType> minigames = Arrays.asList(MinigameType.values());
 
         // when
-        List<MinigameType> chosenMinigames = minigameService.chosenMinigames();
+        List<MinigameType> chosenMinigames = minigameService.chooseAllMinigames();
 
         // then
         assertNotNull(chosenMinigames);

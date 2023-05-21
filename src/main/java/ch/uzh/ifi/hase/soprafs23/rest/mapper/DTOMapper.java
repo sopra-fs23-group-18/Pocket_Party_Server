@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.TimingGame;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
@@ -12,6 +13,7 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyNamesPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamNamePutDTO;
@@ -70,12 +72,13 @@ public interface DTOMapper {
   @Mapping(source = "description", target = "description")
   @Mapping(source = "team1Players", target = "team1Players")
   @Mapping(source = "team2Players", target = "team2Players")
+  @Mapping(source = "amountOfPlayers", target = "amountOfPlayers")
   MinigameGetDTO convertEntityToMinigameGetDTO(Minigame minigame);
 
   //@Mapping(source = "color", target = "color")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
-  Team convertMinigameWinnerTeamPutDTOToEntity(MinigameWinnerTeamPutDTO winnerTeamPutDTO);
+  Team convertMinigameWinnerTeamPutDTOtoEntity(MinigameWinnerTeamPutDTO winnerTeamPutDTO);
 
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
@@ -104,7 +107,7 @@ public interface DTOMapper {
 
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
-  Team convertTeamNamePutDTOToEntity(TeamNamePutDTO teamNamePutDTO);
+  Team convertTeamNamePutDTOtoEntity(TeamNamePutDTO teamNamePutDTO);
 
   @Mapping(source = "teams", target = "teams")
   Lobby convertLobbyNamesPutDTOtoEntity(LobbyNamesPutDTO lobbyNamesPutDTO);

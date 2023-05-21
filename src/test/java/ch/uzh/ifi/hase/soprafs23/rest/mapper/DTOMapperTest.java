@@ -171,7 +171,7 @@ public class DTOMapperTest {
     winnerTeamPutDTO.setScore(100);
 
     // MAP -> Create Team
-    Team team = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
+    Team team = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOtoEntity(winnerTeamPutDTO);
 
     // check content
     assertEquals(winnerTeamPutDTO.getColor(), team.getColor());

@@ -31,39 +31,45 @@ public class LobbyManagement {
 
   @Autowired
   private final LobbyRepository lobbyRepository;
+
+  @Autowired
+  private final TeamService teamService;
   
 
   private Random randomizer = new Random();
 
-  public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository) {
+  public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, TeamService teamService) {
     this.lobbyRepository = lobbyRepository;
+    this.teamService = teamService;
   }
 
     public Lobby createLobby() {
         Lobby newLobby = new Lobby();
-  
         int inviteCode = randomizer.nextInt(900000) + 100000;
         while (lobbyRepository.findByInviteCode(inviteCode) != null){
           inviteCode = randomizer.nextInt(900000) + 100000;
         }
         newLobby.setInviteCode(inviteCode);
 
-        List<Player> unassignedPlayers = new ArrayList<Player>();
-        newLobby.setUnassignedPlayers(unassignedPlayers);
+        // List<Player> unassignedPlayers = new ArrayList<Player>();
+        // newLobby.setUnassignedPlayers(unassignedPlayers);
 
         List<Team> teams = new ArrayList<Team>();
-        Team team1 = new Team();
-        team1.setLobby(newLobby);
-        //team1.setColor(TeamType.RED);
-        team1.setName("Team Red");
+        teams.add(teamService.createTeam(newLobby, "Team Red"));
+        teams.add(teamService.createTeam(newLobby, "Team Blue"));
 
-        Team team2 = new Team();
-        team2.setLobby(newLobby);
-        //team2.setColor(TeamType.BLUE);
-        team2.setName("Team Blue");
+        // Team team1 = new Team();
+        // team1.setLobby(newLobby);
+        // //team1.setColor(TeamType.RED);
+        // team1.setName("Team Red");
 
-        teams.add(team1);
-        teams.add(team2);
+        // Team team2 = new Team();
+        // team2.setLobby(newLobby);
+        // //team2.setColor(TeamType.BLUE);
+        // team2.setName("Team Blue");
+
+        // teams.add(team1);
+        // teams.add(team2);
         newLobby.setTeams(teams);
 
         newLobby = lobbyRepository.save(newLobby);
@@ -211,4 +217,6 @@ public class LobbyManagement {
     // lobbyRepository.save(lobby);
     // lobbyRepository.flush();
   }
+
+
 }

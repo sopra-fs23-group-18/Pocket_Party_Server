@@ -120,7 +120,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateScore(@PathVariable long gameId, @RequestBody MinigameWinnerTeamPutDTO winnerTeamPutDTO){
         //instead of String winnerTeam put the winner TeamDTO and get score of other via total minigame score
-        Team winnerTeamInput = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
+        Team winnerTeamInput = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOtoEntity(winnerTeamPutDTO);
 
         //updateScore
         gameService.finishedMinigameUpdate(gameId, winnerTeamInput);
