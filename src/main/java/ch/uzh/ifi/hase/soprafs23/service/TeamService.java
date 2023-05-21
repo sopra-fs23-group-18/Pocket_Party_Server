@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
@@ -115,11 +114,8 @@ public class TeamService {
     }
 
     public List<Player> randomPlayerChoice(String teamName, Lobby lobby, MinigamePlayers amount){
-
         List<Player> players = new ArrayList<Player>();
         Team team = getByNameAndLobby(lobby, teamName);
-
-        //mapper that maps ONE, TWO to 1,2
 
         if (amount.equals(MinigamePlayers.ALL)){
             for (Player p :team.getPlayers()){
@@ -152,7 +148,6 @@ public class TeamService {
             team.setName(update.getName());
 
             teamRepository.save(team);
-            //if something doesnt work, throw error
         }
         teamRepository.flush();
     }

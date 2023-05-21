@@ -2,8 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-//import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
@@ -45,10 +42,6 @@ public class MinigameService {
     }
 
     public Minigame createMinigame(MinigameType nexMinigameType, int lowestPlayerAmount){
-        //String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
-
-        //EnumMap<MinigameType, Minigame> minigameMapper = new EnumMap<MinigameType, Minigame>(null)
-
         Minigame upcomingMinigame = getMinigameInstance(nexMinigameType);
         MinigamePlayers[] options = upcomingMinigame.getAmntPlayersOptions();
 
@@ -58,13 +51,6 @@ public class MinigameService {
             amount = MinigamePlayers.ONE;
         }       
         upcomingMinigame.setAmountOfPlayers(amount);
-
-        //Minigame upcomingMinigame = new Minigame();
-        //needs to be calculated via linear exponential
-        //maybe also set minigame scoretogain in settings of game
-        // upcomingMinigame.setScoreToGain(500);
-        // upcomingMinigame.setType(nexMinigameType);
-        // upcomingMinigame.setDescription(description);
 
         upcomingMinigame = minigameRepository.save(upcomingMinigame);
         minigameRepository.flush();
@@ -89,7 +75,6 @@ public class MinigameService {
 
     public void updateMinigame(Long minigameId, String winnerTeam){
         Minigame finishedMinigame = getMinigame(minigameId);
-
         finishedMinigame.setWinner(winnerTeam);
         
         finishedMinigame = minigameRepository.save(finishedMinigame);

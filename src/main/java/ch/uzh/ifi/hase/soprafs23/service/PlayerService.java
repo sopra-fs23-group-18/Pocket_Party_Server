@@ -30,10 +30,8 @@ public class PlayerService {
     }
 
     public Player createPlayer(Player newPlayer) {
-
         newPlayer = playerRepository.save(newPlayer);
         playerRepository.flush();
-
         log.debug("Created Information for User: {}", newPlayer);
         return newPlayer;
     }

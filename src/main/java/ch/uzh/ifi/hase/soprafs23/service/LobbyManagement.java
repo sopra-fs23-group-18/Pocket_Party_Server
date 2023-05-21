@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
@@ -51,33 +50,14 @@ public class LobbyManagement {
         }
         newLobby.setInviteCode(inviteCode);
 
-        // List<Player> unassignedPlayers = new ArrayList<Player>();
-        // newLobby.setUnassignedPlayers(unassignedPlayers);
-
         List<Team> teams = new ArrayList<Team>();
         teams.add(teamService.createTeam(newLobby, "Team Red"));
         teams.add(teamService.createTeam(newLobby, "Team Blue"));
-
-        // Team team1 = new Team();
-        // team1.setLobby(newLobby);
-        // //team1.setColor(TeamType.RED);
-        // team1.setName("Team Red");
-
-        // Team team2 = new Team();
-        // team2.setLobby(newLobby);
-        // //team2.setColor(TeamType.BLUE);
-        // team2.setName("Team Blue");
-
-        // teams.add(team1);
-        // teams.add(team2);
         newLobby.setTeams(teams);
 
         newLobby = lobbyRepository.save(newLobby);
         lobbyRepository.flush();
         return newLobby;
-
-    // log.debug("Created Information for User: {}", createdLobby);
-    // return createdLobby;
     }
 
   public Lobby getLobby(Long lobbyId) {
@@ -101,33 +81,6 @@ public class LobbyManagement {
     }
     return lobby;
   }
-
-  
-
-  // @Transactional
-  // public void finishedMinigameUpdate(Long lobbyId, Team winnerTeamInput) {
-  //   Lobby lobby = getLobby(lobbyId);
-
-  //   Minigame playedMinigame = gameService.updateMinigame(lobby, winnerTeamInput);
-
-  //   // update roundsPlayed of players
-  //   playerService.updatePlayers(playedMinigame.getTeam1Players());
-  //   playerService.updatePlayers(playedMinigame.getTeam2Players());
-
-  //   // update score of teams
-  //   teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
-
-  //   List<Team> teams = lobby.getTeams();
-  //   if(teams.get(0).getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
-  //     int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-  //     teamService.updateScore(lobby, teams.get(0).getColor(), score);
-  //   }else{
-  //     int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-  //     teamService.updateScore(lobby, teams.get(1).getColor(), score);
-  //   }
-  //   lobbyRepository.save(lobby);
-  //   lobbyRepository.flush();   
-  // }
 
   public Team getLeadingTeam(Game game) {
     Lobby lobby = getLobby(game);
@@ -200,8 +153,6 @@ public class LobbyManagement {
     throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There players that are not assigned yet!");
   }
 
-  //new
-
   public void addGame(Game game, Long lobbyId){
     Lobby lobby = getLobby(lobbyId);
     lobby.setGame(game);
@@ -213,9 +164,6 @@ public class LobbyManagement {
         }
       }
     }
-    
-    // lobbyRepository.save(lobby);
-    // lobbyRepository.flush();
   }
 
   public int lowestPlayerAmount(Game game){
@@ -231,5 +179,4 @@ public class LobbyManagement {
     }
     return amount;
   }
-
 }

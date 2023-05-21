@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
@@ -55,14 +54,6 @@ public class GameService {
         this.lobbyManager = lobbyManager;
     }
 
-    // public Game getGame(Lobby lobby) {
-    //     Game game = gameRepository.findByLobby(lobby);
-    //     if (game == null) {
-    //         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The game with the given Lobby does not exist!");
-    //     }
-    //     return game;
-    // }
-
     public Game getGame(Long gameId) {
       Game game = gameRepository.findById(gameId).orElseThrow(
         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The game with the given Id does not exist!"));
@@ -113,7 +104,7 @@ public class GameService {
         if (game.getIsFinished()) {
           return team;
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner yet!");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner!");
     }
 
     public void isFinished(Game game){
@@ -162,27 +153,27 @@ public class GameService {
       Game game = getGame(gameId);
       Lobby lobby = lobbyManager.getLobby(game);
       
-
-      //maybe remove this method
       Minigame playedMinigame = updateMinigame(game, winnerTeamInput);
 
-      // update roundsPlayed of players
       playerService.updatePlayers(playedMinigame.getTeam1Players());
       playerService.updatePlayers(playedMinigame.getTeam2Players());
 
-      //new:
-      //TODO: add check if score is 0 then award no points
+      updateScores(winnerTeamInput, lobby, playedMinigame);
+
+      isFinished(game);
+      gameRepository.save(game);
+      gameRepository.flush();
+    }
+
+    private void updateScores(Team winnerTeamInput, Lobby lobby, Minigame playedMinigame) {
       if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Score was out of bounds!");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The score was out of range!");
       }
 
-      // update score of teams
       teamService.updateScore(lobby, winnerTeamInput.getName(), winnerTeamInput.getScore());
 
       List<Team> teams = lobby.getTeams();
 
-      //NEW
-      //also check if input is valid first
       int score = 0;
       if (winnerTeamInput.getScore() != 0){
         score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
@@ -193,9 +184,6 @@ public class GameService {
       }else{
         teamService.updateScore(lobby, teams.get(1).getName(), score);
       }
-      isFinished(game);
-      gameRepository.save(game);
-      gameRepository.flush();
     }
 
     public void updateUpcomingMinigame(Long gameId){
@@ -206,24 +194,10 @@ public class GameService {
       List<Team> teams = lobby.getTeams();
       
       MinigamePlayers amount = upcomingMinigame.getAmountOfPlayers();
-      // if (upcomingMinigame.getType().equals(MinigameType.HOT_POTATO)){
-      //   amount = MinigamePlayers.ALL;
-      // }
+
       List<Player> team1Players = teamService.randomPlayerChoice(teams.get(0).getName(), lobby, amount);
       List<Player> team2Players = teamService.randomPlayerChoice(teams.get(1).getName(), lobby, amount);
 
       minigameService.addPlayersToMinigame(upcomingMinigame, team1Players, team2Players);
-
     }
-
-    
-
-
-
-
-    
-
-
-
-
 }
