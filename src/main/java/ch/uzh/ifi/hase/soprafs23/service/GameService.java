@@ -67,7 +67,7 @@ public class GameService {
       Game game = gameRepository.findById(gameId).orElseThrow(
         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The game with the given Id does not exist!"));
       return game;
-  }
+    }
 
     public Minigame getMinigame(Long gameId) {
         Game game = getGame(gameId);
@@ -98,7 +98,8 @@ public class GameService {
         if (type == null) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
         }
-        Minigame nextMinigame = minigameService.createMinigame(type);
+        int lowestPlayerAmount = lobbyManager.lowestPlayerAmount(game);
+        Minigame nextMinigame = minigameService.createMinigame(type, lowestPlayerAmount);
     
         game.setUpcomingMinigame(nextMinigame);
         gameRepository.save(game);
@@ -124,7 +125,6 @@ public class GameService {
         }
     }
 
-    //new
     public Game createGame(Game newGame, Long lobbyId){
       if (newGame.getWinningScore() <= 0 || newGame.getWinningScore() > 100000){
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because the winningScore was invalid!");
@@ -134,7 +134,7 @@ public class GameService {
       }
       List<MinigameType> minigames;
       if (newGame.getMinigamesChoice() == null || newGame.getMinigamesChoice().isEmpty()){
-        minigames = minigameService.chosenMinigames();
+        minigames = minigameService.chooseAllMinigames();
         newGame.setMinigamesChoice(minigames);
       }
       lobbyManager.addGame(newGame, lobbyId);
@@ -205,10 +205,10 @@ public class GameService {
 
       List<Team> teams = lobby.getTeams();
       
-      MinigamePlayers amount = MinigamePlayers.ONE;
-      if (upcomingMinigame.getType().equals(MinigameType.HOT_POTATO)){
-        amount = MinigamePlayers.ALL;
-      }
+      MinigamePlayers amount = upcomingMinigame.getAmountOfPlayers();
+      // if (upcomingMinigame.getType().equals(MinigameType.HOT_POTATO)){
+      //   amount = MinigamePlayers.ALL;
+      // }
       List<Player> team1Players = teamService.randomPlayerChoice(teams.get(0).getName(), lobby, amount);
       List<Player> team2Players = teamService.randomPlayerChoice(teams.get(1).getName(), lobby, amount);
 
@@ -216,12 +216,12 @@ public class GameService {
 
     }
 
+    
+
 
 
 
     
-
-
 
 
 

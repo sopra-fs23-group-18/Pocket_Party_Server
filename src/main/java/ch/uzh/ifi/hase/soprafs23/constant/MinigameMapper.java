@@ -13,16 +13,25 @@ import ch.uzh.ifi.hase.soprafs23.entity.minigame.Vibration;
 
 public final class MinigameMapper {
 
-    private static EnumMap<MinigameType, Class<? extends Minigame>> minigameClasses = new EnumMap<>(Map.ofEntries(
+    private static EnumMap<MinigameType, Class<? extends Minigame>> minigameClasses = new EnumMap<MinigameType, Class<? extends Minigame>>(Map.ofEntries(
         Map.entry(MinigameType.TAPPING_GAME, TappingGame.class),
         Map.entry(MinigameType.TIMING_GAME, TimingGame.class),
         Map.entry(MinigameType.HOT_POTATO, HotPotato.class),
         Map.entry(MinigameType.VIBRATION_GAME, Vibration.class),
         Map.entry(MinigameType.PONG_GAME, Pong.class),
         Map.entry(MinigameType.RPS_GAME, RPS.class)
-));
+    ));
 
-    public static EnumMap<MinigameType, Class<? extends Minigame>> getMinigameMapper(){
+    private static EnumMap<MinigamePlayers, Integer> minigamePlayers = new EnumMap<MinigamePlayers, Integer>(Map.ofEntries(
+        Map.entry(MinigamePlayers.ONE, 1),
+        Map.entry(MinigamePlayers.TWO, 2)
+    ));
+
+    public static EnumMap<MinigamePlayers, Integer> getMinigamePlayers() {
+        return minigamePlayers;
+    }
+
+    public static EnumMap<MinigameType, Class<? extends Minigame>> getMinigameClasses(){
         return minigameClasses;
     }
 }

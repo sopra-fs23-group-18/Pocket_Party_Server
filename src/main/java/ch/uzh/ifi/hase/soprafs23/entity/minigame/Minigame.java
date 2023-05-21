@@ -46,6 +46,8 @@ public abstract class Minigame implements Serializable{
     private final MinigamePlayers[] amntPlayersOptions;
 
     //actual amount of players:
+    @Column(nullable = false)
+    private MinigamePlayers amountOfPlayers;
 
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Player> team1Players = new ArrayList<Player>();
@@ -69,6 +71,14 @@ public abstract class Minigame implements Serializable{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public MinigamePlayers getAmountOfPlayers() {
+        return amountOfPlayers;
+    }
+
+    public void setAmountOfPlayers(MinigamePlayers amountOfPlayers) {
+        this.amountOfPlayers = amountOfPlayers;
     }
 
     public MinigameType getType() {

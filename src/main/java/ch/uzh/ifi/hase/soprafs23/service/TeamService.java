@@ -127,7 +127,8 @@ public class TeamService {
             }
         }
         else{
-            players = playerService.getMinigamePlayers(team, 1);
+            int amountOfPlayers = MinigameMapper.getMinigamePlayers().get(amount);
+            players = playerService.getMinigamePlayers(team, amountOfPlayers);
         }
         return players;
     }

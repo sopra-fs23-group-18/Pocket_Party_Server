@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 //import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
@@ -27,6 +29,8 @@ import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 public class MinigameService {
     
     private final Logger log = LoggerFactory.getLogger(MinigameService.class);
+
+    private Random randomizer = new Random();
     
     @Autowired
     private final MinigameRepository minigameRepository;
@@ -35,19 +39,25 @@ public class MinigameService {
         this.minigameRepository = minigameRepository;
     }
 
-    public List<MinigameType> chosenMinigames(){
+    public List<MinigameType> chooseAllMinigames(){
         List<MinigameType> minigames = Arrays.asList(MinigameType.values());
-
         return minigames;
     }
 
-    public Minigame createMinigame(MinigameType nexMinigameType){
+    public Minigame createMinigame(MinigameType nexMinigameType, int lowestPlayerAmount){
         //String description = MinigameDescription.getMinigamesDescriptions().get(nexMinigameType);
 
         //EnumMap<MinigameType, Minigame> minigameMapper = new EnumMap<MinigameType, Minigame>(null)
 
         Minigame upcomingMinigame = getMinigameInstance(nexMinigameType);
+        MinigamePlayers[] options = upcomingMinigame.getAmntPlayersOptions();
 
+        int index = randomizer.nextInt(options.length);
+        MinigamePlayers amount = options[index];
+        if (amount == MinigamePlayers.TWO && lowestPlayerAmount < 2) {
+            amount = MinigamePlayers.ONE;
+        }       
+        upcomingMinigame.setAmountOfPlayers(amount);
 
         //Minigame upcomingMinigame = new Minigame();
         //needs to be calculated via linear exponential
@@ -63,7 +73,7 @@ public class MinigameService {
     }
 
     private Minigame getMinigameInstance(MinigameType nexMinigameType) {
-        Class<? extends Minigame> minigameClass = MinigameMapper.getMinigameMapper().get(nexMinigameType);
+        Class<? extends Minigame> minigameClass = MinigameMapper.getMinigameClasses().get(nexMinigameType);
         try {
             return minigameClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
