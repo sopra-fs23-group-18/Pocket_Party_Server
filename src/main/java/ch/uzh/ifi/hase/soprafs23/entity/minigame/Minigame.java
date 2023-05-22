@@ -17,6 +17,7 @@ import javax.persistence.Transient;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 
 @Entity
@@ -33,8 +34,11 @@ public abstract class Minigame implements Serializable{
     @Column(nullable = false)
     private final MinigameType type;
 
+    // @Column(nullable = false)
+    // private boolean isFinished = false;
+
     @Column(nullable = false)
-    private boolean isFinished = false;
+    private OutcomeType minigameOutcome = OutcomeType.NOT_FINISHED;
 
     @Column(nullable = true)
     private String winnerTeamName;
@@ -129,17 +133,33 @@ public abstract class Minigame implements Serializable{
         return winnerTeamName;
     }
 
+    // public void setWinner(String winnerTeamName) {
+    //     this.winnerTeamName = winnerTeamName;
+    //     if (this.winnerTeamName != null){setIsFinished(true);}
+    // }
+
     public void setWinner(String winnerTeamName) {
         this.winnerTeamName = winnerTeamName;
-        if (this.winnerTeamName != null){setIsFinished(true);}
+        if (this.winnerTeamName.equals("")){setMinigameOutcome(OutcomeType.DRAW);}
+        else{
+            setMinigameOutcome(OutcomeType.WINNER);
+        }
     }
 
-    public void setIsFinished(boolean isFinished){
-        this.isFinished = isFinished;
+    // public void setIsFinished(boolean isFinished){
+    //     this.isFinished = isFinished;
+    // }
+
+    // public boolean getIsFinished() {
+    //     return isFinished;
+    // }
+
+    public OutcomeType getMinigameOutcome() {
+        return minigameOutcome;
     }
 
-    public boolean getIsFinished() {
-        return isFinished;
+    public void setMinigameOutcome(OutcomeType minigameOutcome) {
+        this.minigameOutcome = minigameOutcome;
     }
 
     

@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
@@ -101,18 +102,23 @@ public class GameService {
     public Team getWinner(Long gameId) {
         Game game = getGame(gameId);
         Team team = lobbyManager.getLeadingTeam(game);
-        if (game.getIsFinished()) {
+        if (game.getGameOutcome() != OutcomeType.NOT_FINISHED) {
           return team;
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner!");
     }
 
     public void isFinished(Game game){
+        Lobby lobby = lobbyManager.getLobby(game);
         Team team = lobbyManager.getLeadingTeam(game);
         if (team.getScore() >= game.getWinningScore()){
-              game.setIsFinished(true);
-              Lobby lobby = lobbyManager.getLobby(game);
-              lobby.getFinishedGames().add(lobby.getGame());
+          if (lobby.getTeams().get(0).getScore() == lobby.getTeams().get(1).getScore()){
+            game.setGameOutcome(OutcomeType.DRAW);
+          }
+          else{
+            game.setGameOutcome(OutcomeType.WINNER);
+          }
+          lobby.getFinishedGames().add(lobby.getGame());
         }
     }
 
@@ -137,13 +143,20 @@ public class GameService {
 
     public Minigame updateMinigame(Game game, Team winnerTeamInput){
       Minigame playedMinigame = game.getUpcomingMinigame();
-      if (playedMinigame.getIsFinished() == true){
+      if (playedMinigame.getMinigameOutcome() != OutcomeType.NOT_FINISHED){
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores can only be updated once!");
       }
       if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
       }
-      minigameService.updateMinigame(playedMinigame.getId(), winnerTeamInput.getName());
+      String winnerTeam;
+      if (winnerTeamInput.getScore() == (playedMinigame.getScoreToGain()/2)){
+        winnerTeam = "";
+      }
+      else{
+        winnerTeam = winnerTeamInput.getName();
+      }
+      minigameService.updateMinigame(playedMinigame.getId(), winnerTeam);
       game.addToMinigamesPlayed(playedMinigame);
       return playedMinigame;
   }

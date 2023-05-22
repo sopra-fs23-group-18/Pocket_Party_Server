@@ -93,7 +93,7 @@ public interface DTOMapper {
   @Mapping(source = "players", target = "players")
   WinnerTeamGetDTO convertEntityToWinnerTeamGetDTO(Team team); 
 
-  @Mapping(source = "isFinished", target = "isFinished")
+  @Mapping(source = "gameOutcome", target = "gameOutcome")
   GameOverGetDTO convertEntityToGameOverGetDTO(Game game);
 
   @Mapping(source = "minigamesChoice", target = "minigamesChoice")
@@ -112,4 +112,5 @@ public interface DTOMapper {
   @Mapping(source = "teams", target = "teams")
   Lobby convertLobbyNamesPutDTOtoEntity(LobbyNamesPutDTO lobbyNamesPutDTO);
   
+
 }
