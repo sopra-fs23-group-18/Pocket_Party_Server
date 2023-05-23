@@ -114,23 +114,26 @@ public class TeamService {
     }
 
     public List<Player> randomPlayerChoice(String teamName, Lobby lobby, MinigamePlayers amount){
-        List<Player> players = new ArrayList<Player>();
         Team team = getByNameAndLobby(lobby, teamName);
 
+        // if (amount.equals(MinigamePlayers.ALL)){
+        //     for (Player p :team.getPlayers()){
+        //     players.add(p);
+        //     }
+        // }
+        int amountOfPlayers;
         if (amount.equals(MinigamePlayers.ALL)){
-            for (Player p :team.getPlayers()){
-            players.add(p);
-            }
+            amountOfPlayers = lowestPlayerAmount(lobby);
         }
         else{
-            int amountOfPlayers = MinigameMapper.getMinigamePlayers().get(amount);
-            players = playerService.getMinigamePlayers(team, amountOfPlayers);
+            amountOfPlayers = MinigameMapper.getMinigamePlayers().get(amount);
         }
+        List<Player> players = playerService.getMinigamePlayers(team, amountOfPlayers);
         return players;
     }
 
     @Transactional
-    public void updateNames(Lobby lobby, List<Team> teamNames){
+    public void updateNames(List<Team> teamNames){
         if (teamNames.get(0).getName().equals(teamNames.get(1).getName())){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The names are equal!");
         }
@@ -151,6 +154,20 @@ public class TeamService {
         }
         teamRepository.flush();
     }
+
+    public int lowestPlayerAmount(Lobby lobby){
+        List<Team> teams = getTeams(lobby);
+        int amount = -1;
+        for (Team t : teams){
+          if (amount == -1){
+            amount = t.getPlayers().size();
+          }
+          if (t.getPlayers().size() < amount){
+            amount = t.getPlayers().size();
+          }
+        }
+        return amount;
+      }
 
 
     

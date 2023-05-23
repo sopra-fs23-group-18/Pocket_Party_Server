@@ -96,7 +96,7 @@ public class LobbyController {
     public void startGame(@PathVariable long lobbyId, @RequestBody LobbyNamesPutDTO lobbyNamesPutDTO){
         lobbyManager.ableToStart(lobbyId);
         //teamname update
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
+        // Lobby lobby = lobbyManager.getLobby(lobbyId);
         // List<Team> teams = new ArrayList<Team>();
         // for (TeamNamePutDTO teamPutDTO : teamNamesPutDTO){
         //     Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOToEntity(teamPutDTO);
@@ -104,7 +104,7 @@ public class LobbyController {
         // }
 
         List<Team> teams = DTOMapper.INSTANCE.convertLobbyNamesPutDTOtoEntity(lobbyNamesPutDTO).getTeams();
-        teamService.updateNames(lobby, teams);
+        teamService.updateNames(teams);
         
 
         //TODO:
@@ -146,7 +146,7 @@ public class LobbyController {
     public void createPlayer(@PathVariable long lobbyId) {
 
         Lobby lobby = lobbyManager.getLobby(lobbyId);
-        for (int i = 1; i < 3; i++){
+        for (int i = 1; i < 4; i++){
             Player newPlayer = new Player();
             newPlayer.setNickname("test");
             Player createdPlayer = playerService.createPlayer(newPlayer);

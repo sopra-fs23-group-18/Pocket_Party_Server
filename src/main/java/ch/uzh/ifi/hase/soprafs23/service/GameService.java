@@ -86,11 +86,16 @@ public class GameService {
 
     public Minigame addUpcomingMinigame(Long gameId) {
         Game game = getGame(gameId);
+        if (game.getUpcomingMinigame() != null){
+          if (getMinigame(gameId).getMinigameOutcome() == OutcomeType.NOT_FINISHED){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A minigame that isn't finished already exists!");
+          }
+        }
         MinigameType type = getNextMinigameType(game);
         if (type == null) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
         }
-        int lowestPlayerAmount = lobbyManager.lowestPlayerAmount(game);
+        int lowestPlayerAmount = teamService.lowestPlayerAmount(lobbyManager.getLobby(game));
         Minigame nextMinigame = minigameService.createMinigame(type, lowestPlayerAmount);
     
         game.setUpcomingMinigame(nextMinigame);
