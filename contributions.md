@@ -143,4 +143,4 @@ Upcoming:
 - Send each tap to the web app(mobile) [#4](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/4)
 - Create tap counter on web app & update on received tap(web) [#27](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/27)
 - Show 20second countdown after which the game ends(web) [#30](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/30)
-- Test for service, reposiroty, and rest mapper
+- Test for service, reposiroty, and rest mapper 
