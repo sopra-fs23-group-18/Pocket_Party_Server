@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Pong;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.RPS;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Strategy;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.TappingGame;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.TimingGame;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Vibration;
@@ -19,7 +20,8 @@ public final class MinigameMapper {
         Map.entry(MinigameType.HOT_POTATO, HotPotato.class),
         Map.entry(MinigameType.VIBRATION_GAME, Vibration.class),
         Map.entry(MinigameType.PONG_GAME, Pong.class),
-        Map.entry(MinigameType.RPS_GAME, RPS.class)
+        Map.entry(MinigameType.RPS_GAME, RPS.class),
+        Map.entry(MinigameType.STRATEGY_GAME, Strategy.class)
     ));
 
     private static EnumMap<MinigamePlayers, Integer> minigamePlayers = new EnumMap<MinigamePlayers, Integer>(Map.ofEntries(
