@@ -5,6 +5,7 @@ public enum InputType {
     TAP,
     PONG,
     RPS,
+    STRATEGY,
     ACCELEROMETER,
     GYROSCOPE
 }

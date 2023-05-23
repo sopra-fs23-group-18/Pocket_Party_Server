@@ -44,15 +44,7 @@ public class PlayerService {
 
     public List<Player> getMinigamePlayers(Team team, int amountOfPlayers){
         List<Player> minigamePlayers = new ArrayList<Player>();
-        int lowestAmountPlayed = -1;
-        for (Player p : team.getPlayers()){
-            if (lowestAmountPlayed == -1){
-                lowestAmountPlayed = p.getRoundsPlayed();
-            }
-            if (p.getRoundsPlayed() < lowestAmountPlayed){
-                lowestAmountPlayed = p.getRoundsPlayed();
-            }
-        }
+        int lowestAmountPlayed = lowestRoundsPlayed(team, minigamePlayers.size());
         int optIndex;
         int playersAdded = 0;
         while (playersAdded < amountOfPlayers){
@@ -68,10 +60,33 @@ public class PlayerService {
                 else{
                     minigamePlayers.add(player);
                     playersAdded++;
+                    lowestAmountPlayed = lowestRoundsPlayed(team, minigamePlayers.size());
                 }
             }
         }   
         return minigamePlayers;
+    }
+
+    private int lowestRoundsPlayed(Team team, int playersAdded) {
+        int lowestAmountPlayed = -1;
+        int amountWithLowAmntPl = 0;
+        for (Player p : team.getPlayers()){
+            if (lowestAmountPlayed == -1){
+                lowestAmountPlayed = p.getRoundsPlayed();
+                amountWithLowAmntPl++;
+            }
+            else if (p.getRoundsPlayed() < lowestAmountPlayed){
+                lowestAmountPlayed = p.getRoundsPlayed();
+                amountWithLowAmntPl = 1;
+            }
+            else if (p.getRoundsPlayed() == lowestAmountPlayed){
+                amountWithLowAmntPl++;
+            }
+        }
+        if (playersAdded >= amountWithLowAmntPl){
+            lowestAmountPlayed++;
+        }
+        return lowestAmountPlayed;
     }
 
     public void updatePlayers(List<Player> minigamePlayers){
