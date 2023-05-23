@@ -1,13 +1,16 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
-import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.TeamRepository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,9 +20,21 @@ import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 @WebAppConfiguration
 @SpringBootTest
 public class LobbyManagementTest {
+
+    @Autowired
+    private MinigameService minigameService;
+
+    @Autowired
+    private PlayerService playerService;
+
+    @Qualifier("playerRepository")
+    @Autowired
+    private PlayerRepository playerRepository;
 
     @Qualifier("lobbyRepository")
     @Autowired
@@ -32,415 +47,197 @@ public class LobbyManagementTest {
     @Autowired
     private TeamRepository teamRepository;
 
-    @Autowired
-    private TeamService teamService;
+    @BeforeEach
+    public void setup() {
+        lobbyRepository.deleteAll();
+        teamRepository.deleteAll();
+        playerRepository.deleteAll();
+    }
 
     @Test
-    public void createLobby_validWinningScore_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setId(1L);
-        testLobby.setWinningScore(100);
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
+    public void testCreateLobby() {
+        Lobby createdLobby = lobbyManager.createLobby();
 
         // then
-        assertEquals(testLobby.getWinningScore(), createdLobby.getWinningScore());
+
         assertNotNull(createdLobby.getInviteCode());
-        assertEquals(false, createdLobby.getIsFinished());
-        assertNotNull(createdLobby.getMinigamesChoice());
         assertEquals(true, createdLobby.getUnassignedPlayers().isEmpty());
         assertEquals(2, createdLobby.getTeams().size());
 
     }
 
     @Test
-    public void createLobby_invalidWinningScore_throwsException() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setId(1L);
-        testLobby.setWinningScore(-1);
+    public void testGetLobbyById() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Lobby fetchedLobby = lobbyManager.getLobby(createdLobby.getId());
 
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.createLobby(testLobby);
-        });
+        assertEquals(createdLobby.getId(), fetchedLobby.getId());
+        assertEquals(createdLobby.getInviteCode(), fetchedLobby.getInviteCode());
     }
 
     @Test
-    public void createLobby_invalidWinningScore2_throwsException() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setId(1L);
-        testLobby.setWinningScore(100001);
-
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.createLobby(testLobby);
-        });
+    public void testGetLobbyByIdFail() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        assertThrows(ResponseStatusException.class, () -> lobbyManager.getLobby(createdLobby.getId() + 1));
     }
 
     @Test
-    public void getLobby_validId_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
+    public void testGetLobbyByInviteCode() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Lobby fetchedLobby = lobbyManager.getLobby(createdLobby.getInviteCode());
 
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        Lobby foundLobby = lobbyManager.getLobby(createdLobby.getId());
-
-        // then
-        assertEquals(createdLobby.getId(), foundLobby.getId());
-        assertEquals(createdLobby.getWinningScore(), foundLobby.getWinningScore());
-        assertEquals(createdLobby.getInviteCode(), foundLobby.getInviteCode());
-        assertEquals(createdLobby.getIsFinished(), foundLobby.getIsFinished());
-        assertEquals(createdLobby.getMinigamesChoice().get(0), foundLobby.getMinigamesChoice().get(0));
-        assertNotNull(foundLobby.getUnassignedPlayers());
-        assertNotNull(foundLobby.getTeams());
+        assertEquals(createdLobby.getId(), fetchedLobby.getId());
+        assertEquals(createdLobby.getInviteCode(), fetchedLobby.getInviteCode());
     }
 
     @Test
-    public void getLobby_invalidId_throwsException() {
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.getLobby(1000L);
-        });
+    public void testGetLobbyByInviteCodeFail() {
+        assertThrows(ResponseStatusException.class, () -> lobbyManager.getLobby(10101));
     }
 
     @Test
-    public void getLobby_validInviteCode_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
+    public void testGetLobbyByGame() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Lobby fetchedLobby = lobbyManager.getLobby(createdLobby.getGame());
 
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        Lobby foundLobby = lobbyManager.getLobby(createdLobby.getInviteCode());
-
-        // then
-        assertEquals(createdLobby.getId(), foundLobby.getId());
-        assertEquals(createdLobby.getWinningScore(), foundLobby.getWinningScore());
-        assertEquals(createdLobby.getInviteCode(), foundLobby.getInviteCode());
-        assertEquals(createdLobby.getIsFinished(), foundLobby.getIsFinished());
-        assertEquals(createdLobby.getMinigamesChoice().get(0), foundLobby.getMinigamesChoice().get(0));
-        assertNotNull(foundLobby.getUnassignedPlayers());
-        assertNotNull(foundLobby.getTeams());
+        assertEquals(createdLobby.getId(), fetchedLobby.getId());
+        assertEquals(createdLobby.getInviteCode(), fetchedLobby.getInviteCode());
     }
 
     @Test
-    public void getLobby_invalidInviteCode_throwsException() {
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.getLobby(123);
-        });
+    public void testGetLeadingTeam() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Team team = createdLobby.getTeams().get(0);
+        team.setScore(10);
+        teamRepository.save(team);
+        Team leadingTeam = lobbyManager.getLeadingTeam(createdLobby.getGame());
+
+        assertEquals(leadingTeam.getId(), createdLobby.getTeams().get(0).getId());
     }
 
     @Test
-    public void getMinigame_validId_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
+    public void testAddToUnassignedPlayers() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player newPlayer = playerService.createPlayer(player);
+        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
+        assertNotNull(createdLobby.getUnassignedPlayers());
+    }
 
-        Player player1 = new Player();
-        player1.setNickname("test1");
+    @Test
+    public void testAddToUnassignedPlayersFail() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        assertThrows(ResponseStatusException.class,
+                () -> lobbyManager.addToUnassignedPlayers(createdLobby.getId(), null));
+    }
 
+    @Test
+    public void testRemoveFromUnassignedPlayers() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player newPlayer = playerService.createPlayer(player);
+        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
+        lobbyManager.removeFromUnassignedPlayers(createdLobby.getId(), newPlayer);
+        assertEquals(0, createdLobby.getUnassignedPlayers().size());
+    }
+
+    @Test
+    public void testRemoveFromUnassignedPlayersFail() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        assertThrows(ResponseStatusException.class,
+                () -> lobbyManager.removeFromUnassignedPlayers(createdLobby.getId(), null));
+    }
+
+    @Test
+    public void testAbleToJoin() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player newPlayer = playerService.createPlayer(player);
         Player player2 = new Player();
         player2.setNickname("test2");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.addPlayer(createdLobby, TeamType.BLUE, player1);
-        teamService.addPlayer(createdLobby, TeamType.RED, player2);
-        lobbyManager.addUpcommingMinigame(createdLobby.getId());
-        Minigame foundMinigame = lobbyManager.getMinigame(createdLobby.getId());
-
-        // then
-        assertEquals(lobbyManager.getMinigame(createdLobby.getId()).getType(), foundMinigame.getType());
+        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
+        assertEquals(true, lobbyManager.ableToJoin(createdLobby.getInviteCode(), player2));
     }
 
     @Test
-    public void getMinigame_invalidId_throwsException() {
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.getMinigame(1000L);
-        });
+    public void testAbleToJoinFail() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player newPlayer = playerService.createPlayer(player);
+        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
+        assertThrows(ResponseStatusException.class,
+                () -> lobbyManager.ableToJoin(createdLobby.getInviteCode(), newPlayer));
     }
 
     @Test
-    public void addUpcommingMinigame_validId_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
+    public void testAbleToStart() {
+        Lobby createdLobby = lobbyManager.createLobby();
         Player player1 = new Player();
-        player1.setNickname("test1");
-
+        player1.setNickname("test");
         Player player2 = new Player();
         player2.setNickname("test2");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.addPlayer(createdLobby, TeamType.BLUE, player1);
-        teamService.addPlayer(createdLobby, TeamType.RED, player2);
-        lobbyManager.addUpcommingMinigame(createdLobby.getId());
-
-        // then
-        assertNotNull(lobbyManager.getMinigame(createdLobby.getId()));
-    }
-
-    @Test
-    public void addUpcommingMinigame_invalidId_throwsException() {
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.addUpcommingMinigame(100L);
-        });
-    }
-
-    @Test
-    public void finishedMinigameUpdate_validId_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
-        Player player1 = new Player();
-        player1.setNickname("test1");
-
-        Player player2 = new Player();
-        player2.setNickname("test2");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.addPlayer(createdLobby, TeamType.BLUE, player1);
-        teamService.addPlayer(createdLobby, TeamType.RED, player2);
-        lobbyManager.addUpcommingMinigame(createdLobby.getId());
-        lobbyManager.finishedMinigameUpdate(createdLobby.getId(), createdLobby.getTeams().get(0));
-        Lobby foundLobby = lobbyManager.getLobby(createdLobby.getId());
-
-        // then
-        assertNotNull(foundLobby.getMinigamesPlayed());
-
-    }
-
-    @Test
-    public void finishedMinigameUpdate_invalidId_throwsException() {
-        // given
-        Team testTeam = new Team();
-
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.finishedMinigameUpdate(100L, testTeam);
-        });
-    }
-
-    @Test
-    public void isFinished_EnoughScore() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.updateScore(createdLobby, TeamType.BLUE, 101);
-
-        lobbyManager.isFinished(createdLobby.getId());
-        Lobby foundLobby = lobbyManager.getLobby(createdLobby.getId());
-
-        // then
-        assertEquals(true, foundLobby.getIsFinished());
-    }
-
-    @Test
-    public void isFinished_NotEnoughScore() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.updateScore(createdLobby, TeamType.BLUE, 99);
-
-        lobbyManager.isFinished(createdLobby.getId());
-        Lobby foundLobby = lobbyManager.getLobby(createdLobby.getId());
-
-        // then
-        assertEquals(false, foundLobby.getIsFinished());
-    }
-
-    @Test
-    public void getWinner_isFinished_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-        testLobby.setIsFinished(true);
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.updateScore(createdLobby, TeamType.BLUE, 101);
-
-        // then
-        assertEquals(TeamType.BLUE, lobbyManager.getWinner(createdLobby.getId()).getColor());
-
-    }
-
-    @Test
-    public void getWinner_isNotFinished_throwException() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-        testLobby.setIsFinished(false);
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-
-        // then
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.getWinner(createdLobby.getId());
-        });
-    }
-
-    @Test
-    public void addToUnassignedPlayers_validInput_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
-        Player testPlayer = new Player();
-        testPlayer.setId(2L);
-        testPlayer.setNickname("test");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), testPlayer);
-        Lobby foundLobby = lobbyManager.getLobby(createdLobby.getId());
-
-        // then
-        assertNotNull(foundLobby.getUnassignedPlayers());
-
-    }
-
-    @Test
-    public void addToUnassignedPlayers_invalidInput_throwException() {
-        // given
-        Player testPlayer = new Player();
-
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.addToUnassignedPlayers(100L, testPlayer);
-        });
-    }
-
-    @Test
-    public void removeFromUnassignedPlayers_validInput_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
-        Player testPlayer = new Player();
-        testPlayer.setNickname("test");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), testPlayer);
-        lobbyManager.removeFromUnassignedPlayers(createdLobby.getId(), testPlayer);
-    }
-
-    @Test
-    public void removeFromUnassignedPlayers_invalidInput_throwException() {
-        // given
-        Player testPlayer = new Player();
-        testPlayer.setNickname("test");
-
-        // when
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.removeFromUnassignedPlayers(100L, testPlayer);
-        });
-    }
-
-    @Test
-    public void ableToJoin_validInput_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setId(1L);
-        testLobby.setWinningScore(100);
-
-        Player testPlayer = new Player();
-        testPlayer.setId(2L);
-        testPlayer.setNickname("test");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-
-        // then
-        assertEquals(true, lobbyManager.ableToJoin(createdLobby.getInviteCode(), testPlayer));
-    }
-
-    @Test
-    public void ableToJoin_invalidInput_throwException() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
-        Player testPlayer1 = new Player();
-        testPlayer1.setNickname("test");
-
-        Player testPlayer2 = new Player();
-        testPlayer2.setNickname("test");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), testPlayer1);
-
-        // then
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.ableToJoin(createdLobby.getInviteCode(), testPlayer2);
-        });
-
-    }
-
-    @Test
-    public void ableToStart_lobbyReady_success() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
-
-        Player testPlayer1 = new Player();
-        testPlayer1.setNickname("test");
-
-        Player testPlayer2 = new Player();
-        testPlayer2.setNickname("test");
-
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.addPlayer(createdLobby, TeamType.BLUE, testPlayer1);
-        teamService.addPlayer(createdLobby, TeamType.RED, testPlayer2);
-
+        createdLobby.getTeams().get(0).setPlayers(List.of(player1));
+        createdLobby.getTeams().get(1).setPlayers(List.of(player2));
+        lobbyRepository.save(createdLobby);
         lobbyManager.ableToStart(createdLobby.getId());
-        lobbyManager.addUpcommingMinigame(createdLobby.getId());
-
-        // then
-        assertNotNull(lobbyManager.getMinigame(createdLobby.getId()));
-
     }
 
     @Test
-    public void ableToStart_lobbyNotReady_throwException() {
-        // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(100);
+    public void testAbleToStartFail1() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        assertThrows(ResponseStatusException.class, () -> lobbyManager.ableToStart(createdLobby.getId()));
+    }
 
-        Player testPlayer = new Player();
-        testPlayer.setNickname("test");
+    @Test
+    public void testAbleToStartFail2() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player1 = new Player();
+        player1.setNickname("test");
+        Player player2 = new Player();
+        player2.setNickname("test2");
+        createdLobby.getTeams().get(0).setPlayers(List.of(player1));
+        lobbyRepository.save(createdLobby);
+        assertThrows(ResponseStatusException.class, () -> lobbyManager.ableToStart(createdLobby.getId()));
+    }
 
-        // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), testPlayer);
+    @Test
+    public void testAbleToStartFail3() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player1 = new Player();
+        player1.setNickname("test");
+        Player player2 = new Player();
+        player2.setNickname("test2");
+        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), player2);
+        lobbyRepository.save(createdLobby);
+        assertThrows(ResponseStatusException.class, () -> lobbyManager.ableToStart(createdLobby.getId()));
+    }
 
-        assertThrows(ResponseStatusException.class, () -> {
-            lobbyManager.ableToStart(100L);
-        });
+    @Test
+    public void testAddGame() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Game game = new Game();
+        List<MinigameType> minigames = minigameService.chooseAllMinigames();
+        game.setMinigamesChoice(minigames);
+        game.setPlayerChoice(PlayerChoice.RANDOM);
+
+        lobbyManager.addGame(game, createdLobby.getId());
+
+        Lobby lobby = lobbyManager.getLobby(createdLobby.getId());
+
+        assertEquals(game.getId(), lobby.getGame().getId());
+    }
+
+    @Test
+    public void testLowestPlayerAmount() {
+        Lobby createdLobby = lobbyManager.createLobby();
+        Game game = new Game();
+        game.setPlayerChoice(PlayerChoice.RANDOM);
+        lobbyManager.addGame(game, createdLobby.getId());
+        assertEquals(0, lobbyManager.lowestPlayerAmount(game));
     }
 
 }

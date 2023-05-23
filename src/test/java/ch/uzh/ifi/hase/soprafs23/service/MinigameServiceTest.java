@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
@@ -54,16 +55,14 @@ public class MinigameServiceTest {
         team1Players.add(player1);
         List<Player> team2Players = new ArrayList<Player>();
         team2Players.add(player2);
-        
 
         // when
-        Minigame createdMinigame = minigameService.createMinigame(minigameType, team1Players, team2Players);
+        Minigame createdMinigame = minigameService.createMinigame(minigameType, 2);
 
         // then
         assertNotNull(createdMinigame);
         assertEquals(minigameType, createdMinigame.getType());
-        assertEquals(player1, createdMinigame.getTeam1Players().get(0));
-        assertEquals(player2, createdMinigame.getTeam2Players().get(0));
+        assertEquals(MinigamePlayers.ONE, createdMinigame.getAmountOfPlayers());
     }
 
     @Test
@@ -82,19 +81,20 @@ public class MinigameServiceTest {
         List<Player> team2Players = new ArrayList<Player>();
         team2Players.add(player2);
 
-        Minigame createdMinigame = minigameService.createMinigame(minigameType, team1Players, team2Players);
+        Minigame createdMinigame = minigameService.createMinigame(minigameType, 2);
 
         // when
         Minigame foundMinigame = minigameService.getMinigame(createdMinigame.getId());
-
 
         // then
         assertNotNull(foundMinigame);
         assertEquals(createdMinigame.getId(), foundMinigame.getId());
         assertEquals(createdMinigame.getType(), foundMinigame.getType());
         assertEquals(createdMinigame.getDescription(), foundMinigame.getDescription());
-        //assertEquals(createdMinigame.getTeam1Players(), foundMinigame.getTeam1Players());
-        //assertEquals(createdMinigame.getTeam2Players(), foundMinigame.getTeam2Players());
+        // assertEquals(createdMinigame.getTeam1Players(),
+        // foundMinigame.getTeam1Players());
+        // assertEquals(createdMinigame.getTeam2Players(),
+        // foundMinigame.getTeam2Players());
     }
 
     @Test
@@ -114,7 +114,7 @@ public class MinigameServiceTest {
         team2Players.add(player2);
 
         // when
-        Minigame createdMinigame = minigameService.createMinigame(minigameType, team1Players, team2Players);
+        Minigame createdMinigame = minigameService.createMinigame(minigameType, 2);
 
         // then
         assertThrows(ResponseStatusException.class, () -> {
@@ -139,7 +139,7 @@ public class MinigameServiceTest {
         team2Players.add(player2);
 
         // when
-        Minigame createdMinigame = minigameService.createMinigame(minigameType, team1Players, team2Players);
+        Minigame createdMinigame = minigameService.createMinigame(minigameType, 2);
         minigameService.updateMinigame(createdMinigame.getId(), "test");
         Minigame foundMinigame = minigameService.getMinigame(createdMinigame.getId());
 

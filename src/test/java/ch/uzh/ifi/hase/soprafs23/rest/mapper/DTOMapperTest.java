@@ -1,27 +1,35 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamGetDTO;
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
-
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.constant.*;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyNamesPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamNamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,150 +73,192 @@ public class DTOMapperTest {
   }
 
   @Test
-  public void testCreateLobby_fromLobbyPostDTO_toLobby_success() {
-    // create LobbyPostDTO
-    LobbyPostDTO lobbyPostDTO = new LobbyPostDTO();
-    lobbyPostDTO.setWinningScore(100);
-
-    // MAP -> Create Lobby
-    Lobby lobby = DTOMapper.INSTANCE.convertLobbyPostDTOtoEntity(lobbyPostDTO);
-
-    // check content
-    assertEquals(lobbyPostDTO.getWinningScore(), lobby.getWinningScore());
-  }
-
-  @Test
-  public void testGetLobby_fromLobby_toLobbyGetDTO_success() {
-    // create Lobby
+  public void testConvertEntityToLobbyGetDTO() {
+    // Create a Lobby entity
     Lobby lobby = new Lobby();
     lobby.setId(1L);
-    lobby.setWinningScore(100);
-    lobby.setInviteCode(000000);
-    lobby.setTeams(List.of(new Team(), new Team()));
-    lobby.setUnassignedPlayers(List.of(new Player(), new Player()));
+    lobby.setInviteCode(12345);
+    // Set other properties of the Lobby entity
 
-    // MAP -> Create LobbyGetDTO
+    // Convert Lobby entity to LobbyGetDTO
     LobbyGetDTO lobbyGetDTO = DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
 
-    // check content
+    // Verify the mapping
     assertEquals(lobby.getId(), lobbyGetDTO.getId());
-    assertEquals(lobby.getWinningScore(), lobbyGetDTO.getWinningScore());
     assertEquals(lobby.getInviteCode(), lobbyGetDTO.getInviteCode());
-    assertEquals(lobby.getTeams(), lobbyGetDTO.getTeams());
-    assertEquals(lobby.getUnassignedPlayers(), lobbyGetDTO.getUnassignedPlayers());
   }
 
   @Test
-  public void testGetScore_fromLobby_toScoresGetDTO_success() {
-    // create Lobby
+  public void testConvertEntitiesToScoresGetDTO() {
+    // Create a Lobby object and a Game object
     Lobby lobby = new Lobby();
-    lobby.setWinningScore(100);
+    Game game = new Game();
 
-    Team team1 = new Team();
-    team1.setScore(50);
-    team1.setColor(TeamType.RED);
-    team1.setId(3L);
+    // Set the necessary properties in the Lobby and Game objects
 
-    team1.setName("test");
+    // Call the convertEntitiesToScoresGetDTO method
+    ScoresGetDTO scoresGetDTO = DTOMapper.INSTANCE.convertEntitiesToScoresGetDTO(lobby, game);
 
-    Team team2 = new Team();
-    team2.setId(4L);
-    team2.setColor(TeamType.BLUE);
-    team2.setName("test2");
-    team2.setScore(60);
-
-    lobby.setTeams(List.of(team1, team2));
-
-    // MAP -> Create ScoresGetDTO
-    ScoresGetDTO scoresGetDTO = DTOMapper.INSTANCE.convertEntityToScoresGetDTO(lobby);
-
-    // check content
-    assertEquals(lobby.getWinningScore(), scoresGetDTO.getWinningScore());
-    assertEquals(lobby.getTeams().get(0).getId(), scoresGetDTO.getTeams().get(0).getId());
-    assertEquals(lobby.getTeams().get(0).getColor(), scoresGetDTO.getTeams().get(0).getColor());
-    assertEquals(lobby.getTeams().get(0).getName(), scoresGetDTO.getTeams().get(0).getName());
-    assertEquals(lobby.getTeams().get(0).getScore(), scoresGetDTO.getTeams().get(0).getScore());
-    assertEquals(lobby.getTeams().get(1).getId(), scoresGetDTO.getTeams().get(1).getId());
-    assertEquals(lobby.getTeams().get(1).getColor(), scoresGetDTO.getTeams().get(1).getColor());
-    assertEquals(lobby.getTeams().get(1).getName(), scoresGetDTO.getTeams().get(1).getName());
-    assertEquals(lobby.getTeams().get(1).getScore(), scoresGetDTO.getTeams().get(1).getScore());
+    // Verify the mapping
+    assertEquals(lobby.getTeams(), scoresGetDTO.getTeams());
+    assertEquals(game.getWinningScore(), scoresGetDTO.getWinningScore());
   }
 
   @Test
-  public void testGetMinigame_fromMinigame_toMinigameGetDTO_success() {
-    // create Minigame
-    Minigame minigame = new Minigame();
-    minigame.setScoreToGain(100);
-    minigame.setType(MinigameType.TIMING_GAME);
-    minigame.setDescription("test");
-    Player player1 = new Player();
-    Player player2 = new Player();
+  public void testConvertEntityToMinigameGetDTO() {
+    // Create a Minigame object and set the necessary properties for testing
+    Minigame minigame = new HotPotato();
 
-    List<Player> team1Players = new ArrayList<Player>();
-    team1Players.add(player1);
-    List<Player> team2Players = new ArrayList<Player>();
-    team2Players.add(player2);
-    minigame.setTeam1Players(team1Players);
-    minigame.setTeam2Players(team2Players);
+    // Set other necessary properties of the Minigame object
 
-    // MAP -> Create MinigameGetDTO
+    // Call the convertEntityToMinigameGetDTO method
     MinigameGetDTO minigameGetDTO = DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(minigame);
 
-    // check content
+    // Assert the expected values
     assertEquals(minigame.getScoreToGain(), minigameGetDTO.getScoreToGain());
     assertEquals(minigame.getType(), minigameGetDTO.getType());
     assertEquals(minigame.getDescription(), minigameGetDTO.getDescription());
-    assertEquals(minigame.getTeam1Players(), minigameGetDTO.getTeam1Players());
-    assertEquals(minigame.getTeam2Players(), minigameGetDTO.getTeam2Players());
   }
 
   @Test
-  public void testGetWinnerTeam_fromWinnerTeamPutDTO_toTeam_success() {
-    // create WinnerTeamPutDTO
+  public void testConvertMinigameWinnerTeamPutDTOtoEntity() {
+    // Create a MinigameWinnerTeamPutDTO object and set the necessary properties for
+    // testing
     MinigameWinnerTeamPutDTO winnerTeamPutDTO = new MinigameWinnerTeamPutDTO();
-    winnerTeamPutDTO.setColor(TeamType.RED);
-    winnerTeamPutDTO.setName("test");
+    winnerTeamPutDTO.setName("Team Name");
     winnerTeamPutDTO.setScore(100);
 
-    // MAP -> Create Team
+    // Call the convertMinigameWinnerTeamPutDTOtoEntity method
     Team team = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOtoEntity(winnerTeamPutDTO);
 
-    // check content
-    assertEquals(winnerTeamPutDTO.getColor(), team.getColor());
-    assertEquals(winnerTeamPutDTO.getName(), team.getName());
-    assertEquals(winnerTeamPutDTO.getScore(), team.getScore());
+    // Assert the expected values
+    assertEquals("Team Name", team.getName());
+    assertEquals(100, team.getScore());
   }
 
   @Test
-  public void testGetTeam_fromTeam_toTeamGetDTO_success() {
-    // create Team
+  public void testConvertEntityToTeamGetDTO() {
+    // Create a Team object and set the necessary properties for testing
     Team team = new Team();
     team.setId(1L);
-    team.setColor(TeamType.RED);
-    team.setName("test");
+    team.setName("Team Name");
     team.setScore(100);
 
-    // MAP -> Create TeamGetDTO
+    // Call the convertEntityToTeamGetDTO method
     TeamGetDTO teamGetDTO = DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
 
-    // check content
-    assertEquals(team.getId(), teamGetDTO.getId());
-    assertEquals(team.getColor(), teamGetDTO.getColor());
-    assertEquals(team.getName(), teamGetDTO.getName());
-    assertEquals(team.getScore(), teamGetDTO.getScore());
+    // Assert the expected values
+    assertEquals(1L, teamGetDTO.getId());
+    assertEquals("Team Name", teamGetDTO.getName());
+    assertEquals(100, teamGetDTO.getScore());
   }
 
   @Test
-  public void testGetGameOver_fromLobby_toGameOverGetDTO_success() {
-    // create Lobby
-    Lobby lobby = new Lobby();
-    lobby.setIsFinished(false);
+  public void testConvertEntityToWinnerTeamGetDTO() {
+    // Create a Team object and set the necessary properties for testing
+    Team team = new Team();
+    team.setId(1L);
+    team.setName("Team Name");
+    team.setScore(100);
+    // Set the players for the team
+    List<Player> players = new ArrayList<>();
+    Player player1 = new Player();
+    player1.setId(1L);
+    player1.setNickname("Player 1");
+    players.add(player1);
+    Player player2 = new Player();
+    player2.setId(2L);
+    player2.setNickname("Player 2");
+    players.add(player2);
+    team.setPlayers(players);
 
-    // MAP -> Create GameOverGetDTO
-    GameOverGetDTO gameOverGetDTO = DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(lobby);
+    // Call the convertEntityToWinnerTeamGetDTO method
+    WinnerTeamGetDTO winnerTeamGetDTO = DTOMapper.INSTANCE.convertEntityToWinnerTeamGetDTO(team);
 
-    // check content
-    assertEquals(lobby.getIsFinished(), gameOverGetDTO.getIsFinished());
+    // Assert the expected values
+    assertEquals(1L, winnerTeamGetDTO.getId());
+    assertEquals("Team Name", winnerTeamGetDTO.getName());
+    assertEquals(100, winnerTeamGetDTO.getScore());
+    // Assert the players list
+    assertEquals(2, winnerTeamGetDTO.getPlayers().size());
+    assertEquals(1L, winnerTeamGetDTO.getPlayers().get(0).getId());
+    assertEquals("Player 1", winnerTeamGetDTO.getPlayers().get(0).getNickname());
+    assertEquals(2L, winnerTeamGetDTO.getPlayers().get(1).getId());
+    assertEquals("Player 2", winnerTeamGetDTO.getPlayers().get(1).getNickname());
+  }
+
+  @Test
+  public void testConvertEntityToGameOverGetDTO() {
+    // Create a Game object and set the necessary properties for testing
+    Game game = new Game();
+    game.setIsFinished(true);
+
+    // Call the convertEntityToGameOverGetDTO method
+    GameOverGetDTO gameOverGetDTO = DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(game);
+
+    // Assert the expected value
+    assertTrue(gameOverGetDTO.getIsFinished());
+  }
+
+  @Test
+  public void testConvertGamePostDTOtoEntity() {
+    // Create a GamePostDTO object and set the necessary properties for testing
+    GamePostDTO gamePostDTO = new GamePostDTO();
+    List<MinigameType> minigamesChoice = Arrays.asList(MinigameType.HOT_POTATO, MinigameType.PONG_GAME);
+    gamePostDTO.setMinigamesChoice(minigamesChoice);
+    gamePostDTO.setWinningScore(100);
+    gamePostDTO.setPlayerChoice(PlayerChoice.RANDOM);
+
+    // Call the convertGamePostDTOtoEntity method
+    Game game = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
+
+    // Assert the expected values
+    assertEquals(minigamesChoice, game.getMinigamesChoice());
+    assertEquals(100, game.getWinningScore());
+    assertEquals(PlayerChoice.RANDOM, game.getPlayerChoice());
+  }
+
+  @Test
+  public void testConvertEntityToGameGetDTO() {
+    // Create a Game object and set the necessary properties for testing
+    Game game = new Game();
+    game.setId(1L);
+    game.setWinningScore(100);
+
+    // Call the convertEntityToGameGetDTO method
+    GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+
+    // Assert the expected values
+    assertEquals(1L, gameGetDTO.getId());
+    assertEquals(100, gameGetDTO.getWinningScore());
+  }
+
+  @Test
+  public void testConvertTeamNamePutDTOtoEntity() {
+    // Create a TeamNamePutDTO object and set the necessary properties for testing
+    TeamNamePutDTO teamNamePutDTO = new TeamNamePutDTO();
+    teamNamePutDTO.setId(1L);
+    teamNamePutDTO.setName("Team 1");
+
+    // Call the convertTeamNamePutDTOtoEntity method
+    Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOtoEntity(teamNamePutDTO);
+
+    // Assert the expected values
+    assertEquals(1L, team.getId());
+    assertEquals("Team 1", team.getName());
+  }
+
+  @Test
+  public void testConvertLobbyNamesPutDTOtoEntity() {
+    // Create a LobbyNamesPutDTO object and set the necessary properties for testing
+    LobbyNamesPutDTO lobbyNamesPutDTO = new LobbyNamesPutDTO();
+    // Set the required properties for conversion
+
+    // Call the convertLobbyNamesPutDTOtoEntity method
+    Lobby lobby = DTOMapper.INSTANCE.convertLobbyNamesPutDTOtoEntity(lobbyNamesPutDTO);
+
+    // Assert the expected values
+    assertNotNull(lobby);
   }
 
 }
