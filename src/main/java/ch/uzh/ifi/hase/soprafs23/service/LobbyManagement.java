@@ -143,9 +143,14 @@ public class LobbyManagement {
   public void ableToStart(Long lobbyId) {
     Lobby lobby = getLobby(lobbyId);
     List<Team> teams = lobby.getTeams();
+    int team1Size = teams.get(0).getPlayers().size();
+    int team2Size = teams.get(1).getPlayers().size();
     if (lobby.getUnassignedPlayers().size() == 0) {
-      if (teams.get(0).getPlayers().size() > 0 && teams.get(1).getPlayers().size() > 0) {
-        return;
+      if (team1Size > 0 && team2Size > 0) {
+        if (Math.abs(team1Size - team2Size) < 2){
+          return;
+        }
+        throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "Please split the players more evenly!");
       }
       throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED,
           "There are not enough players in the teams to start!");
@@ -166,17 +171,17 @@ public class LobbyManagement {
     }
   }
 
-  public int lowestPlayerAmount(Game game){
-    Lobby lobby = getLobby(game);
-    int amount = -1;
-    for (Team t : lobby.getTeams()){
-      if (amount == -1){
-        amount = t.getPlayers().size();
-      }
-      if (t.getPlayers().size() < amount){
-        amount = t.getPlayers().size();
-      }
-    }
-    return amount;
-  }
+  // public int lowestPlayerAmount(Game game){
+  //   Lobby lobby = getLobby(game);
+  //   int amount = -1;
+  //   for (Team t : lobby.getTeams()){
+  //     if (amount == -1){
+  //       amount = t.getPlayers().size();
+  //     }
+  //     if (t.getPlayers().size() < amount){
+  //       amount = t.getPlayers().size();
+  //     }
+  //   }
+  //   return amount;
+  // }
 }
