@@ -271,3 +271,10 @@ Upcoming:
 - Add Info component to lobby with corresponding text [#80](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/80)
 - Add Info component to CreateLobby with corresponding text [#84](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/84), used to be [#166](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/166) before it was moved.
 - Add button in GamePreview instead of timer [#54](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/54)
+
+# 19.05 - 25.05
+## Nils Grob
+## Stefan Schuler
+## Naseem Hassan
+## Guojun Wu
+## Sven Ringger
