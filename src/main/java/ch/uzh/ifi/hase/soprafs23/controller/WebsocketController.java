@@ -2,7 +2,11 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
@@ -47,7 +51,7 @@ public class WebsocketController {
 
     @MessageMapping("/lobbies/{inviteCode}")
     @SendToUser("/queue/join")
-    public PlayerDTO playerJoin(@DestinationVariable int inviteCode, PlayerJoinDTO player) {
+    public PlayerDTO playerJoin(@DestinationVariable int inviteCode, PlayerJoinDTO player, SimpMessageHeaderAccessor headerAccessor) {
         Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
         lobbyManager.ableToJoin(inviteCode, playerToCreate);
 
@@ -59,8 +63,8 @@ public class WebsocketController {
         createdPlayerDTO.setAvatar(player.getAvatar());
         
         // Get the session ID of the user who sent the message
-        // String sessionId = headerAccessor.getSessionId();
-        // log.warn("Session Id: {}", sessionId);
+        String sessionId = headerAccessor.getSessionId();
+        log.warn("Session Id: {}", sessionId);
         // // Send a message to the user's queue
         messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", joinedLobby.getId()), createdPlayerDTO);
         createdPlayerDTO.setLobbyId(joinedLobby.getId());
@@ -99,4 +103,10 @@ public class WebsocketController {
     // public void votingChoice(@DestinationVariable long lobbyId) {
         
     // }
+
+    @MessageExceptionHandler
+    @SendToUser("/queue/errors")
+    public String handleException(Throwable exception) {
+        return exception.getMessage();
+    }
 }
