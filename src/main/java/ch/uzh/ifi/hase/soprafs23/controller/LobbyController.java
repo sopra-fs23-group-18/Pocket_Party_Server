@@ -96,7 +96,7 @@ public class LobbyController {
                 // }
 
                 List<Team> teams = DTOMapper.INSTANCE.convertLobbyNamesPutDTOtoEntity(lobbyNamesPutDTO).getTeams();
-                teamService.updateNames(lobby, teams);
+                teamService.updateNames(teams);
 
                 // TODO:
                 // maybe do something in lobby to set it to be fixed or similar
@@ -140,7 +140,7 @@ public class LobbyController {
         public void createPlayer(@PathVariable long lobbyId) {
 
                 Lobby lobby = lobbyManager.getLobby(lobbyId);
-                for (int i = 1; i < 3; i++) {
+                for (int i = 1; i < 4; i++) {
                         Player newPlayer = new Player();
                         newPlayer.setNickname("test");
                         Player createdPlayer = playerService.createPlayer(newPlayer);
