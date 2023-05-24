@@ -326,8 +326,8 @@ public class GameServiceTest {
         player1.setNickname("test1");
         Player player2 = new Player();
         player2.setNickname("test2");
-        teamService.addPlayer(lobby, lobby.getTeams().get(0).getName(), player1);
-        teamService.addPlayer(lobby, lobby.getTeams().get(1).getName(), player2);
+        teamService.addPlayer(lobby, lobby.getTeams().get(0).getType(), player1);
+        teamService.addPlayer(lobby, lobby.getTeams().get(1).getType(), player2);
         lobbyManager.addGame(game, lobby.getId());
 
         gameService.updateUpcomingMinigame(game.getId());

@@ -76,10 +76,10 @@ public class LobbyManagementIntegrationTest {
 
         // when
         Lobby createdLobby = lobbyManager.createLobby();
-        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getName(), player1);
-        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getName(), player2);
-        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getName(), player3);
-        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getName(), player4);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getType(), player1);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getType(), player2);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getType(), player3);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getType(), player4);
 
         lobbyManager.ableToStart(createdLobby.getId());
         lobbyManager.addGame(game, createdLobby.getId());
@@ -87,7 +87,7 @@ public class LobbyManagementIntegrationTest {
 
         Team winnerTeamInput = new Team();
         winnerTeamInput.setName(createdLobby.getTeams().get(1).getName());
-        winnerTeamInput.setScore(300);
+        winnerTeamInput.setScore(200);
 
         gameService.finishedMinigameUpdate(game.getId(), winnerTeamInput);
         Minigame game1 = gameService.getMinigame(game.getId());

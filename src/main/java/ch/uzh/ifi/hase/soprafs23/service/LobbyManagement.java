@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
@@ -50,8 +51,8 @@ public class LobbyManagement {
       newLobby.setInviteCode(inviteCode);
 
       List<Team> teams = new ArrayList<Team>();
-      teams.add(teamService.createTeam(newLobby, "Team 1"));
-      teams.add(teamService.createTeam(newLobby, "Team 2"));
+      teams.add(teamService.createTeam(newLobby, "Team 1", TeamType.TEAM_ONE));
+      teams.add(teamService.createTeam(newLobby, "Team 2", TeamType.TEAM_TWO));
       newLobby.setTeams(teams);
 
       newLobby = lobbyRepository.save(newLobby);

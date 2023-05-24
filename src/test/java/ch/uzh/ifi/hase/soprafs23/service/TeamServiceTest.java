@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
@@ -48,7 +49,7 @@ public class TeamServiceTest {
 
         // Create a team
         String teamName = "Team 1";
-        Team team = teamService.createTeam(lobby, teamName);
+        Team team = teamService.createTeam(lobby, teamName, TeamType.TEAM_ONE);
 
         // Verify the team is created with the correct properties
         assertNotNull(team);
@@ -63,10 +64,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);
@@ -82,7 +83,7 @@ public class TeamServiceTest {
         Player newPlayer = playerService.createPlayer(player);
 
         // Call the addPlayer method
-        teamService.addPlayer(lobby, teamName1, newPlayer);
+        teamService.addPlayer(lobby, team1.getType(), newPlayer);
 
         Team team = teamService.getByNameAndLobby(lobby, teamName1);
 
@@ -104,10 +105,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);
@@ -123,12 +124,12 @@ public class TeamServiceTest {
         Player newPlayer = playerService.createPlayer(player);
 
         // Call the addPlayer method
-        teamService.addPlayer(lobby, teamName1, newPlayer);
+        teamService.addPlayer(lobby, team1.getType(), newPlayer);
 
         Team team = lobby.getTeams().get(0);
 
         // Call the removePlayer method
-        teamService.removePlayer(lobby, team.getName(), player);
+        teamService.removePlayer(lobby, team.getType(), player);
 
         // Verify that the player is removed from the team and saved
         assertEquals(0, team.getPlayers().size());
@@ -166,10 +167,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);
@@ -201,10 +202,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);
@@ -226,10 +227,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);
@@ -239,7 +240,9 @@ public class TeamServiceTest {
         // save lobby
         lobbyRepository.saveAndFlush(lobby);
 
-        assertEquals(null, teamService.getByNameAndLobby(lobby, "Team 3"));
+        assertThrows(ResponseStatusException.class, () -> {
+            teamService.getByNameAndLobby(lobby, "Team 3");
+        });
     }
 
     @Test
@@ -249,10 +252,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);
@@ -275,10 +278,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);
@@ -294,7 +297,7 @@ public class TeamServiceTest {
         Player newPlayer = playerService.createPlayer(player);
 
         // Call the addPlayer method
-        teamService.addPlayer(lobby, teamName1, newPlayer);
+        teamService.addPlayer(lobby, team1.getType(), newPlayer);
 
         Team team = teamService.getByNameAndLobby(lobby, teamName1);
 
@@ -315,10 +318,10 @@ public class TeamServiceTest {
 
         // Create two teams
         String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1);
+        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
 
         String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2);
+        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
 
         // form list of teams
         List<Team> teams = List.of(team1, team2);

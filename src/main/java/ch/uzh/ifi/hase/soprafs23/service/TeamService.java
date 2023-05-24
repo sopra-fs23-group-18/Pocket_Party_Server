@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
@@ -35,33 +36,34 @@ public class TeamService {
         this.playerService = playerService;
     }
 
-    public Team createTeam(Lobby lobby, String name) {
+    public Team createTeam(Lobby lobby, String name, TeamType type) {
         Team newTeam = new Team();
         newTeam.setLobby(lobby);
         newTeam.setName(name);
+        newTeam.setType(type);
 
         log.debug("Created Information for User: {}", newTeam);
         return newTeam;
     }
 
-    public void addPlayer(Lobby lobby, String teamName, Player player) {
-        if (lobby == null || teamName == null || player == null) {
+    public void addPlayer(Lobby lobby, TeamType type , Player player) {
+        if (lobby == null || type == null || player == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The input was empty, please provide information!");
         }
-        Team team = getByNameAndLobby(lobby, teamName);
+        Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.add(player);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
-    public void removePlayer(Lobby lobby, String teamName, Player player) {
-        if (player == null) {
+    public void removePlayer(Lobby lobby, TeamType type, Player player) {
+        if (lobby == null || type == null || player == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The input was empty, please provide information!");
         }
-        Team team = getByNameAndLobby(lobby, teamName);
+        Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.remove(player);
         teamRepository.save(team);
@@ -81,15 +83,15 @@ public class TeamService {
         teamRepository.flush();
     }
 
-    // public Team getByColorAndLobby(Lobby lobby, TeamType color) {
-    // List<Team> teams = getTeams(lobby);
-    // for (Team team : teams) {
-    // if (team.getColor().ordinal() == color.ordinal()) {
-    // return team;
-    // }
-    // }
-    // return null;
-    // }
+    public Team getByTypeAndLobby(Lobby lobby, TeamType color) {
+        List<Team> teams = getTeams(lobby);
+        for (Team team : teams) {
+            if (team.getType().ordinal() == color.ordinal()) {
+                return team;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Team with such type exists");
+    }
 
     public Team getByNameAndLobby(Lobby lobby, String name) {
         List<Team> teams = getTeams(lobby);
