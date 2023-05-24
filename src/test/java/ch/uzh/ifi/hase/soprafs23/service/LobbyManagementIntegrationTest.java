@@ -1,32 +1,37 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.management.MBeanInfo;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.TappingGame;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.TeamRepository;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 
 @WebAppConfiguration
 @SpringBootTest
 public class LobbyManagementIntegrationTest {
-    
+
     @Qualifier("lobbyRepository")
     @Autowired
     private LobbyRepository lobbyRepository;
@@ -48,15 +53,12 @@ public class LobbyManagementIntegrationTest {
     @Autowired
     private PlayerRepository playerRepository;
 
-    @Autowired
-    private PlayerService playerService;
-
     @Qualifier("minigameRepository")
     @Autowired
     private MinigameRepository minigameRepository;
 
     @Test
-    public void addUpcommingMinigame_secondGame(){
+    public void addUpcommingMinigame_secondGame() {
         // given
         Player player1 = new Player();
         player1.setNickname("test1");
@@ -67,32 +69,42 @@ public class LobbyManagementIntegrationTest {
         Player player4 = new Player();
         player4.setNickname("test4");
 
+        Game game = new Game();
+        game.setPlayerChoice(PlayerChoice.RANDOM);
+        List<MinigameType> minigameTypes = Arrays.asList(MinigameType.values());
+        game.setMinigamesChoice(minigameTypes);
+
         // when
         Lobby createdLobby = lobbyManager.createLobby();
-        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getName() ,player1);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getName(), player1);
         teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getName(), player2);
         teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getName(), player3);
         teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getName(), player4);
 
         lobbyManager.ableToStart(createdLobby.getId());
-        gameService.addUpcomingMinigame(createdLobby.getId());
+        lobbyManager.addGame(game, createdLobby.getId());
+        gameService.addUpcomingMinigame(game.getId());
 
         Team winnerTeamInput = new Team();
         winnerTeamInput.setName(createdLobby.getTeams().get(1).getName());
         winnerTeamInput.setScore(300);
 
-        gameService.finishedMinigameUpdate(createdLobby.getId(), winnerTeamInput);
-        Minigame game1 = gameService.getMinigame(createdLobby.getId());
+        gameService.finishedMinigameUpdate(game.getId(), winnerTeamInput);
+        Minigame game1 = gameService.getMinigame(game.getId());
 
-        gameService.addUpcomingMinigame(createdLobby.getId());
-        Minigame game2 = gameService.getMinigame(createdLobby.getId());
+        gameService.addUpcomingMinigame(game.getId());
+        Minigame game2 = gameService.getMinigame(game.getId());
 
-        // Player game1Team1Player = playerService.getPlayer(game1.getTeam1Players().get(0).getId());
-        // Player game1Team2Player = playerService.getPlayer(game1.getTeam2Players().get(0).getId());
-        // Player game2Team1Player = playerService.getPlayer(game2.getTeam1Players().get(0).getId());
-        // Player game2Team2Player = playerService.getPlayer(game2.getTeam2Players().get(0).getId());
+        // Player game1Team1Player =
+        // playerService.getPlayer(game1.getTeam1Players().get(0).getId());
+        // Player game1Team2Player =
+        // playerService.getPlayer(game1.getTeam2Players().get(0).getId());
+        // Player game2Team1Player =
+        // playerService.getPlayer(game2.getTeam1Players().get(0).getId());
+        // Player game2Team2Player =
+        // playerService.getPlayer(game2.getTeam2Players().get(0).getId());
 
-        assertNotNull(gameService.getMinigame(createdLobby.getId()));
+        assertNotNull(gameService.getMinigame(game.getId()));
         assertNotEquals(game1.getType(), game2.getType());
         assertNotEquals(game1.getTeam1Players(), game2.getTeam1Players());
         assertNotEquals(game1.getTeam2Players(), game2.getTeam2Players());
@@ -101,6 +113,6 @@ public class LobbyManagementIntegrationTest {
         // assertEquals(1, game1Team1Player.getRoundsPlayed());
         // assertEquals(1, game1Team2Player.getRoundsPlayed());
         // assertEquals(0, game2Team1Player.getRoundsPlayed());
-        // assertEquals(0, game2Team2Player.getRoundsPlayed());        
+        // assertEquals(0, game2Team2Player.getRoundsPlayed());
     }
 }

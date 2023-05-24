@@ -33,6 +33,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
@@ -221,7 +222,7 @@ public class GameControllerTest {
         Game game = new Game();
         // Set the necessary properties of the game
 
-        GameOverGetDTO expectedDTO = new GameOverGetDTO();
+        GameOverGetDTO expectedDTO = DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(game);
         // Set the necessary properties of the expectedDTO based on the game
 
         // Mock the behavior of gameService

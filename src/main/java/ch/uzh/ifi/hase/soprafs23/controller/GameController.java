@@ -22,7 +22,6 @@ import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameOverGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.ScoresGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.TeamGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
@@ -44,7 +43,6 @@ public class GameController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-
     GameController(LobbyManagement lobbyManager, GameService gameService) {
         this.lobbyManager = lobbyManager;
         this.gameService = gameService;
@@ -52,14 +50,14 @@ public class GameController {
 
     /**
      * @input winningScore, chosenMinigames
-    */
+     */
     @PostMapping("/lobbies/{lobbyId}/games")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public GameGetDTO createGame(@PathVariable long lobbyId, @RequestBody GamePostDTO gamePostDTO) {
         // convert API user to internal representation
         Game game = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
-        
+
         // create user
         Game createdGame = gameService.createGame(game, lobbyId);
 
@@ -69,7 +67,7 @@ public class GameController {
 
     /**
      * @return game; format: id, winningScore
-    */
+     */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -79,8 +77,9 @@ public class GameController {
     }
 
     /**
-     * @return minigame; format: description, scoreToGain, team1Player, team2Player, type
-    */
+     * @return minigame; format: description, scoreToGain, team1Player, team2Player,
+     *         type
+     */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/minigame")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -91,57 +90,56 @@ public class GameController {
 
     /**
      * @change adds next minigame
-    */
+     */
     @PostMapping("/lobbies/{lobbyId}/games/{gameId}/minigames")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public MinigameGetDTO addMinigame(@PathVariable long gameId){
+    public MinigameGetDTO addMinigame(@PathVariable long gameId) {
         Minigame nextMinigame = gameService.addUpcomingMinigame(gameId);
         return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
     }
 
     /**
      * @change add players to Minigame
-    */
+     */
     @PutMapping("/lobbies/{lobbyId}/games/{gameId}/minigames")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMinigame(@PathVariable long gameId){
-        gameService.updateUpcomingMinigame(gameId);        
+    public void updateMinigame(@PathVariable long gameId) {
+        gameService.updateUpcomingMinigame(gameId);
     }
-
-
 
     /**
      * @input winner team of minigame; format: score, color, name
-     * @change updates score of teams, add winnerName to minigame, update roundsPlayed of players.
-     * Creates and adds next Minigame & checks if finished.
-    */
+     * @change updates score of teams, add winnerName to minigame, update
+     *         roundsPlayed of players.
+     *         Creates and adds next Minigame & checks if finished.
+     */
     @PutMapping("/lobbies/{lobbyId}/games/{gameId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateScore(@PathVariable long gameId, @RequestBody MinigameWinnerTeamPutDTO winnerTeamPutDTO){
-        //instead of String winnerTeam put the winner TeamDTO and get score of other via total minigame score
+    public void updateScore(@PathVariable long gameId, @RequestBody MinigameWinnerTeamPutDTO winnerTeamPutDTO) {
+        // instead of String winnerTeam put the winner TeamDTO and get score of other
+        // via total minigame score
         Team winnerTeamInput = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOtoEntity(winnerTeamPutDTO);
 
-        //updateScore
+        // updateScore
         gameService.finishedMinigameUpdate(gameId, winnerTeamInput);
-
 
     }
 
     /**
      * @return boolean; true if a team has achieved the winning score.
-    */
+     */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/gameover")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameOverGetDTO getIsFinished(@PathVariable long gameId){
+    public GameOverGetDTO getIsFinished(@PathVariable long gameId) {
         Game game = gameService.getGame(gameId);
         return DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(game);
     }
 
     /**
      * @return winnerTeam (id, score, name, color)
-    */
+     */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/winner")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -150,10 +148,9 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToWinnerTeamGetDTO(team);
     }
 
-
     /**
      * @return winning score + both teams (id, score, name, color)
-    */
+     */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/scores")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody

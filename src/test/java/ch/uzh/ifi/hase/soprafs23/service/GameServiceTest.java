@@ -1,16 +1,12 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.util.Arrays;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,15 +53,9 @@ public class GameServiceTest {
     @Autowired
     private PlayerRepository playerRepository;
 
-    @Autowired
-    private PlayerService playerService;
-
     @Qualifier("minigameRepository")
     @Autowired
     private MinigameRepository minigameRepository;
-
-    @Autowired
-    private MinigameService minigameService;
 
     @Qualifier("gameRepository")
     @Autowired
@@ -77,10 +67,10 @@ public class GameServiceTest {
     @BeforeEach
     public void setup() {
         lobbyRepository.deleteAll();
+        gameRepository.deleteAll();
         teamRepository.deleteAll();
         playerRepository.deleteAll();
         minigameRepository.deleteAll();
-        gameRepository.deleteAll();
 
     }
 
