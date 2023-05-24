@@ -1,39 +1,41 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
-import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 
 @DataJpaTest
+@ActiveProfiles("test")
 public class MinigameRepositoryTest {
+
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Autowired
     private MinigameRepository minigameRepository;
 
     @Test
-    public void findById_success() {
-        // given
-        Minigame minigame = new Minigame();
-        minigame.setType(MinigameType.TIMING_GAME);
-        minigame.setDescription("test");
+    public void testFindById() {
+        // Create a Minigame entity and persist it
+        Minigame minigame = new HotPotato();
+        minigame.setAmountOfPlayers(MinigamePlayers.ALL);
 
-        minigameRepository.save(minigame);
-        minigameRepository.flush();
+        entityManager.persist(minigame);
+        entityManager.flush();
 
-        // when
-        Minigame found = minigameRepository.findById(minigame.getId()).orElse(null);
+        // Retrieve the Minigame entity by ID using the repository
+        Minigame foundMinigame = minigameRepository.findById(minigame.getId()).orElse(null);
 
-        // then
-        assertNotNull(found);
-        assertEquals(minigame.getId(), found.getId());
-        assertEquals(minigame.getType(), found.getType());
-        assertEquals(minigame.getDescription(), found.getDescription());
+        // Assert that the retrieved Minigame is not null and has the expected ID
+        assertThat(foundMinigame).isNotNull();
+        assertThat(foundMinigame.getId()).isEqualTo(minigame.getId());
     }
-
 }

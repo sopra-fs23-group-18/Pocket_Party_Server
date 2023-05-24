@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,7 +17,6 @@ public class TeamRepositoryTest {
     public void findById_success() {
         // given
         Team team = new Team();
-        team.setColor(TeamType.BLUE);
         team.setScore(0);
         team.setName("test");
 
@@ -31,7 +29,6 @@ public class TeamRepositoryTest {
         // then
         assertNotNull(found);
         assertEquals(team.getId(), found.getId());
-        assertEquals(team.getColor(), found.getColor());
         assertEquals(team.getScore(), found.getScore());
         assertEquals(team.getName(), found.getName());
     }
