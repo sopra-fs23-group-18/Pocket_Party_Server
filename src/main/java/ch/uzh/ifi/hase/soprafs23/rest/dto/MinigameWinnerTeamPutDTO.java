@@ -4,7 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 
 public class MinigameWinnerTeamPutDTO {
     private int score;
-    private TeamType color;
+    //private TeamType color;
     private String name;
 
     public String getName() {
@@ -15,13 +15,13 @@ public class MinigameWinnerTeamPutDTO {
         this.name = name;
     }
 
-    public TeamType getColor() {
-        return color;
-    }
+    // public TeamType getColor() {
+    //     return color;
+    // }
 
-    public void setColor(TeamType color) {
-        this.color = color;
-    }
+    // public void setColor(TeamType color) {
+    //     this.color = color;
+    // }
 
     public int getScore() {
         return score;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigameMapper;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
@@ -35,41 +36,38 @@ public class TeamService {
         this.playerService = playerService;
     }
 
-    // public Team createTeam(TeamType color, Lobby lobby, String name) {
-    // Team newTeam = new Team();
-    // newTeam.setLobby(lobby);
-    // newTeam.setColor(color);
-    // newTeam.setName(name);
-    // newTeam = teamRepository.save(newTeam);
-    // teamRepository.flush();
+    public Team createTeam(Lobby lobby, String name, TeamType type) {
+        Team newTeam = new Team();
+        newTeam.setLobby(lobby);
+        newTeam.setName(name);
+        newTeam.setType(type);
 
-    // log.debug("Created Information for User: {}", newTeam);
-    // return newTeam;
-    // }
+        log.debug("Created Information for User: {}", newTeam);
+        return newTeam;
+    }
 
-    public void addPlayer(Lobby lobby, TeamType teamColor, Player player) {
-        if (lobby == null || teamColor == null || player == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+    public void addPlayer(Lobby lobby, TeamType type , Player player) {
+        if (lobby == null || type == null || player == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The input was empty, please provide information!");
         }
-        Team team = getByColorAndLobby(lobby, teamColor);
+        Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.add(player);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
-    public void removePlayer(Lobby lobby, TeamType teamColor, Player player) {
-        if (player == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+    public void removePlayer(Lobby lobby, TeamType type, Player player) {
+        if (lobby == null || type == null || player == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The input was empty, please provide information!");
         }
-        Team team = getByColorAndLobby(lobby, teamColor);
+        Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.remove(player);
         teamRepository.save(team);
         teamRepository.flush();
-        // does this work? or do we need to set id again
     }
 
     public Team getTeam(Long teamId) {
@@ -78,72 +76,98 @@ public class TeamService {
         return team;
     }
 
-    public void updateScore(Lobby lobby, TeamType color, int score) {
-        Team team = getByColorAndLobby(lobby, color);
+    public void updateScore(Lobby lobby, String teamName, int score) {
+        Team team = getByNameAndLobby(lobby, teamName);
         team.setScore(team.getScore() + score);
         teamRepository.save(team);
         teamRepository.flush();
     }
 
-    public Team getByColorAndLobby(Lobby lobby, TeamType color) {
+    public Team getByTypeAndLobby(Lobby lobby, TeamType color) {
         List<Team> teams = getTeams(lobby);
         for (Team team : teams) {
-            if (team.getColor().ordinal() == color.ordinal()) {
+            if (team.getType().ordinal() == color.ordinal()) {
                 return team;
             }
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Team with such type exists");
     }
 
-    public List<Team> getTeams(Lobby lobby){
+    public Team getByNameAndLobby(Lobby lobby, String name) {
+        List<Team> teams = getTeams(lobby);
+        for (Team team : teams) {
+            if (team.getName().equals(name)) {
+                return team;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Team with such name exists");
+    }
+
+    public List<Team> getTeams(Lobby lobby) {
         List<Team> teams = teamRepository.findByLobby(lobby);
         if (teams.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No team with such a lobby exists!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No teams with such a lobby exists!");
         }
         return teams;
     }
 
-    public List<Player> randomPlayerChoice(TeamType color, Lobby lobby, MinigamePlayers amount){
+    public List<Player> randomPlayerChoice(String teamName, Lobby lobby, MinigamePlayers amount) {
+        Team team = getByNameAndLobby(lobby, teamName);
 
-        List<Player> players = new ArrayList<Player>();
-        Team team = getByColorAndLobby(lobby, color);
-        if (amount.equals(MinigamePlayers.ALL)){
-            for (Player p :team.getPlayers()){
-            players.add(p);
-            }
+        // if (amount.equals(MinigamePlayers.ALL)){
+        // for (Player p :team.getPlayers()){
+        // players.add(p);
+        // }
+        // }
+        int amountOfPlayers;
+
+        if (amount.equals(MinigamePlayers.ALL)) {
+            amountOfPlayers = lowestPlayerAmount(lobby);
+        } else {
+            amountOfPlayers = MinigameMapper.getMinigamePlayers().get(amount);
         }
-        else{
-        players = playerService.getMinigamePlayers(team, 1);
-        }
+        List<Player> players = playerService.getMinigamePlayers(team, amountOfPlayers);
         return players;
     }
 
     @Transactional
-    public void updateNames(Lobby lobby, List<Team> teamNames){
-        if (teamNames.get(0).getName().equals(teamNames.get(1).getName())){
+    public void updateNames(List<Team> teamNames) {
+        if (teamNames.get(0).getName().equals(teamNames.get(1).getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The names are equal!");
         }
-        //check if both names unique, maybe via getByNameAndLobby and see if already in there (if null then doesn't exist)
-        for (Team update : teamNames){
-            if (update.getName().strip().equals("")){
+        // check if both names unique, maybe via getByNameAndLobby and see if already in
+        // there (if null then doesn't exist)
+        for (Team update : teamNames) {
+            if (update.getName().strip().equals("")) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This name is invalid");
             }
             Team team = getTeam(update.getId());
 
-            if (team.getName().equals(update.getName())){continue;}
+            if (team.getName().equals(update.getName())) {
+                continue;
+            }
             // if (getByNameAndLobby(lobby, update.getName()) == null){
-            //     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "null")
+            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "null")
             // }
             team.setName(update.getName());
 
             teamRepository.save(team);
-            //if something doesnt work, throw error
         }
         teamRepository.flush();
     }
 
-
-    
-
+    public int lowestPlayerAmount(Lobby lobby) {
+        List<Team> teams = getTeams(lobby);
+        int amount = -1;
+        for (Team t : teams) {
+            if (amount == -1) {
+                amount = t.getPlayers().size();
+            }
+            if (t.getPlayers().size() < amount) {
+                amount = t.getPlayers().size();
+            }
+        }
+        return amount;
+    }
 
 }

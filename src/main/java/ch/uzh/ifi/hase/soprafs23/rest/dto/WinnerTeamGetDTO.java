@@ -9,7 +9,7 @@ public class WinnerTeamGetDTO {
     private Long id;
     private int score;
     private String name;
-    private TeamType color;
+    // private TeamType color;
     private List<Player> players;
 
     public List<Player> getPlayers() {
@@ -20,13 +20,13 @@ public class WinnerTeamGetDTO {
         this.players = players;
     }
 
-    public TeamType getColor() {
-        return color;
-    }
+    // public TeamType getColor() {
+    //     return color;
+    // }
 
-    public void setColor(TeamType color) {
-        this.color = color;
-    }
+    // public void setColor(TeamType color) {
+    //     this.color = color;
+    // }
 
     public String getName() {
         return name;

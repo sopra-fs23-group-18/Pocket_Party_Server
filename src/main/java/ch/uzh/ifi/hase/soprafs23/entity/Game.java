@@ -23,7 +23,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.JoinColumn;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
 import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 
 @Entity
 @Table(name = "GAME")
@@ -45,8 +47,8 @@ public class Game implements Serializable{
     @Column(nullable = false)
     private int winningScore;    
 
-    @Column(nullable = false)
-    private boolean isFinished = false;
+    // @Column(nullable = false)
+    // private boolean isFinished = false;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Minigame upcomingMinigame;
@@ -62,9 +64,20 @@ public class Game implements Serializable{
     @Column(nullable = false)
     private PlayerChoice playerChoice;
 
+    @Column(nullable = true)
+    private OutcomeType gameOutcome = OutcomeType.NOT_FINISHED;
+
     
 
     //getters & setters
+
+    public OutcomeType getGameOutcome() {
+        return gameOutcome;
+    }
+
+    public void setGameOutcome(OutcomeType gameOutcome) {
+        this.gameOutcome = gameOutcome;
+    }
 
     public PlayerChoice getPlayerChoice() {
         return playerChoice;
@@ -124,13 +137,13 @@ public class Game implements Serializable{
 
     
 
-    public boolean getIsFinished() {
-        return isFinished;
-    }
+    // public boolean getIsFinished() {
+    //     return isFinished;
+    // }
 
-    public void setIsFinished(boolean isFinished) {
-        this.isFinished = isFinished;
-    }
+    // public void setIsFinished(boolean isFinished) {
+    //     this.isFinished = isFinished;
+    // }
 
     // additional methods to add and get single elements
 

@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import java.util.List;
 
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 
@@ -11,7 +12,17 @@ public class MinigameGetDTO {
     private List<Player> team1Players;
     private List<Player> team2Players;
     private MinigameType type;
+    private MinigamePlayers amountOfPlayers;
 
+
+
+    public MinigamePlayers getAmountOfPlayers() {
+        return amountOfPlayers;
+    }
+
+    public void setAmountOfPlayers(MinigamePlayers amountOfPlayers) {
+        this.amountOfPlayers = amountOfPlayers;
+    }
 
     public MinigameType getType() {
         return type;

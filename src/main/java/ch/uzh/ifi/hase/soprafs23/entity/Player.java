@@ -2,20 +2,15 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "PLAYER")
-public class Player implements Serializable{
+public class Player implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -26,10 +21,10 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teamId")
-    private Team team;
+    // @JsonIgnore
+    // @ManyToOne(cascade = CascadeType.ALL)
+    // @JoinColumn(name = "teamId")
+    // private Team team;
 
     @Column(nullable = false)
     private int roundsPlayed = 0;
@@ -40,7 +35,7 @@ public class Player implements Serializable{
 
     public void setRoundsPlayed(int roundsPlayed) {
         this.roundsPlayed = roundsPlayed;
-    }    
+    }
 
     public Player() {
     }
@@ -62,12 +57,12 @@ public class Player implements Serializable{
     }
 
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
 
-        else if (obj == this){
+        else if (obj == this) {
             return true;
         }
 
@@ -75,15 +70,14 @@ public class Player implements Serializable{
             return false;
         }
 
-        else{
-            return this.id == ((Player)obj).id && this.nickname == ((Player)obj).nickname;
+        else {
+            return this.id == ((Player) obj).id && this.nickname == ((Player) obj).nickname;
         }
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Long.hashCode(id);
     }
 
-    
 }

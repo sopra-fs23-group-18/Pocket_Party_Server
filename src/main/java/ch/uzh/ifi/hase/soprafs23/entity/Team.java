@@ -37,7 +37,7 @@ public class Team implements Serializable {
     @JoinColumn(name = "lobbyId")
     private Lobby lobby;
 
-    private TeamType color;
+    private TeamType type;
 
     @Column(nullable = false)
     private String name;
@@ -77,12 +77,12 @@ public class Team implements Serializable {
         this.score = score;
     }
 
-    public TeamType getColor() {
-        return color;
+    public TeamType getType() {
+        return type;
     }
 
-    public void setColor(TeamType color) {
-        this.color = color;
+    public void setType(TeamType type) {
+        this.type = type;
     }
 
     public Lobby getLobby() {

@@ -38,6 +38,10 @@ public class Lobby implements Serializable {
     @JoinColumn(name = "gameId")
     private Game game;
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Game> finishedGames = new ArrayList<Game>();
+
     @Column(nullable = false, unique = true)
     private int inviteCode;
 
@@ -53,6 +57,14 @@ public class Lobby implements Serializable {
 
     // getters & setters
 
+    public List<Game> getFinishedGames() {
+        return finishedGames;
+    }
+
+    public void setFinishedGames(List<Game> finishedGames) {
+        this.finishedGames = finishedGames;
+    }
+    
     public Game getGame() {
         return game;
     }

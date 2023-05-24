@@ -2,7 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 
 @Service
 @Transactional
@@ -55,22 +55,14 @@ public class GameService {
         this.lobbyManager = lobbyManager;
     }
 
-    public Game getGame(Lobby lobby) {
-        Game game = gameRepository.findByLobby(lobby);
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The game with the given Lobby does not exist!");
-        }
-        return game;
-    }
-
     public Game getGame(Long gameId) {
       Game game = gameRepository.findById(gameId).orElseThrow(
         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The game with the given Id does not exist!"));
       return game;
-  }
+    }
 
-    public Minigame getMinigame(Lobby lobby) {
-        Game game = getGame(lobby);
+    public Minigame getMinigame(Long gameId) {
+        Game game = getGame(gameId);
         Minigame minigame = game.getUpcomingMinigame();
         if (minigame == null) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No upcoming Minigame was found!");
@@ -94,11 +86,17 @@ public class GameService {
 
     public Minigame addUpcomingMinigame(Long gameId) {
         Game game = getGame(gameId);
+        if (game.getUpcomingMinigame() != null){
+          if (getMinigame(gameId).getMinigameOutcome() == OutcomeType.NOT_FINISHED){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A minigame that isn't finished already exists!");
+          }
+        }
         MinigameType type = getNextMinigameType(game);
         if (type == null) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, no MinigameType has been chosen!");
         }
-        Minigame nextMinigame = minigameService.createMinigame(type);
+        int lowestPlayerAmount = teamService.lowestPlayerAmount(lobbyManager.getLobby(game));
+        Minigame nextMinigame = minigameService.createMinigame(type, lowestPlayerAmount);
     
         game.setUpcomingMinigame(nextMinigame);
         gameRepository.save(game);
@@ -109,20 +107,32 @@ public class GameService {
     public Team getWinner(Long gameId) {
         Game game = getGame(gameId);
         Team team = lobbyManager.getLeadingTeam(game);
-        if (game.getIsFinished()) {
+        if (game.getGameOutcome() != OutcomeType.NOT_FINISHED) {
           return team;
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner yet!");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no winner!");
     }
 
     public void isFinished(Game game){
+        Lobby lobby = lobbyManager.getLobby(game);
         Team team = lobbyManager.getLeadingTeam(game);
         if (team.getScore() >= game.getWinningScore()){
-              game.setIsFinished(true);
+          if (lobby.getTeams().size() < 2){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby doesn't have 2 teams");
+          }
+          if (lobby.getTeams().get(0).getScore() == lobby.getTeams().get(1).getScore()){
+            game.setGameOutcome(OutcomeType.DRAW);
+          }
+          else{
+            game.setGameOutcome(OutcomeType.WINNER);
+          }
+          if (lobby.getGame() == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby had no game set to it");
+          }
+          lobby.getFinishedGames().add(lobby.getGame());
         }
     }
 
-    //new
     public Game createGame(Game newGame, Long lobbyId){
       if (newGame.getWinningScore() <= 0 || newGame.getWinningScore() > 100000){
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because the winningScore was invalid!");
@@ -130,9 +140,8 @@ public class GameService {
       if (newGame.getPlayerChoice() == null){
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because playerChoice was not set!");
       }
-      List<MinigameType> minigames;
       if (newGame.getMinigamesChoice() == null || newGame.getMinigamesChoice().isEmpty()){
-        minigames = minigameService.chosenMinigames();
+        List<MinigameType> minigames = minigameService.chooseAllMinigames();
         newGame.setMinigamesChoice(minigames);
       }
       lobbyManager.addGame(newGame, lobbyId);
@@ -142,16 +151,25 @@ public class GameService {
       return createdGame;
     }
 
-    public Minigame updateMinigame(Lobby lobby, Team winnerTeamInput){
-      Game game = getGame(lobby);
+    public Minigame updateMinigame(Game game, Team winnerTeamInput){
       Minigame playedMinigame = game.getUpcomingMinigame();
-      if (playedMinigame.getIsFinished() == true){
+      if (playedMinigame.getMinigameOutcome() != OutcomeType.NOT_FINISHED){
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores can only be updated once!");
       }
       if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Scores could not be updated, because score was out of range!");
       }
-      minigameService.updateMinigame(playedMinigame.getId(), winnerTeamInput.getName());
+      if (winnerTeamInput.getName() == null || winnerTeamInput.getName().isEmpty()){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No name was provided");
+      }
+      String winnerTeam;
+      if (winnerTeamInput.getScore() == (playedMinigame.getScoreToGain()/2)){
+        winnerTeam = "";
+      }
+      else{
+        winnerTeam = winnerTeamInput.getName();
+      }
+      minigameService.updateMinigame(playedMinigame.getId(), winnerTeam);
       game.addToMinigamesPlayed(playedMinigame);
       return playedMinigame;
   }
@@ -160,54 +178,57 @@ public class GameService {
     public void finishedMinigameUpdate(Long gameId, Team winnerTeamInput) {
       Game game = getGame(gameId);
       Lobby lobby = lobbyManager.getLobby(game);
+      
+      Minigame playedMinigame = updateMinigame(game, winnerTeamInput);
 
-      //maybe remove this method
-      Minigame playedMinigame = updateMinigame(lobby, winnerTeamInput);
-
-      // update roundsPlayed of players
       playerService.updatePlayers(playedMinigame.getTeam1Players());
       playerService.updatePlayers(playedMinigame.getTeam2Players());
 
-      // update score of teams
-      teamService.updateScore(lobby, winnerTeamInput.getColor(), winnerTeamInput.getScore());
+      updateScores(winnerTeamInput, lobby, playedMinigame);
 
-      List<Team> teams = lobby.getTeams();
-      if(teams.get(0).getColor().ordinal() != winnerTeamInput.getColor().ordinal()){
-        int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-        teamService.updateScore(lobby, teams.get(0).getColor(), score);
-      }else{
-        int score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
-        teamService.updateScore(lobby, teams.get(1).getColor(), score);
-      }
       isFinished(game);
       gameRepository.save(game);
       gameRepository.flush();
     }
 
+    private void updateScores(Team winnerTeamInput, Lobby lobby, Minigame playedMinigame) {
+      teamService.updateScore(lobby, winnerTeamInput.getName(), winnerTeamInput.getScore());
+
+      List<Team> teams = lobby.getTeams();
+      if (teams.size() < 2){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby doesn't have 2 teams");
+      }
+
+      int score = 0;
+      if (winnerTeamInput.getScore() != 0){
+        score = playedMinigame.getScoreToGain() - winnerTeamInput.getScore();
+      }
+
+      if(!teams.get(0).getName().equals(winnerTeamInput.getName())){
+        teamService.updateScore(lobby, teams.get(0).getName(), score);
+      }else{
+        teamService.updateScore(lobby, teams.get(1).getName(), score);
+      }
+    }
+
     public void updateUpcomingMinigame(Long gameId){
       Game game = getGame(gameId);
       Minigame upcomingMinigame = game.getUpcomingMinigame();
-      Lobby lobby = lobbyManager.getLobby(game);
-      
-      MinigamePlayers amount = MinigamePlayers.ONE;
-      if (upcomingMinigame.getType().equals(MinigameType.HOT_POTATO)){
-        amount = MinigamePlayers.ALL;
+      if (upcomingMinigame == null){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot update minigame, because no minigame has been found");
       }
-      List<Player> team1Players = teamService.randomPlayerChoice(TeamType.RED, lobby, amount);
-      List<Player> team2Players = teamService.randomPlayerChoice(TeamType.BLUE, lobby, amount);
+      Lobby lobby = lobbyManager.getLobby(game);
+
+      List<Team> teams = lobby.getTeams();
+      if (teams.size() < 2){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby doesn't have 2 teams");
+      }
+      
+      MinigamePlayers amount = upcomingMinigame.getAmountOfPlayers();
+
+      List<Player> team1Players = teamService.randomPlayerChoice(teams.get(0).getName(), lobby, amount);
+      List<Player> team2Players = teamService.randomPlayerChoice(teams.get(1).getName(), lobby, amount);
 
       minigameService.addPlayersToMinigame(upcomingMinigame, team1Players, team2Players);
-
     }
-
-
-
-
-    
-
-
-
-
-
-
 }
