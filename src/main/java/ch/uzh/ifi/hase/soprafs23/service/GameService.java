@@ -83,6 +83,7 @@ public class GameService {
         }
         return nextMinigameType;
     }
+    //continue here: lobbymanagement done with errors
 
     public Minigame addUpcomingMinigame(Long gameId) {
         Game game = getGame(gameId);

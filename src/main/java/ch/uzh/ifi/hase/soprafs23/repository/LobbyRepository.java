@@ -10,4 +10,5 @@ public interface LobbyRepository extends JpaRepository<Lobby, Long> {
   Lobby findById(long id);
   Lobby findByInviteCode(int inviteCode);
   Lobby findByGame(Game game);
+  // void deleteById(long id);
 }
