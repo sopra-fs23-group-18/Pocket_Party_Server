@@ -9,8 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
-import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
+//import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.RPS;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -25,8 +26,8 @@ public class MinigameRepositoryTest {
     @Test
     public void testFindById() {
         // Create a Minigame entity and persist it
-        Minigame minigame = new HotPotato();
-        minigame.setAmountOfPlayers(MinigamePlayers.ALL);
+        Minigame minigame = new RPS();
+        minigame.setAmountOfPlayers(MinigamePlayers.ONE);
 
         entityManager.persist(minigame);
         entityManager.flush();

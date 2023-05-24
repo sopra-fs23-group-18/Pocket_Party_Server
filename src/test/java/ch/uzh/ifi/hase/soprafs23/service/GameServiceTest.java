@@ -23,8 +23,13 @@ import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
-import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
+//import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.RPS;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Strategy;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.TappingGame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.TimingGame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Vibration;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
@@ -96,7 +101,7 @@ public class GameServiceTest {
         Game game = new Game();
         game.setPlayerChoice(PlayerChoice.RANDOM);
 
-        Minigame minigame = new HotPotato();
+        Minigame minigame = new TimingGame();
         minigame.setAmountOfPlayers(MinigamePlayers.TWO);
 
         game.setUpcomingMinigame(minigame);
@@ -233,8 +238,8 @@ public class GameServiceTest {
         game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
 
-        Minigame minigame = new HotPotato();
-        minigame.setAmountOfPlayers(MinigamePlayers.TWO);
+        Minigame minigame = new TappingGame();
+        minigame.setAmountOfPlayers(MinigamePlayers.ONE);
 
         game.setUpcomingMinigame(minigame);
 
@@ -254,8 +259,8 @@ public class GameServiceTest {
         Game game = new Game();
         game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
-        Minigame minigame = new HotPotato();
-        minigame.setAmountOfPlayers(MinigamePlayers.TWO);
+        Minigame minigame = new Vibration();
+        minigame.setAmountOfPlayers(MinigamePlayers.ONE);
         minigame.setMinigameOutcome(OutcomeType.WINNER);
 
         game.setUpcomingMinigame(minigame);
@@ -273,8 +278,8 @@ public class GameServiceTest {
         Game game = new Game();
         game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
-        Minigame minigame = new HotPotato();
-        minigame.setAmountOfPlayers(MinigamePlayers.TWO);
+        Minigame minigame = new RPS();
+        minigame.setAmountOfPlayers(MinigamePlayers.ONE);
         minigame.setMinigameOutcome(OutcomeType.NOT_FINISHED);
 
         game.setUpcomingMinigame(minigame);
@@ -293,7 +298,7 @@ public class GameServiceTest {
         Game game = new Game();
         game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
-        Minigame minigame = new HotPotato();
+        Minigame minigame = new Strategy();
         minigame.setAmountOfPlayers(MinigamePlayers.TWO);
 
         game.setUpcomingMinigame(minigame);
@@ -316,7 +321,7 @@ public class GameServiceTest {
         game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
         game.setMinigamesChoice(minigameTypes);
-        Minigame minigame = new HotPotato();
+        Minigame minigame = new TimingGame();
         minigame.setAmountOfPlayers(MinigamePlayers.ONE);
 
         game.setUpcomingMinigame(minigame);
