@@ -29,130 +29,130 @@ import ch.uzh.ifi.hase.soprafs23.service.TeamService;
 @RestController
 public class LobbyController {
 
-    private final Logger log = LoggerFactory.getLogger(LobbyManagement.class);
+        private final Logger log = LoggerFactory.getLogger(LobbyManagement.class);
 
-    @Autowired
-    private final LobbyManagement lobbyManager;
+        @Autowired
+        private final LobbyManagement lobbyManager;
 
-    @Autowired
-    private final PlayerService playerService;
+        @Autowired
+        private final PlayerService playerService;
 
-    @Autowired
-    private final TeamService teamService;
+        @Autowired
+        private final TeamService teamService;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+        @Autowired
+        private SimpMessagingTemplate messagingTemplate;
 
-    LobbyController(LobbyManagement lobbyManager, PlayerService playerService, TeamService teamService) {
-        this.lobbyManager = lobbyManager;
-        this.playerService = playerService;
-        this.teamService = teamService;
-    }
+        LobbyController(LobbyManagement lobbyManager, PlayerService playerService, TeamService teamService) {
+                this.lobbyManager = lobbyManager;
+                this.playerService = playerService;
+                this.teamService = teamService;
+        }
 
-    /**
-     * @input none
-     */
-    @PostMapping("/lobbies")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public LobbyGetDTO createLobby() {
+        /**
+         * @input none
+         */
+        @PostMapping("/lobbies")
+        @ResponseStatus(HttpStatus.CREATED)
+        @ResponseBody
+        public LobbyGetDTO createLobby() {
 
-        // create lobby
-        Lobby createdLobby = lobbyManager.createLobby();
+                // create lobby
+                Lobby createdLobby = lobbyManager.createLobby();
 
-        // convert internal representation of lobby back to API
-        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
-    }
+                // convert internal representation of lobby back to API
+                return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
+        }
 
-    // NOTE: create lobbyy and return it (in here a game instance also gets created
-    // that has empty values at first)
-    // this empty game is then updated when the settings are set via a put method
-    // for the game
+        // NOTE: create lobbyy and return it (in here a game instance also gets created
+        // that has empty values at first)
+        // this empty game is then updated when the settings are set via a put method
+        // for the game
 
-    /**
-     * @return lobby; format: id, inviteCode, teams, unassignedPlayers
-     */
-    @GetMapping("/lobbies/{lobbyId}")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public LobbyGetDTO getLobby(@PathVariable long lobbyId) {
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
-    }
+        /**
+         * @return lobby; format: id, inviteCode, teams, unassignedPlayers
+         */
+        @GetMapping("/lobbies/{lobbyId}")
+        @ResponseStatus(HttpStatus.OK)
+        @ResponseBody
+        public LobbyGetDTO getLobby(@PathVariable long lobbyId) {
+                Lobby lobby = lobbyManager.getLobby(lobbyId);
+                return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(lobby);
+        }
 
-    /**
-     * @change checks if condition met & creates + adds first minigame
-     */
-    @PutMapping("/lobbies/{lobbyId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void startGame(@PathVariable long lobbyId, @RequestBody LobbyNamesPutDTO lobbyNamesPutDTO) {
-        lobbyManager.ableToStart(lobbyId);
-        // teamname update
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        // List<Team> teams = new ArrayList<Team>();
-        // for (TeamNamePutDTO teamPutDTO : teamNamesPutDTO){
-        // Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOToEntity(teamPutDTO);
-        // teams.add(team);
+        /**
+         * @change checks if condition met & creates + adds first minigame
+         */
+        @PutMapping("/lobbies/{lobbyId}")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        public void startGame(@PathVariable long lobbyId, @RequestBody LobbyNamesPutDTO lobbyNamesPutDTO) {
+                lobbyManager.ableToStart(lobbyId);
+                // teamname update
+                // Lobby lobby = lobbyManager.getLobby(lobbyId);
+                // List<Team> teams = new ArrayList<Team>();
+                // for (TeamNamePutDTO teamPutDTO : teamNamesPutDTO){
+                // Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOToEntity(teamPutDTO);
+                // teams.add(team);
+                // }
+
+                List<Team> teams = DTOMapper.INSTANCE.convertLobbyNamesPutDTOtoEntity(lobbyNamesPutDTO).getTeams();
+                teamService.updateNames(lobby, teams);
+
+                // TODO:
+                // maybe do something in lobby to set it to be fixed or similar
+        }
+
+        // /**
+        // * @input winner team of minigame; format: score, color, name
+        // * @change updates score of teams, add winnerName to minigame, update
+        // roundsPlayed of players.
+        // * Creates and adds next Minigame & checks if finished.
+        // */
+        // @PutMapping("/lobbies/{lobbyId}/minigame")
+        // @ResponseStatus(HttpStatus.NO_CONTENT)
+        // public void updateScore(@PathVariable long lobbyId, @RequestBody
+        // WinnerTeamPutDTO winnerTeamPutDTO){
+        // //instead of String winnerTeam put the winner TeamDTO and get score of other
+        // via total minigame score
+        // Team winnerTeamInput =
+        // DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
+
+        // //updateScore
+        // lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeamInput);
+
+        // Lobby lobby = lobbyManager.getLobby(lobbyId);
         // }
 
-        List<Team> teams = DTOMapper.INSTANCE.convertLobbyNamesPutDTOtoEntity(lobbyNamesPutDTO).getTeams();
-        teamService.updateNames(lobby, teams);
+        // /**
+        // * @return winnerTeam (id, score, name, color)
+        // */
+        // @GetMapping("/lobbies/{lobbyId}/winner")
+        // @ResponseStatus(HttpStatus.OK)
+        // @ResponseBody
+        // public TeamGetDTO getWinner(@PathVariable long lobbyId) {
+        // Lobby lobby = lobbyManager.getLobby(lobbyId);
+        // Team team = gameService.getWinner(lobby);
+        // return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
+        // }
 
-        // TODO:
-        // maybe do something in lobby to set it to be fixed or similar
-    }
+        @PutMapping("/lobbies/players/{lobbyId}")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        public void createPlayer(@PathVariable long lobbyId) {
 
-    // /**
-    // * @input winner team of minigame; format: score, color, name
-    // * @change updates score of teams, add winnerName to minigame, update
-    // roundsPlayed of players.
-    // * Creates and adds next Minigame & checks if finished.
-    // */
-    // @PutMapping("/lobbies/{lobbyId}/minigame")
-    // @ResponseStatus(HttpStatus.NO_CONTENT)
-    // public void updateScore(@PathVariable long lobbyId, @RequestBody
-    // WinnerTeamPutDTO winnerTeamPutDTO){
-    // //instead of String winnerTeam put the winner TeamDTO and get score of other
-    // via total minigame score
-    // Team winnerTeamInput =
-    // DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
+                Lobby lobby = lobbyManager.getLobby(lobbyId);
+                for (int i = 1; i < 3; i++) {
+                        Player newPlayer = new Player();
+                        newPlayer.setNickname("test");
+                        Player createdPlayer = playerService.createPlayer(newPlayer);
+                        teamService.addPlayer(lobby, "Team Blue", createdPlayer);
+                }
+                for (int i = 1; i < 3; i++) {
+                        Player newPlayer = new Player();
+                        newPlayer.setNickname("test");
+                        Player createdPlayer = playerService.createPlayer(newPlayer);
+                        teamService.addPlayer(lobby, "Team Red", createdPlayer);
+                }
 
-    // //updateScore
-    // lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeamInput);
-
-    // Lobby lobby = lobbyManager.getLobby(lobbyId);
-    // }
-
-    // /**
-    // * @return winnerTeam (id, score, name, color)
-    // */
-    // @GetMapping("/lobbies/{lobbyId}/winner")
-    // @ResponseStatus(HttpStatus.OK)
-    // @ResponseBody
-    // public TeamGetDTO getWinner(@PathVariable long lobbyId) {
-    // Lobby lobby = lobbyManager.getLobby(lobbyId);
-    // Team team = gameService.getWinner(lobby);
-    // return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
-    // }
-
-    @PutMapping("/lobbies/players/{lobbyId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createPlayer(@PathVariable long lobbyId) {
-
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        for (int i = 1; i < 3; i++) {
-            Player newPlayer = new Player();
-            newPlayer.setNickname("test");
-            Player createdPlayer = playerService.createPlayer(newPlayer);
-            teamService.addPlayer(lobby, "Team Blue", createdPlayer);
         }
-        for (int i = 1; i < 3; i++) {
-            Player newPlayer = new Player();
-            newPlayer.setNickname("test");
-            Player createdPlayer = playerService.createPlayer(newPlayer);
-            teamService.addPlayer(lobby, "Team Red", createdPlayer);
-        }
-
-    }
 
 }

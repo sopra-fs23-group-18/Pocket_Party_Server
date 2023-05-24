@@ -1,15 +1,28 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
+
 public class GameOverGetDTO {
-    private boolean isFinished;
+    private OutcomeType gameOutcome;
 
-    public boolean getIsFinished() {
-        return isFinished;
+    public OutcomeType getGameOutcome() {
+        return gameOutcome;
     }
 
-    public void setIsFinished(boolean isFinished) {
-        this.isFinished = isFinished;
+    public void setGameOutcome(OutcomeType gameOutcome) {
+        this.gameOutcome = gameOutcome;
     }
+
+
+    // private boolean isFinished;
+
+    // public boolean getIsFinished() {
+    //     return isFinished;
+    // }
+
+    // public void setIsFinished(boolean isFinished) {
+    //     this.isFinished = isFinished;
+    // }
 
 
 

@@ -114,7 +114,6 @@ public class TeamService {
     }
 
     public List<Player> randomPlayerChoice(String teamName, Lobby lobby, MinigamePlayers amount) {
-        List<Player> players = new ArrayList<Player>();
         Team team = getByNameAndLobby(lobby, teamName);
 
         if (amount.equals(MinigamePlayers.ALL)) {
@@ -125,6 +124,7 @@ public class TeamService {
             int amountOfPlayers = MinigameMapper.getMinigamePlayers().get(amount);
             players = playerService.getMinigamePlayers(team, amountOfPlayers);
         }
+        List<Player> players = playerService.getMinigamePlayers(team, amountOfPlayers);
         return players;
     }
 
