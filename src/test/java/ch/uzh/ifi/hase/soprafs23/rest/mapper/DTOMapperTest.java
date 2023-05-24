@@ -191,13 +191,13 @@ public class DTOMapperTest {
   public void testConvertEntityToGameOverGetDTO() {
     // Create a Game object and set the necessary properties for testing
     Game game = new Game();
-    game.setIsFinished(true);
+    game.setGameOutcome(OutcomeType.WINNER);
 
     // Call the convertEntityToGameOverGetDTO method
     GameOverGetDTO gameOverGetDTO = DTOMapper.INSTANCE.convertEntityToGameOverGetDTO(game);
 
     // Assert the expected value
-    assertTrue(gameOverGetDTO.getIsFinished());
+    assertEquals(OutcomeType.WINNER, gameOverGetDTO.getGameOutcome());
   }
 
   @Test

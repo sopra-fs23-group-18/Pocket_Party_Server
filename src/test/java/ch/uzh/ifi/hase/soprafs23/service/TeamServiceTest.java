@@ -329,7 +329,7 @@ public class TeamServiceTest {
         lobbyRepository.saveAndFlush(lobby);
 
         // Call the updateNames method
-        teamService.updateNames(lobby, teams);
+        teamService.updateNames(teams);
 
         // Verify that the team names are updated
         assertEquals(teamName1, team1.getName());

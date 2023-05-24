@@ -32,6 +32,9 @@ public class LobbyManagementTest {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private TeamService teamService;
+
     @Qualifier("playerRepository")
     @Autowired
     private PlayerRepository playerRepository;
@@ -159,7 +162,7 @@ public class LobbyManagementTest {
         Player player2 = new Player();
         player2.setNickname("test2");
         lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
-        assertEquals(true, lobbyManager.ableToJoin(createdLobby.getInviteCode(), player2));
+        lobbyManager.ableToJoin(createdLobby.getInviteCode(), player2);
     }
 
     @Test
@@ -237,7 +240,7 @@ public class LobbyManagementTest {
         Game game = new Game();
         game.setPlayerChoice(PlayerChoice.RANDOM);
         lobbyManager.addGame(game, createdLobby.getId());
-        assertEquals(0, lobbyManager.lowestPlayerAmount(game));
+        assertEquals(0, teamService.lowestPlayerAmount(createdLobby));
     }
 
 }

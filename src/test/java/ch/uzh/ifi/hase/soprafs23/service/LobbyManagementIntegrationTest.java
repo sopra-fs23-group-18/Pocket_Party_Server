@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
@@ -32,6 +33,9 @@ public class LobbyManagementIntegrationTest {
 
     @Autowired
     private LobbyManagement lobbyManager;
+
+    @Autowired
+    private GameService gameService;
 
     @Qualifier("teamRepository")
     @Autowired
@@ -54,9 +58,6 @@ public class LobbyManagementIntegrationTest {
     @Test
     public void addUpcommingMinigame_secondGame(){
         // given
-        Lobby testLobby = new Lobby();
-        testLobby.setWinningScore(500);
-
         Player player1 = new Player();
         player1.setNickname("test1");
         Player player2 = new Player();
@@ -67,37 +68,36 @@ public class LobbyManagementIntegrationTest {
         player4.setNickname("test4");
 
         // when
-        Lobby createdLobby = lobbyManager.createLobby(testLobby);
-        teamService.addPlayer(createdLobby, TeamType.BLUE, player1);
-        teamService.addPlayer(createdLobby, TeamType.BLUE, player2);
-        teamService.addPlayer(createdLobby, TeamType.RED, player3);
-        teamService.addPlayer(createdLobby, TeamType.RED, player4);
+        Lobby createdLobby = lobbyManager.createLobby();
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getName() ,player1);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(1).getName(), player2);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getName(), player3);
+        teamService.addPlayer(createdLobby, createdLobby.getTeams().get(0).getName(), player4);
 
         lobbyManager.ableToStart(createdLobby.getId());
-        lobbyManager.addUpcommingMinigame(createdLobby.getId());
+        gameService.addUpcomingMinigame(createdLobby.getId());
 
         Team winnerTeamInput = new Team();
-        winnerTeamInput.setColor(TeamType.RED);
-        winnerTeamInput.setName("Team Red");
+        winnerTeamInput.setName(createdLobby.getTeams().get(1).getName());
         winnerTeamInput.setScore(300);
 
-        lobbyManager.finishedMinigameUpdate(createdLobby.getId(), winnerTeamInput);
-        Minigame game1 = lobbyManager.getMinigame(createdLobby.getId());
+        gameService.finishedMinigameUpdate(createdLobby.getId(), winnerTeamInput);
+        Minigame game1 = gameService.getMinigame(createdLobby.getId());
 
-        lobbyManager.addUpcommingMinigame(createdLobby.getId());
-        Minigame game2 = lobbyManager.getMinigame(createdLobby.getId());
+        gameService.addUpcomingMinigame(createdLobby.getId());
+        Minigame game2 = gameService.getMinigame(createdLobby.getId());
 
         // Player game1Team1Player = playerService.getPlayer(game1.getTeam1Players().get(0).getId());
         // Player game1Team2Player = playerService.getPlayer(game1.getTeam2Players().get(0).getId());
         // Player game2Team1Player = playerService.getPlayer(game2.getTeam1Players().get(0).getId());
         // Player game2Team2Player = playerService.getPlayer(game2.getTeam2Players().get(0).getId());
 
-        assertNotNull(lobbyManager.getMinigame(createdLobby.getId()));
+        assertNotNull(gameService.getMinigame(createdLobby.getId()));
         assertNotEquals(game1.getType(), game2.getType());
         assertNotEquals(game1.getTeam1Players(), game2.getTeam1Players());
         assertNotEquals(game1.getTeam2Players(), game2.getTeam2Players());
         assertNotEquals(game1.getDescription(), game2.getDescription());
-        assertNotEquals(game1.getIsFinished(), game2.getIsFinished());
+        assertNotEquals(game1.getMinigameOutcome(), game2.getMinigameOutcome());
         // assertEquals(1, game1Team1Player.getRoundsPlayed());
         // assertEquals(1, game1Team2Player.getRoundsPlayed());
         // assertEquals(0, game2Team1Player.getRoundsPlayed());

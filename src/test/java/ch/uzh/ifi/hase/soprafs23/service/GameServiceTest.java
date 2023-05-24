@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
 import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
@@ -145,7 +146,7 @@ public class GameServiceTest {
     public void testGetWinner() {
         Game game = new Game();
         game.setPlayerChoice(PlayerChoice.RANDOM);
-        game.setIsFinished(true);
+        game.setGameOutcome(OutcomeType.WINNER);
 
         Lobby lobby = lobbyManager.createLobby();
         lobbyManager.addGame(game, lobby.getId());
@@ -161,7 +162,7 @@ public class GameServiceTest {
     public void testGetWinnerFail() {
         Game game = new Game();
         game.setPlayerChoice(PlayerChoice.RANDOM);
-        game.setIsFinished(false);
+        game.setGameOutcome(OutcomeType.NOT_FINISHED);
 
         Lobby lobby = lobbyManager.createLobby();
         lobbyManager.addGame(game, lobby.getId());
@@ -182,7 +183,7 @@ public class GameServiceTest {
 
         gameService.isFinished(game);
 
-        assertTrue(game.getIsFinished());
+        assertEquals(OutcomeType.WINNER, game.getGameOutcome());
     }
 
     @Test
@@ -198,7 +199,7 @@ public class GameServiceTest {
 
         gameService.isFinished(game);
 
-        assertFalse(game.getIsFinished());
+        assertEquals(OutcomeType.NOT_FINISHED, game.getGameOutcome());
     }
 
     @Test
@@ -265,7 +266,7 @@ public class GameServiceTest {
         game.setWinningScore(10);
         Minigame minigame = new HotPotato();
         minigame.setAmountOfPlayers(MinigamePlayers.TWO);
-        minigame.setIsFinished(true);
+        minigame.setMinigameOutcome(OutcomeType.WINNER);
 
         game.setUpcomingMinigame(minigame);
 
@@ -284,7 +285,7 @@ public class GameServiceTest {
         game.setWinningScore(10);
         Minigame minigame = new HotPotato();
         minigame.setAmountOfPlayers(MinigamePlayers.TWO);
-        minigame.setIsFinished(false);
+        minigame.setMinigameOutcome(OutcomeType.NOT_FINISHED);
 
         game.setUpcomingMinigame(minigame);
 
