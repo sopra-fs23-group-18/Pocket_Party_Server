@@ -46,7 +46,7 @@ public class TeamService {
 
     public void addPlayer(Lobby lobby, String teamName, Player player) {
         if (lobby == null || teamName == null || player == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The input was empty, please provide information!");
         }
         Team team = getByNameAndLobby(lobby, teamName);
@@ -58,7 +58,7 @@ public class TeamService {
 
     public void removePlayer(Lobby lobby, String teamName, Player player) {
         if (player == null) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT,
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "The input was empty, please provide information!");
         }
         Team team = getByNameAndLobby(lobby, teamName);
@@ -66,7 +66,6 @@ public class TeamService {
         players.remove(player);
         teamRepository.save(team);
         teamRepository.flush();
-        // does this work? or do we need to set id again
     }
 
     public Team getTeam(Long teamId) {
@@ -77,9 +76,6 @@ public class TeamService {
 
     public void updateScore(Lobby lobby, String teamName, int score) {
         Team team = getByNameAndLobby(lobby, teamName);
-        if (team == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No Team with such name exists");
-        }
         team.setScore(team.getScore() + score);
         teamRepository.save(team);
         teamRepository.flush();
@@ -102,13 +98,13 @@ public class TeamService {
                 return team;
             }
         }
-        return null;
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Team with such name exists");
     }
 
     public List<Team> getTeams(Lobby lobby) {
         List<Team> teams = teamRepository.findByLobby(lobby);
         if (teams.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No team with such a lobby exists!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No teams with such a lobby exists!");
         }
         return teams;
     }

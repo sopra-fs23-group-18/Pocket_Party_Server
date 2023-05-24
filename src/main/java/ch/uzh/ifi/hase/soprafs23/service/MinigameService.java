@@ -44,6 +44,9 @@ public class MinigameService {
     public Minigame createMinigame(MinigameType nexMinigameType, int lowestPlayerAmount){
         Minigame upcomingMinigame = getMinigameInstance(nexMinigameType);
         MinigamePlayers[] options = upcomingMinigame.getAmntPlayersOptions();
+        if (options.length == 0){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something in the server went wrong, there were no options for amount of players possible");
+        }
 
         int index = randomizer.nextInt(options.length);
         MinigamePlayers amount = options[index];
@@ -63,7 +66,7 @@ public class MinigameService {
         try {
             return minigameClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            throw new RuntimeException("Unable to create minigame instance", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create minigame instance, try reloading the page!");
         }
     }
 

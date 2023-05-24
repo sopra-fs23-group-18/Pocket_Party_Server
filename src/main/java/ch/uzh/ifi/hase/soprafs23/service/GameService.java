@@ -83,7 +83,6 @@ public class GameService {
         }
         return nextMinigameType;
     }
-    //continue here: lobbymanagement done with errors
 
     public Minigame addUpcomingMinigame(Long gameId) {
         Game game = getGame(gameId);
@@ -94,7 +93,7 @@ public class GameService {
         }
         MinigameType type = getNextMinigameType(game);
         if (type == null) {
-          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No MinigameType has been chosen!");
+          throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, no MinigameType has been chosen!");
         }
         int lowestPlayerAmount = teamService.lowestPlayerAmount(lobbyManager.getLobby(game));
         Minigame nextMinigame = minigameService.createMinigame(type, lowestPlayerAmount);
@@ -118,11 +117,17 @@ public class GameService {
         Lobby lobby = lobbyManager.getLobby(game);
         Team team = lobbyManager.getLeadingTeam(game);
         if (team.getScore() >= game.getWinningScore()){
+          if (lobby.getTeams().size() < 2){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby doesn't have 2 teams");
+          }
           if (lobby.getTeams().get(0).getScore() == lobby.getTeams().get(1).getScore()){
             game.setGameOutcome(OutcomeType.DRAW);
           }
           else{
             game.setGameOutcome(OutcomeType.WINNER);
+          }
+          if (lobby.getGame() == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby had no game set to it");
           }
           lobby.getFinishedGames().add(lobby.getGame());
         }
@@ -135,9 +140,8 @@ public class GameService {
       if (newGame.getPlayerChoice() == null){
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because playerChoice was not set!");
       }
-      List<MinigameType> minigames;
       if (newGame.getMinigamesChoice() == null || newGame.getMinigamesChoice().isEmpty()){
-        minigames = minigameService.chooseAllMinigames();
+        List<MinigameType> minigames = minigameService.chooseAllMinigames();
         newGame.setMinigamesChoice(minigames);
       }
       lobbyManager.addGame(newGame, lobbyId);
@@ -153,7 +157,10 @@ public class GameService {
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores can only be updated once!");
       }
       if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Scores could not be updated, because score was out of range!");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Scores could not be updated, because score was out of range!");
+      }
+      if (winnerTeamInput.getName() == null || winnerTeamInput.getName().isEmpty()){
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No name was provided");
       }
       String winnerTeam;
       if (winnerTeamInput.getScore() == (playedMinigame.getScoreToGain()/2)){
@@ -185,13 +192,12 @@ public class GameService {
     }
 
     private void updateScores(Team winnerTeamInput, Lobby lobby, Minigame playedMinigame) {
-      if (winnerTeamInput.getScore() < 0 || winnerTeamInput.getScore() > playedMinigame.getScoreToGain()){
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The score was out of range!");
-      }
-
       teamService.updateScore(lobby, winnerTeamInput.getName(), winnerTeamInput.getScore());
 
       List<Team> teams = lobby.getTeams();
+      if (teams.size() < 2){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby doesn't have 2 teams");
+      }
 
       int score = 0;
       if (winnerTeamInput.getScore() != 0){
@@ -208,9 +214,15 @@ public class GameService {
     public void updateUpcomingMinigame(Long gameId){
       Game game = getGame(gameId);
       Minigame upcomingMinigame = game.getUpcomingMinigame();
+      if (upcomingMinigame == null){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cannot update minigame, because no minigame has been found");
+      }
       Lobby lobby = lobbyManager.getLobby(game);
 
       List<Team> teams = lobby.getTeams();
+      if (teams.size() < 2){
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Something went wrong in the server, the lobby doesn't have 2 teams");
+      }
       
       MinigamePlayers amount = upcomingMinigame.getAmountOfPlayers();
 

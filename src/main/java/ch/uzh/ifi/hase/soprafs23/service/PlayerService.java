@@ -44,6 +44,9 @@ public class PlayerService {
 
     public List<Player> getMinigamePlayers(Team team, int amountOfPlayers){
         List<Player> minigamePlayers = new ArrayList<Player>();
+        if (team.getPlayers().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This team has no players");
+        }
         int lowestAmountPlayed = lowestRoundsPlayed(team, minigamePlayers.size());
         int optIndex;
         int playersAdded = 0;
