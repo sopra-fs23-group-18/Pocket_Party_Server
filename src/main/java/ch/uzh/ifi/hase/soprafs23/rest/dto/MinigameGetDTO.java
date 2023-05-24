@@ -1,15 +1,28 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
+import java.util.List;
+
+import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 
 public class MinigameGetDTO {
     private String description;
     private int scoreToGain;
-    private Player team1Player;
-    private Player team2Player;
+    private List<Player> team1Players;
+    private List<Player> team2Players;
     private MinigameType type;
+    private MinigamePlayers amountOfPlayers;
 
+
+
+    public MinigamePlayers getAmountOfPlayers() {
+        return amountOfPlayers;
+    }
+
+    public void setAmountOfPlayers(MinigamePlayers amountOfPlayers) {
+        this.amountOfPlayers = amountOfPlayers;
+    }
 
     public MinigameType getType() {
         return type;
@@ -27,20 +40,20 @@ public class MinigameGetDTO {
         this.description = description;
     }
 
-    public Player getTeam1Player() {
-        return team1Player;
+    public List<Player> getTeam1Players() {
+        return team1Players;
     }
 
-    public void setTeam1Player(Player team1Player) {
-        this.team1Player = team1Player;
+    public void setTeam1Players(List<Player> team1Players) {
+        this.team1Players = team1Players;
     } 
 
-    public Player getTeam2Player() {
-        return team2Player;
+    public List<Player> getTeam2Players() {
+        return team2Players;
     }
 
-    public void setTeam2Player(Player team2Player) {
-        this.team2Player = team2Player;
+    public void setTeam2Players(List<Player> team2Players) {
+        this.team2Players = team2Players;
     }
 
     public int getScoreToGain() {

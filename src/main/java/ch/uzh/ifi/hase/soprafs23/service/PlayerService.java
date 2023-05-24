@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +30,8 @@ public class PlayerService {
     }
 
     public Player createPlayer(Player newPlayer) {
-
         newPlayer = playerRepository.save(newPlayer);
         playerRepository.flush();
-
         log.debug("Created Information for User: {}", newPlayer);
         return newPlayer;
     }
@@ -42,34 +42,62 @@ public class PlayerService {
         return player;
     }
 
-    public Player getMinigamePlayer(Team team){
-        int lowestAmountPlayed = -1;
-        for (Player p : team.getPlayers()){
-            if (lowestAmountPlayed == -1){
-                lowestAmountPlayed = p.getRoundsPlayed();
-            }
-            if (p.getRoundsPlayed() < lowestAmountPlayed){
-                lowestAmountPlayed = p.getRoundsPlayed();
-            }
+    public List<Player> getMinigamePlayers(Team team, int amountOfPlayers){
+        List<Player> minigamePlayers = new ArrayList<Player>();
+        if (team.getPlayers().isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This team has no players");
         }
+        int lowestAmountPlayed = lowestRoundsPlayed(team, minigamePlayers.size());
         int optIndex;
-        while (true){
+        int playersAdded = 0;
+        while (playersAdded < amountOfPlayers){
             optIndex = randomizer.nextInt(team.getPlayers().size());
             Player player = team.getPlayers().get(optIndex);
             if (player.getRoundsPlayed() > lowestAmountPlayed){
                 continue;
             }
             else{
-                return player;
+                if (minigamePlayers.contains(player)){
+                    continue;
+                }
+                else{
+                    minigamePlayers.add(player);
+                    playersAdded++;
+                    lowestAmountPlayed = lowestRoundsPlayed(team, minigamePlayers.size());
+                }
             }
-        }
-        
+        }   
+        return minigamePlayers;
     }
 
-    public void updatePlayer(Long playerId){
-        Player player = getPlayer(playerId);
-        player.setRoundsPlayed(player.getRoundsPlayed() + 1);
-        playerRepository.save(player);
-        playerRepository.flush();
+    private int lowestRoundsPlayed(Team team, int playersAdded) {
+        int lowestAmountPlayed = -1;
+        int amountWithLowAmntPl = 0;
+        for (Player p : team.getPlayers()){
+            if (lowestAmountPlayed == -1){
+                lowestAmountPlayed = p.getRoundsPlayed();
+                amountWithLowAmntPl++;
+            }
+            else if (p.getRoundsPlayed() < lowestAmountPlayed){
+                lowestAmountPlayed = p.getRoundsPlayed();
+                amountWithLowAmntPl = 1;
+            }
+            else if (p.getRoundsPlayed() == lowestAmountPlayed){
+                amountWithLowAmntPl++;
+            }
+        }
+        if (playersAdded >= amountWithLowAmntPl){
+            lowestAmountPlayed++;
+        }
+        return lowestAmountPlayed;
+    }
+
+    public void updatePlayers(List<Player> minigamePlayers){
+        for (Player p : minigamePlayers){
+            Player player = getPlayer(p.getId());
+            player.setRoundsPlayed(player.getRoundsPlayed() + 1);
+            playerRepository.save(player);
+            playerRepository.flush();
+        }
     }
 }

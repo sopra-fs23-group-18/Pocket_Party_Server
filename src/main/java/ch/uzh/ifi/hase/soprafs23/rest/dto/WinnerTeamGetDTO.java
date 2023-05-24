@@ -1,12 +1,24 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import java.util.List;
 
-public class TeamGetDTO {
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
+
+public class WinnerTeamGetDTO {
     private Long id;
     private int score;
     private String name;
-    //private TeamType color;
+    // private TeamType color;
+    private List<Player> players;
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
 
     // public TeamType getColor() {
     //     return color;
@@ -39,8 +51,4 @@ public class TeamGetDTO {
     public void setId(Long id) {
         this.id = id;
     }
-
-
-
-
 }

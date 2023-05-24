@@ -8,7 +8,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Team;
 public class LobbyGetDTO {
     private Long id;
     private int inviteCode;
-    private int winningScore;
+    //private int winningScore;
     private List<Team> teams;
     private List<Player> unassignedPlayers;
 
@@ -28,13 +28,13 @@ public class LobbyGetDTO {
         this.teams = teams;
     }
 
-    public int getWinningScore() {
-        return winningScore;
-    }
+    // public int getWinningScore() {
+    //     return winningScore;
+    // }
 
-    public void setWinningScore(int winningScore) {
-        this.winningScore = winningScore;
-    }
+    // public void setWinningScore(int winningScore) {
+    //     this.winningScore = winningScore;
+    // }
 
     public int getInviteCode() {
         return inviteCode;

@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @WebAppConfiguration
@@ -54,7 +55,7 @@ public class PlayerServiceTest {
     public void getPlayer_invalidId_throwsException() {
         // when
         assertThrows(ResponseStatusException.class, () -> {
-            playerService.getPlayer(100L);
+            playerService.getPlayer(10000L);
         });
     }
 
@@ -75,12 +76,12 @@ public class PlayerServiceTest {
 
         // when
         // since player1 has played more rounds, player2 should be chosen
-        Player chosenPlayer = playerService.getMinigamePlayer(team);
+        List<Player> chosenPlayers = playerService.getMinigamePlayers(team, 1);
 
         // then
-        assertNotNull(chosenPlayer);
-        assertEquals(player2.getId(), chosenPlayer.getId());
-        assertEquals(player2.getNickname(), chosenPlayer.getNickname());
+        assertNotNull(chosenPlayers);
+        assertEquals(player2.getId(), chosenPlayers.get(0).getId());
+        assertEquals(player2.getNickname(), chosenPlayers.get(0).getNickname());
     }
 
     @Test
@@ -91,7 +92,9 @@ public class PlayerServiceTest {
 
         // when
         Player createdPlayer = playerService.createPlayer(player);
-        playerService.updatePlayer(createdPlayer.getId());
+        List<Player> minigamePlayers = new ArrayList<Player>();
+        minigamePlayers.add(createdPlayer);
+        playerService.updatePlayers(minigamePlayers);
         Player foundPlayer = playerService.getPlayer(createdPlayer.getId());
 
         // then

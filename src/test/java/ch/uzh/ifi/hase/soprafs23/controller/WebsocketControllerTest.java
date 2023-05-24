@@ -40,15 +40,14 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
-import ch.uzh.ifi.hase.soprafs23.constant.MinigameDescription;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
-import ch.uzh.ifi.hase.soprafs23.entity.Minigame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamPutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
