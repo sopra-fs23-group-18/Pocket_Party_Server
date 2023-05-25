@@ -31,6 +31,9 @@ public class TeamServiceTest {
     private TeamService teamService;
 
     @Autowired
+    private LobbyManagement lobbyManager;
+
+    @Autowired
     private TeamRepository teamRepository;
 
     @Autowired
@@ -60,32 +63,19 @@ public class TeamServiceTest {
     @Test
     public void testAddPlayer() {
         // Create a lobby
-        Lobby lobby = new Lobby();
-
-        // Create two teams
-        String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
-
-        String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
-
-        // form list of teams
-        List<Team> teams = List.of(team1, team2);
-
-        lobby.setTeams(teams);
-
-        // save lobby
-        lobbyRepository.saveAndFlush(lobby);
+        Lobby lobby = lobbyManager.createLobby();
 
         // Create a player
         Player player = new Player();
         player.setNickname("John Doe");
-        Player newPlayer = playerService.createPlayer(player);
+        Player newPlayer = lobbyManager.createPlayer(lobby.getInviteCode(), player);
+
+        Team team1 = lobby.getTeams().get(0);
 
         // Call the addPlayer method
-        teamService.addPlayer(lobby, team1.getType(), newPlayer);
+        lobbyManager.assignPlayer(lobby.getId(), newPlayer.getId(), team1.getType());
 
-        Team team = teamService.getByNameAndLobby(lobby, teamName1);
+        Team team = teamService.getByNameAndLobby(lobby, team1.getName());
 
         // Verify that the player is added to the team and saved
         assertNotNull(team.getPlayers());
@@ -100,40 +90,25 @@ public class TeamServiceTest {
 
     @Test
     public void testRemovePlayer() {
-        /// Create a lobby
-        Lobby lobby = new Lobby();
-
-        // Create two teams
-        String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
-
-        String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
-
-        // form list of teams
-        List<Team> teams = List.of(team1, team2);
-
-        lobby.setTeams(teams);
-
-        // save lobby
-        lobbyRepository.saveAndFlush(lobby);
+        // Create a lobby
+        Lobby lobby = lobbyManager.createLobby();
 
         // Create a player
         Player player = new Player();
         player.setNickname("John Doe");
-        Player newPlayer = playerService.createPlayer(player);
+        Player newPlayer = lobbyManager.createPlayer(lobby.getInviteCode(), player);
+
+        Team team1 = lobby.getTeams().get(0);
 
         // Call the addPlayer method
-        teamService.addPlayer(lobby, team1.getType(), newPlayer);
-
-        Team team = lobby.getTeams().get(0);
+        lobbyManager.assignPlayer(lobby.getId(), newPlayer.getId(), team1.getType());
 
         // Call the removePlayer method
-        teamService.removePlayer(lobby, team.getType(), player);
+        lobbyManager.unassignPlayer(lobby.getId(), player.getId(), team1.getType());
 
         // Verify that the player is removed from the team and saved
-        assertEquals(0, team.getPlayers().size());
-        assertFalse(team.getPlayers().contains(player));
+        assertEquals(0, team1.getPlayers().size());
+        assertFalse(team1.getPlayers().contains(player));
     }
 
     @Test
@@ -273,39 +248,26 @@ public class TeamServiceTest {
 
     @Test
     public void testRandomPlayerChoice() {
-        /// Create a lobby
-        Lobby lobby = new Lobby();
+        // Create a lobby
+        Lobby lobby = lobbyManager.createLobby();
 
-        // Create two teams
-        String teamName1 = "Team 1";
-        Team team1 = teamService.createTeam(lobby, teamName1, TeamType.TEAM_ONE);
-
-        String teamName2 = "Team 2";
-        Team team2 = teamService.createTeam(lobby, teamName2, TeamType.TEAM_TWO);
-
-        // form list of teams
-        List<Team> teams = List.of(team1, team2);
-
-        lobby.setTeams(teams);
-
-        // save lobby
-        lobbyRepository.saveAndFlush(lobby);
+        Team team1 = lobby.getTeams().get(0);
 
         // Create a player
         Player player = new Player();
         player.setNickname("John Doe");
-        Player newPlayer = playerService.createPlayer(player);
+        Player newPlayer = lobbyManager.createPlayer(lobby.getInviteCode(), player);
 
         // Call the addPlayer method
-        teamService.addPlayer(lobby, team1.getType(), newPlayer);
+        lobbyManager.assignPlayer(lobby.getId(), newPlayer.getId(), team1.getType());
 
-        Team team = teamService.getByNameAndLobby(lobby, teamName1);
+        Team team = teamService.getByNameAndLobby(lobby, team1.getName());
 
         // Verify that the player is added to the team and saved
         assertNotNull(team.getPlayers());
 
         // Call the randomPlayerChoice method
-        List<Player> randomPlayer = teamService.randomPlayerChoice(teamName1, lobby, MinigamePlayers.ALL);
+        List<Player> randomPlayer = teamService.randomPlayerChoice(team1.getName(), lobby, MinigamePlayers.ALL);
 
         // Verify that the player is not null
         assertNotNull(randomPlayer);
