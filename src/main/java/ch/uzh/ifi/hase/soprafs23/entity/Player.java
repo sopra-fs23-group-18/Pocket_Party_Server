@@ -27,6 +27,8 @@ public class Player implements Serializable {
     private String nickname;
 
     
+
+    
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "lobbyId")
