@@ -204,23 +204,4 @@ public class LobbyManagement {
 
     lobbyRepository.saveAndFlush(lobby);
   }
-
-
-  // public int lowestPlayerAmount(Game game){
-  //   Lobby lobby = getLobby(game);
-  //   int amount = -1;
-  //   for (Team t : lobby.getTeams()){
-  //     if (amount == -1){
-  //       amount = t.getPlayers().size();
-  //     }
-  //     if (t.getPlayers().size() < amount){
-  //       amount = t.getPlayers().size();
-  //     }
-  //   }
-  //   return amount;
-  // }
-
-  // public void deleteLobby(Long lobbyId){
-  //   lobbyRepository.deleteById(lobbyId);
-  // }
 }
