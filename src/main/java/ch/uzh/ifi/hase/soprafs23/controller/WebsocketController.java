@@ -52,10 +52,7 @@ public class WebsocketController {
     @SendToUser("/queue/join")
     public PlayerDTO playerJoin(@DestinationVariable int inviteCode, PlayerJoinDTO player, SimpMessageHeaderAccessor headerAccessor) {
         Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
-        lobbyManager.ableToJoin(inviteCode, playerToCreate);
-
-
-        Player createdPlayer = playerService.createPlayer(playerToCreate, inviteCode);
+        Player createdPlayer = lobbyManager.createPlayer(inviteCode, playerToCreate);
 
         // lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
 

@@ -33,21 +33,17 @@ public class PlayerService {
     @Autowired
     private final PlayerRepository playerRepository;
 
-    @Autowired
-    private final LobbyManagement lobbyService;
 
-    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository, LobbyManagement lobbyService) {
+    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
-        this.lobbyService = lobbyService;
+    
     }
 
-    public Player createPlayer(Player newPlayer, int inviteCode) {
-        Lobby lobby = lobbyService.getLobby(inviteCode);
+    public Player createPlayer(Player newPlayer, Lobby lobby) {
        
         // lobby = entityManager.find(Lobby.class, lobby.getId());
         newPlayer.setLobby(lobby);
         playerRepository.save(newPlayer);
-        lobbyService.addToUnassignedPlayers(lobby.getId(), newPlayer);
         
 
         log.debug("Created Information for User: {}", newPlayer);
@@ -126,19 +122,17 @@ public class PlayerService {
         return playerRepository.saveAndFlush(player);
     }
 
-    public Player disconnect(long playerId){
-        Player player = getPlayer(playerId);
-        Lobby lobby = player.getLobby();
-        if(lobby.getGame() == null){
-            lobbyService.removePlayer(player, lobby.getId());
-        }
-        
-        player.setCurrentSessionId(null);
-        player.setConnected(false);
-        return playerRepository.saveAndFlush(player);
-    }
+
 
     public Player getPlayerBySession(String sessionId){
         return playerRepository.findByCurrentSessionId(sessionId);
+    }
+
+    public Player disconnect(long playerId){
+        Player player = getPlayer(playerId);
+    
+        player.setCurrentSessionId(null);
+        player.setConnected(false);
+        return playerRepository.saveAndFlush(player);
     }
 }
