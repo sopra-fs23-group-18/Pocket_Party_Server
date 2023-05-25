@@ -10,7 +10,7 @@ public class TappingGame extends Minigame {
     public TappingGame() {
         super(
                 MinigameType.TAPPING_GAME,
-                "Tap the screen as fast as you can!",
+                "Tap the screen as fast as you can! You have a timelimit and whoever has a higher score wins!",
                 500,
                 new MinigamePlayers[] { MinigamePlayers.ONE });
     }

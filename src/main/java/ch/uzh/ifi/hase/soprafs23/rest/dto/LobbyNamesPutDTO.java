@@ -12,7 +12,4 @@ public class LobbyNamesPutDTO {
     public void setTeams(List<TeamNamePutDTO> teams) {
         this.teams = teams;
     }
-
-
-    
 }

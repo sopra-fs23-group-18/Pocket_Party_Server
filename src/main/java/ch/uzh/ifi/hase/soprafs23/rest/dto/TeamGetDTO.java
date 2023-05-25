@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
-
 public class TeamGetDTO {
     private Long id;
     private int score;
@@ -39,8 +37,4 @@ public class TeamGetDTO {
     public void setId(Long id) {
         this.id = id;
     }
-
-
-
-
 }

@@ -88,7 +88,7 @@ public class GameService {
         Game game = getGame(gameId);
         if (game.getUpcomingMinigame() != null){
           if (getMinigame(gameId).getMinigameOutcome() == OutcomeType.NOT_FINISHED){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A minigame that isn't finished already exists!");
+            return game.getUpcomingMinigame();
           }
         }
         MinigameType type = getNextMinigameType(game);

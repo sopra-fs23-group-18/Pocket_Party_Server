@@ -55,7 +55,6 @@ public class WebsocketController {
         Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
         lobbyManager.ableToJoin(inviteCode, playerToCreate);
 
-
         Player createdPlayer = playerService.createPlayer(playerToCreate);
         Lobby joinedLobby = lobbyManager.getLobby(inviteCode);
         lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
@@ -65,11 +64,10 @@ public class WebsocketController {
         // Get the session ID of the user who sent the message
         String sessionId = headerAccessor.getSessionId();
         log.warn("Session Id: {}", sessionId);
-        // // Send a message to the user's queue
+        // Send a message to the user's queue
         messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", joinedLobby.getId()), createdPlayerDTO);
         createdPlayerDTO.setLobbyId(joinedLobby.getId());
         return createdPlayerDTO;
-
     }
 
     @MessageMapping("/lobbies/{lobbyId}/assign")
@@ -82,13 +80,11 @@ public class WebsocketController {
 
     @MessageMapping("/lobbies/{lobbyId}/unassign")
     public void unassignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO unassignData) {
-
         Player player = playerService.getPlayer(unassignData.getPlayerId());
         Lobby lobby = lobbyManager.getLobby(lobbyId);
         teamService.removePlayer(lobby, unassignData.getTeam(), player);
         lobbyManager.addToUnassignedPlayers(lobbyId, player);
     }
-
 
     @MessageMapping("/lobbies/{lobbyId}/reassign")
     public void reassignPlayer(@DestinationVariable long lobbyId, PlayerReassignTeamDTO reassignTeamDTO) {
@@ -97,12 +93,6 @@ public class WebsocketController {
         teamService.removePlayer(lobby, reassignTeamDTO.getFrom(), player);
         teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
     }
-
-    // @MessageMapping("/lobbies/{lobbyId}/voting")
-    // @SendToUser("")
-    // public void votingChoice(@DestinationVariable long lobbyId) {
-        
-    // }
 
     @MessageExceptionHandler
     @SendToUser("/queue/errors")

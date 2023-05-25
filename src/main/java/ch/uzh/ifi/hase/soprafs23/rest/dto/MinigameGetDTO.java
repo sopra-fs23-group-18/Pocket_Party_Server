@@ -14,8 +14,6 @@ public class MinigameGetDTO {
     private MinigameType type;
     private MinigamePlayers amountOfPlayers;
 
-
-
     public MinigamePlayers getAmountOfPlayers() {
         return amountOfPlayers;
     }
@@ -63,5 +61,4 @@ public class MinigameGetDTO {
     public void setScoreToGain(int scoreToGain) {
         this.scoreToGain = scoreToGain;
     }
-    
 }

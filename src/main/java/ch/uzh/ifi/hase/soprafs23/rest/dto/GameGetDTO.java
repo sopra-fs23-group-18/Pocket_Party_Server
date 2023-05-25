@@ -18,8 +18,5 @@ public class GameGetDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-
-    
+    } 
 }

@@ -23,7 +23,7 @@ public class TimingGame extends Minigame{
     public TimingGame() {
         super(
             MinigameType.TIMING_GAME, 
-            "Shake your phone at the right time to catch the objects falling from the sky!", 
+            "Shake your phone at the right time to catch the objects falling from the sky! The player with a higher score wins!", 
             500,
             new MinigamePlayers[] {MinigamePlayers.ONE}
         );

@@ -51,10 +51,6 @@ public class Lobby implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Player> unassignedPlayers = new ArrayList<Player>();
 
-
-    
-
-
     // getters & setters
 
     public List<Game> getFinishedGames() {
@@ -111,16 +107,4 @@ public class Lobby implements Serializable {
     public void addToUnassignedPlayers(Player player) {
         unassignedPlayers.add(player);
     }
-
-    // Player names in each lobby need to be unique (per lobby)
-    // public void removeFromUnassignedPlayers(String playerName) {
-    // Player removedPlayer;
-    // for (Player player : unassignedPlayers) {
-    // if (player.getNickname().equals(playerName)) {
-    // removedPlayer = player;
-    // unassignedPlayers.remove(removedPlayer);
-    // }
-    // }
-    // }
-
 }

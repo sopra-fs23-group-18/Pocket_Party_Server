@@ -23,7 +23,7 @@ public class Vibration extends Minigame{
     public Vibration() {
         super(
             MinigameType.VIBRATION_GAME, 
-            "test", 
+            "You will get 3 vibration patterns on your phone. Then one of the 3 will be shown again and you need to choose which one it was!", 
             200,
             new MinigamePlayers[] {MinigamePlayers.ONE}
         );

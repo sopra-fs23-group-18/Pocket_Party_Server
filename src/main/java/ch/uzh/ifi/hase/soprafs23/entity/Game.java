@@ -150,8 +150,4 @@ public class Game implements Serializable{
     public void addToMinigamesPlayed(Minigame nextMinigame) {
         minigamesPlayed.add(nextMinigame);
     }
-
-
-    
-
 }

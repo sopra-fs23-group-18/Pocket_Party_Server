@@ -30,5 +30,4 @@ public class GamePostDTO {
     public void setMinigamesChoice(List<MinigameType> minigamesChoice) {
         this.minigamesChoice = minigamesChoice;
     }
-    
 }
