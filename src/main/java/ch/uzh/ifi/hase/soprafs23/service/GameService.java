@@ -139,9 +139,9 @@ public class GameService {
       if (newGame.getWinningScore() <= 0 || newGame.getWinningScore() > 100000){
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because the winningScore was invalid!");
       }
-      if (newGame.getPlayerChoice() == null){
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because playerChoice was not set!");
-      }
+      // if (newGame.getPlayerChoice() == null){
+      //   throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game could not be created because playerChoice was not set!");
+      // }
       if (newGame.getMinigamesChoice() == null || newGame.getMinigamesChoice().isEmpty()){
         List<MinigameType> minigames = minigameService.chooseAllMinigames();
         newGame.setMinigamesChoice(minigames);

@@ -70,7 +70,6 @@ public class LobbyManagementIntegrationTest {
         player4.setNickname("test4");
 
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         List<MinigameType> minigameTypes = Arrays.asList(MinigameType.values());
         game.setMinigamesChoice(minigameTypes);
 

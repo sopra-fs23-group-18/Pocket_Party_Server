@@ -24,7 +24,6 @@ public class GameRepositoryTest {
     public void testFindById() {
         // Create a game entity and persist it to the in-memory database
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.VOTING);
 
         entityManager.persist(game);
         entityManager.flush();

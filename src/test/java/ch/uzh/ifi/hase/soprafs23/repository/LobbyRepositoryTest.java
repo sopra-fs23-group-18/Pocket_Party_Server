@@ -59,7 +59,6 @@ public class LobbyRepositoryTest {
         // Create a Lobby entity and a corresponding Game entity, and associate them
         Lobby lobby = new Lobby();
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.VOTING);
         lobby.setGame(game);
         entityManager.persist(lobby);
         entityManager.flush();

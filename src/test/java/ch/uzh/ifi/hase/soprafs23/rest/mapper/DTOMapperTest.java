@@ -208,7 +208,6 @@ public class DTOMapperTest {
     List<MinigameType> minigamesChoice = Arrays.asList(MinigameType.QUICK_FINGERS, MinigameType.POCKET_PONG);
     gamePostDTO.setMinigamesChoice(minigamesChoice);
     gamePostDTO.setWinningScore(100);
-    gamePostDTO.setPlayerChoice(PlayerChoice.RANDOM);
 
     // Call the convertGamePostDTOtoEntity method
     Game game = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
@@ -216,7 +215,6 @@ public class DTOMapperTest {
     // Assert the expected values
     assertEquals(minigamesChoice, game.getMinigamesChoice());
     assertEquals(100, game.getWinningScore());
-    assertEquals(PlayerChoice.RANDOM, game.getPlayerChoice());
   }
 
   @Test

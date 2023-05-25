@@ -225,7 +225,6 @@ public class LobbyManagementTest {
         Game game = new Game();
         List<MinigameType> minigames = minigameService.chooseAllMinigames();
         game.setMinigamesChoice(minigames);
-        game.setPlayerChoice(PlayerChoice.RANDOM);
 
         lobbyManager.addGame(game, createdLobby.getId());
 
@@ -238,7 +237,6 @@ public class LobbyManagementTest {
     public void testLowestPlayerAmount() {
         Lobby createdLobby = lobbyManager.createLobby();
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         lobbyManager.addGame(game, createdLobby.getId());
         assertEquals(0, teamService.lowestPlayerAmount(createdLobby));
     }
