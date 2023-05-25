@@ -3,50 +3,45 @@ package ch.uzh.ifi.hase.soprafs23.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
-import ch.uzh.ifi.hase.soprafs23.websocket.SocketHandler;
+import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
+import ch.uzh.ifi.hase.soprafs23.websocket.WebSocketEventListener;
 
 @Configuration
 @EnableWebSocket
 @EnableWebSocketMessageBroker
-public class WebSocketConfiguration implements WebSocketConfigurer, WebSocketMessageBrokerConfigurer {
+public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new SocketHandler(), "/socket")
-                .setAllowedOrigins("*");
+    private final LobbyManagement lobbyManagement;
+
+    public WebSocketConfiguration(LobbyManagement lobbyManagement) {
+        this.lobbyManagement = lobbyManagement;
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/game")
-                // .setHandshakeHandler(new DefaultHandshakeHandler() {
-                // //Get sessionId from request and set it in Map attributes
-                // public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse
-                // response, WebSocketHandler wsHandler, Map attributes) throws Exception {
-                // if (request instanceof ServletServerHttpRequest) {
-                // ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-                // HttpSession session = servletRequest
-                // .getServletRequest().getSession();
-                // attributes.put("sessionId", session.getId());
-                // }
-                // return true;
-                // }
-                // })
                 .setAllowedOriginPatterns("*");
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/queue/", "/topic/");
+        long[] heartbeat = {1000L, 1000L};
+        ThreadPoolTaskScheduler te = new ThreadPoolTaskScheduler();
+        te.setPoolSize(1);
+        te.setThreadNamePrefix("wss-heartbeat-thread-");
+        te.initialize();
+
+        registry.enableSimpleBroker("/queue/", "/topic/")
+            .setTaskScheduler(te)
+            .setHeartbeatValue(heartbeat);
         registry.setUserDestinationPrefix("/user/");
         // registry.setApplicationDestinationPrefixes("/app");
     }
@@ -56,7 +51,6 @@ public class WebSocketConfiguration implements WebSocketConfigurer, WebSocketMes
         webSocketTransportRegistration
                 .setMessageSizeLimit(1024 * 1024)
                 .setSendBufferSizeLimit(1024 * 1024);
-
     }
 
     @Bean
@@ -65,5 +59,10 @@ public class WebSocketConfiguration implements WebSocketConfigurer, WebSocketMes
         container.setMaxTextMessageBufferSize(500000);
         container.setMaxBinaryMessageBufferSize(500000);
         return container;
+    }
+
+    @Bean
+    public WebSocketEventListener webSocketEventListener() {
+        return new WebSocketEventListener(this.lobbyManagement);
     }
 }

@@ -2,8 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -20,6 +18,7 @@ import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerAssignTeamDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerJoinDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerReassignTeamDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerRejoinDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.mapper.DTOMapperWebsocket;
 
 import org.slf4j.Logger;
@@ -53,16 +52,19 @@ public class WebsocketController {
     @SendToUser("/queue/join")
     public PlayerDTO playerJoin(@DestinationVariable int inviteCode, PlayerJoinDTO player, SimpMessageHeaderAccessor headerAccessor) {
         Player playerToCreate = DTOMapperWebsocket.INSTANCE.convertPlayerJoinDTOtoEntity(player);
-        lobbyManager.ableToJoin(inviteCode, playerToCreate);
+        Player createdPlayer = lobbyManager.createPlayer(inviteCode, playerToCreate);
 
-        Player createdPlayer = playerService.createPlayer(playerToCreate);
+        // lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
+
         Lobby joinedLobby = lobbyManager.getLobby(inviteCode);
-        lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
+
         PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
         createdPlayerDTO.setAvatar(player.getAvatar());
         
         // Get the session ID of the user who sent the message
         String sessionId = headerAccessor.getSessionId();
+        playerService.setCurrentSessionId(createdPlayer.getId(), sessionId);
+
         log.warn("Session Id: {}", sessionId);
         // Send a message to the user's queue
         messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", joinedLobby.getId()), createdPlayerDTO);
@@ -72,27 +74,35 @@ public class WebsocketController {
 
     @MessageMapping("/lobbies/{lobbyId}/assign")
     public void assignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO assignData) {
-        Player player = playerService.getPlayer(assignData.getPlayerId());
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        lobbyManager.removeFromUnassignedPlayers(lobbyId, player);
-        teamService.addPlayer(lobby, assignData.getTeam(), player);
+        lobbyManager.assignPlayer(lobbyId, assignData.getPlayerId(), assignData.getTeam());
     }
 
     @MessageMapping("/lobbies/{lobbyId}/unassign")
     public void unassignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO unassignData) {
-        Player player = playerService.getPlayer(unassignData.getPlayerId());
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        teamService.removePlayer(lobby, unassignData.getTeam(), player);
-        lobbyManager.addToUnassignedPlayers(lobbyId, player);
+        lobbyManager.unassignPlayer(lobbyId, unassignData.getPlayerId(), unassignData.getTeam());
     }
 
     @MessageMapping("/lobbies/{lobbyId}/reassign")
     public void reassignPlayer(@DestinationVariable long lobbyId, PlayerReassignTeamDTO reassignTeamDTO) {
-        Player player = playerService.getPlayer(reassignTeamDTO.getPlayerId());
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        teamService.removePlayer(lobby, reassignTeamDTO.getFrom(), player);
-        teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
+        lobbyManager.reassignPlayer(lobbyId, reassignTeamDTO.getPlayerId(), reassignTeamDTO.getFrom(), reassignTeamDTO.getTo());
     }
+
+    @MessageMapping("/lobbies/{lobbyId}/rejoin")
+    @SendToUser("/queue/join")
+    public PlayerDTO rejoinLobby(@DestinationVariable long lobbyId, PlayerRejoinDTO playerDTO, SimpMessageHeaderAccessor headerAccessor){
+        Player player = lobbyManager.rejoinPlayer(playerDTO.getId(), headerAccessor.getSessionId());
+        PlayerDTO playerDTOReturned = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(player);
+        playerDTOReturned.setAvatar(playerDTO.getAvatar());
+        playerDTOReturned.setLobbyId(player.getLobby().getId());
+
+        messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", player.getLobby().getId()), playerDTOReturned);
+        return playerDTOReturned;
+    }
+    // @MessageMapping("/lobbies/{lobbyId}/voting")
+    // @SendToUser("")
+    // public void votingChoice(@DestinationVariable long lobbyId) {
+        
+    // }
 
     @MessageExceptionHandler
     @SendToUser("/queue/errors")

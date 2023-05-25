@@ -3,6 +3,10 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
@@ -21,18 +26,25 @@ import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 public class PlayerService {
     private final Logger log = LoggerFactory.getLogger(PlayerService.class);
     private Random randomizer = new Random();
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private final PlayerRepository playerRepository;
 
+
     public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
+    
     }
 
-    public Player createPlayer(Player newPlayer) {
-        newPlayer = playerRepository.save(newPlayer);
-        playerRepository.flush();
-        log.debug("Created Information for User: {}", newPlayer);
+    public Player createPlayer(Player newPlayer, Lobby lobby) {
+       
+        // lobby = entityManager.find(Lobby.class, lobby.getId());
+        newPlayer.setLobby(lobby);
+        playerRepository.save(newPlayer);
+        
         return newPlayer;
     }
 
@@ -99,5 +111,29 @@ public class PlayerService {
             playerRepository.save(player);
             playerRepository.flush();
         }
+    }
+
+    public Player setCurrentSessionId(long playerId, String sessionId){
+        Player player = getPlayer(playerId);
+        player.setCurrentSessionId(sessionId);
+        player.setConnected(true);
+        return playerRepository.saveAndFlush(player);
+    }
+
+
+
+    public Player getPlayerBySession(String sessionId){
+        return playerRepository.findByCurrentSessionId(sessionId);
+    }
+
+    public void disconnect(Player player){
+        player.setCurrentSessionId(null);
+        player.setConnected(false);
+    }
+
+    public Player connect(Player player, String sessionId){
+        player.setCurrentSessionId(sessionId);
+        player.setConnected(true);
+        return playerRepository.saveAndFlush(player);
     }
 }

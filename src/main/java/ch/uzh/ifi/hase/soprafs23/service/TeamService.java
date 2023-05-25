@@ -54,8 +54,8 @@ public class TeamService {
         Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.add(player);
-        teamRepository.save(team);
-        teamRepository.flush();
+        // teamRepository.save(team);
+        // teamRepository.flush();
     }
 
     public void removePlayer(Lobby lobby, TeamType type, Player player) {
@@ -66,8 +66,8 @@ public class TeamService {
         Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.remove(player);
-        teamRepository.save(team);
-        teamRepository.flush();
+        // teamRepository.save(team);
+        // teamRepository.flush();
     }
 
     public Team getTeam(Long teamId) {
