@@ -59,18 +59,9 @@ public class LobbyController {
         @ResponseStatus(HttpStatus.CREATED)
         @ResponseBody
         public LobbyGetDTO createLobby() {
-
-                // create lobby
                 Lobby createdLobby = lobbyManager.createLobby();
-
-                // convert internal representation of lobby back to API
                 return DTOMapper.INSTANCE.convertEntityToLobbyGetDTO(createdLobby);
         }
-
-        // NOTE: create lobbyy and return it (in here a game instance also gets created
-        // that has empty values at first)
-        // this empty game is then updated when the settings are set via a put method
-        // for the game
 
         /**
          * @return lobby; format: id, inviteCode, teams, unassignedPlayers
@@ -84,86 +75,15 @@ public class LobbyController {
         }
 
         /**
-         * @change checks if condition met & creates + adds first minigame
+         * @change checks if condition to start met & updates team names
          */
         @PutMapping("/lobbies/{lobbyId}")
         @ResponseStatus(HttpStatus.NO_CONTENT)
         public void startGame(@PathVariable long lobbyId, @RequestBody LobbyNamesPutDTO lobbyNamesPutDTO) {
                 lobbyManager.ableToStart(lobbyId);
-                // teamname update
-                // Lobby lobby = lobbyManager.getLobby(lobbyId);
-                // List<Team> teams = new ArrayList<Team>();
-                // for (TeamNamePutDTO teamPutDTO : teamNamesPutDTO){
-                // Team team = DTOMapper.INSTANCE.convertTeamNamePutDTOToEntity(teamPutDTO);
-                // teams.add(team);
-                // }
-
                 List<Team> teams = DTOMapper.INSTANCE.convertLobbyNamesPutDTOtoEntity(lobbyNamesPutDTO).getTeams();
                 teamService.updateNames(teams);
-
-                // TODO:
-                // maybe do something in lobby to set it to be fixed or similar
         }
-
-        // /**
-        // * @input winner team of minigame; format: score, color, name
-        // * @change updates score of teams, add winnerName to minigame, update
-        // roundsPlayed of players.
-        // * Creates and adds next Minigame & checks if finished.
-        // */
-        // @PutMapping("/lobbies/{lobbyId}/minigame")
-        // @ResponseStatus(HttpStatus.NO_CONTENT)
-        // public void updateScore(@PathVariable long lobbyId, @RequestBody
-        // WinnerTeamPutDTO winnerTeamPutDTO){
-        // //instead of String winnerTeam put the winner TeamDTO and get score of other
-        // via total minigame score
-        // Team winnerTeamInput =
-        // DTOMapper.INSTANCE.convertWinnerTeamPutDTOToEntity(winnerTeamPutDTO);
-
-        // //updateScore
-        // lobbyManager.finishedMinigameUpdate(lobbyId, winnerTeamInput);
-
-        // Lobby lobby = lobbyManager.getLobby(lobbyId);
-        // }
-
-        // /**
-        // * @return winnerTeam (id, score, name, color)
-        // */
-        // @GetMapping("/lobbies/{lobbyId}/winner")
-        // @ResponseStatus(HttpStatus.OK)
-        // @ResponseBody
-        // public TeamGetDTO getWinner(@PathVariable long lobbyId) {
-        // Lobby lobby = lobbyManager.getLobby(lobbyId);
-        // Team team = gameService.getWinner(lobby);
-        // return DTOMapper.INSTANCE.convertEntityToTeamGetDTO(team);
-        // }
-
-    // @PutMapping("/lobbies/players/{lobbyId}")
-    // @ResponseStatus(HttpStatus.NO_CONTENT)
-    // public void createPlayer(@PathVariable long lobbyId) {
-
-    //     Lobby lobby = lobbyManager.getLobby(lobbyId);
-    //     for (int i = 1; i < 4; i++){
-    //         Player newPlayer = new Player();
-    //         newPlayer.setNickname("test");
-    //         Player createdPlayer = playerService.createPlayer(newPlayer);
-    //         teamService.addPlayer(lobby, "Team 1" ,createdPlayer);
-    //     }
-    //     for (int i = 1; i < 3; i++){
-    //         Player newPlayer = new Player();
-    //         newPlayer.setNickname("test");
-    //         Player createdPlayer = playerService.createPlayer(newPlayer);
-    //         teamService.addPlayer(lobby, "Team 2", createdPlayer);
-    //     }
-
-    // @DeleteMapping("lobbies/{lobbyId}")
-    // @ResponseStatus(HttpStatus.OK)
-    // public void deleteLobby(@PathVariable long lobbyId){
-    //     lobbyManager.deleteLobby(lobbyId);
-    // }
-
-
-
     }
 
 

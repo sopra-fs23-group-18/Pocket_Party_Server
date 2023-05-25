@@ -12,8 +12,6 @@ public class GameOverGetDTO {
     public void setGameOutcome(OutcomeType gameOutcome) {
         this.gameOutcome = gameOutcome;
     }
-
-
     // private boolean isFinished;
 
     // public boolean getIsFinished() {
@@ -23,8 +21,4 @@ public class GameOverGetDTO {
     // public void setIsFinished(boolean isFinished) {
     //     this.isFinished = isFinished;
     // }
-
-
-
-
 }

@@ -77,8 +77,8 @@ public class GameController {
     }
 
     /**
-     * @return minigame; format: description, scoreToGain, team1Player, team2Player,
-     *         type
+     * @return minigame; format: description, scoreToGain, team1Players, team2Players,
+     *         type, amountOfPlayers
      */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/minigame")
     @ResponseStatus(HttpStatus.OK)
@@ -109,25 +109,19 @@ public class GameController {
     }
 
     /**
-     * @input winner team of minigame; format: score, color, name
+     * @input winner team of minigame; format: score, name
      * @change updates score of teams, add winnerName to minigame, update
      *         roundsPlayed of players.
-     *         Creates and adds next Minigame & checks if finished.
      */
     @PutMapping("/lobbies/{lobbyId}/games/{gameId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateScore(@PathVariable long gameId, @RequestBody MinigameWinnerTeamPutDTO winnerTeamPutDTO) {
-        // instead of String winnerTeam put the winner TeamDTO and get score of other
-        // via total minigame score
         Team winnerTeamInput = DTOMapper.INSTANCE.convertMinigameWinnerTeamPutDTOtoEntity(winnerTeamPutDTO);
-
-        // updateScore
         gameService.finishedMinigameUpdate(gameId, winnerTeamInput);
-
     }
 
     /**
-     * @return boolean; true if a team has achieved the winning score.
+     * @return enum: NOT_FINISHED or DRAW/WINNER if someone achieved winningScore.
      */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/gameover")
     @ResponseStatus(HttpStatus.OK)
@@ -138,7 +132,7 @@ public class GameController {
     }
 
     /**
-     * @return winnerTeam (id, score, name, color)
+     * @return winnerTeam: (id, score, name, players)
      */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/winner")
     @ResponseStatus(HttpStatus.OK)
@@ -149,7 +143,7 @@ public class GameController {
     }
 
     /**
-     * @return winning score + both teams (id, score, name, color)
+     * @return winning score + both teams (id, score, name)
      */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/scores")
     @ResponseStatus(HttpStatus.OK)
@@ -159,5 +153,4 @@ public class GameController {
         Game game = gameService.getGame(gameId);
         return DTOMapper.INSTANCE.convertEntitiesToScoresGetDTO(lobby, game);
     }
-
 }

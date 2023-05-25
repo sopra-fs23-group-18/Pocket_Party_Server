@@ -49,7 +49,6 @@ public abstract class Minigame implements Serializable{
     @Transient
     private final MinigamePlayers[] amntPlayersOptions;
 
-    //actual amount of players:
     @Column(nullable = false)
     private MinigamePlayers amountOfPlayers;
 
@@ -93,14 +92,6 @@ public abstract class Minigame implements Serializable{
         return amntPlayersOptions;
     }
 
-    // public void setType(MinigameType type){
-    //     this.type = type;
-    // }
-
-    // public void setDescription(String description) {
-    //     this.description = description;
-    // }
-
     public String getDescription() {
         return description;
     }
@@ -125,18 +116,9 @@ public abstract class Minigame implements Serializable{
         return scoreToGain;
     }
 
-    // public void setScoreToGain(int scoreToGain){
-    //     this.scoreToGain = scoreToGain;
-    // }
-
     public String getWinner() {
         return winnerTeamName;
     }
-
-    // public void setWinner(String winnerTeamName) {
-    //     this.winnerTeamName = winnerTeamName;
-    //     if (this.winnerTeamName != null){setIsFinished(true);}
-    // }
 
     public void setWinner(String winnerTeamName) {
         this.winnerTeamName = winnerTeamName;
@@ -161,7 +143,4 @@ public abstract class Minigame implements Serializable{
     public void setMinigameOutcome(OutcomeType minigameOutcome) {
         this.minigameOutcome = minigameOutcome;
     }
-
-    
-
 }

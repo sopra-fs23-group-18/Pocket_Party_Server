@@ -5,12 +5,12 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
-public class Pong extends Minigame {
+public class TimingTumble extends Minigame {
 
-    public Pong() {
+    public TimingTumble() {
         super(
-                MinigameType.POCKET_PONG,
-                "Move your paddle by rotating your phone and try to stop the ball from hitting your side. If you miss the other player gets a point!",
+                MinigameType.TIMING_TUMBLE,
+                "Catch the squares falling from the sky by shaking your phone at the right time. Perfect timing will reward you with 3 points while being too late or too early will result in 1 point.",
                 500,
                 new MinigamePlayers[] { MinigamePlayers.ONE });
     }

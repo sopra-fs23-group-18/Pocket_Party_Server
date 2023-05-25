@@ -9,8 +9,13 @@ public class RPS extends Minigame {
 
     public RPS() {
         super(
-                MinigameType.RPS_GAME,
-                "Rock Paper Scissors",
+                MinigameType.ROCK_PAPER_SCISSORS,
+                """
+                        Rock Paper Scissors: Choose one of the three, if you beat your opponent you get a point.
+                        Rock > Scissors
+                        Scissors > Paper
+                        Paper > Rock
+                        """,
                 500,
                 new MinigamePlayers[] { MinigamePlayers.ONE });
     }

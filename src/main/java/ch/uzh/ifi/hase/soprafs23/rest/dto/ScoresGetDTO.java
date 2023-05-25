@@ -7,8 +7,6 @@ public class ScoresGetDTO {
     private int winningScore;
     private List<TeamGetDTO> teams;
 
-   
-
     public List<TeamGetDTO> getTeams() {
         return teams;
     }
@@ -24,6 +22,4 @@ public class ScoresGetDTO {
     public void setWinningScore(int winningScore) {
         this.winningScore = winningScore;
     }
-
-    
 }

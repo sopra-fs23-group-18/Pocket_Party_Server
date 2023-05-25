@@ -66,11 +66,10 @@ public class WebsocketController {
         playerService.setCurrentSessionId(createdPlayer.getId(), sessionId);
 
         log.warn("Session Id: {}", sessionId);
-        // // Send a message to the user's queue
+        // Send a message to the user's queue
         messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", joinedLobby.getId()), createdPlayerDTO);
         createdPlayerDTO.setLobbyId(joinedLobby.getId());
         return createdPlayerDTO;
-
     }
 
     @MessageMapping("/lobbies/{lobbyId}/assign")
@@ -82,7 +81,6 @@ public class WebsocketController {
     public void unassignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO unassignData) {
         lobbyManager.unassignPlayer(lobbyId, unassignData.getPlayerId(), unassignData.getTeam());
     }
-
 
     @MessageMapping("/lobbies/{lobbyId}/reassign")
     public void reassignPlayer(@DestinationVariable long lobbyId, PlayerReassignTeamDTO reassignTeamDTO) {

@@ -1,7 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
-import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
-
 public class MinigameWinnerTeamPutDTO {
     private int score;
     //private TeamType color;
@@ -30,5 +28,4 @@ public class MinigameWinnerTeamPutDTO {
     public void setScore(int score) {
         this.score = score;
     }
-
 }

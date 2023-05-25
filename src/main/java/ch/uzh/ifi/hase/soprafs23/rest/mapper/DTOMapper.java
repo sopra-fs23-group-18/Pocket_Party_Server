@@ -48,11 +48,7 @@ public interface DTOMapper {
   @Mapping(source = "status", target = "status")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
-  // @Mapping(source = "winningScore", target = "winningScore")
-  // Lobby convertLobbyPostDTOtoEntity(LobbyPostDTO lobbyPostDTO);
-
   @Mapping(source = "id", target = "id")
-  // @Mapping(source = "winningScore", target = "winningScore")
   @Mapping(source = "inviteCode", target = "inviteCode")
   @Mapping(source = "teams", target = "teams")
   @Mapping(source = "unassignedPlayers", target = "unassignedPlayers")
@@ -70,7 +66,6 @@ public interface DTOMapper {
   @Mapping(source = "amountOfPlayers", target = "amountOfPlayers")
   MinigameGetDTO convertEntityToMinigameGetDTO(Minigame minigame);
 
-  // @Mapping(source = "color", target = "color")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
   Team convertMinigameWinnerTeamPutDTOtoEntity(MinigameWinnerTeamPutDTO winnerTeamPutDTO);
@@ -78,13 +73,11 @@ public interface DTOMapper {
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
-  // @Mapping(source = "color", target = "color")
   TeamGetDTO convertEntityToTeamGetDTO(Team team);
 
   @Mapping(source = "id", target = "id")
   @Mapping(source = "name", target = "name")
   @Mapping(source = "score", target = "score")
-  // @Mapping(source = "color", target = "color")
   @Mapping(source = "players", target = "players")
   WinnerTeamGetDTO convertEntityToWinnerTeamGetDTO(Team team);
 

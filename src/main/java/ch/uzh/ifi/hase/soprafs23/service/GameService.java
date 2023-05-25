@@ -77,9 +77,11 @@ public class GameService {
         int index = randomizer.nextInt(minigamesChoice.size());
         MinigameType nextMinigameType = minigamesChoice.get(index);
         if (minigamesPlayed.size() != 0) {
+          if (minigamesChoice.size() > 1){
           while (nextMinigameType.equals(minigamesPlayed.get(minigamesPlayed.size() - 1).getType())) {
             nextMinigameType = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
           }
+        }
         }
         return nextMinigameType;
     }
@@ -88,7 +90,7 @@ public class GameService {
         Game game = getGame(gameId);
         if (game.getUpcomingMinigame() != null){
           if (getMinigame(gameId).getMinigameOutcome() == OutcomeType.NOT_FINISHED){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A minigame that isn't finished already exists!");
+            return game.getUpcomingMinigame();
           }
         }
         MinigameType type = getNextMinigameType(game);
