@@ -36,33 +36,38 @@ public class LobbyManagement {
   private final LobbyRepository lobbyRepository;
 
   @PersistenceContext
-    private EntityManager entityManager;
+  private EntityManager entityManager;
   @Autowired
   private final TeamService teamService;
-  
+
+  @Autowired
+  private final PlayerService playerService;
+
   private Random randomizer = new Random();
 
-  public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, TeamService teamService) {
+  public LobbyManagement(@Qualifier("lobbyRepository") LobbyRepository lobbyRepository, TeamService teamService,
+      PlayerService playerService) {
     this.lobbyRepository = lobbyRepository;
     this.teamService = teamService;
+    this.playerService = playerService;
   }
 
   public Lobby createLobby() {
-      Lobby newLobby = new Lobby();
-      int inviteCode = randomizer.nextInt(900000) + 100000;
-      while (lobbyRepository.findByInviteCode(inviteCode) != null){
-        inviteCode = randomizer.nextInt(900000) + 100000;
-      }
-      newLobby.setInviteCode(inviteCode);
+    Lobby newLobby = new Lobby();
+    int inviteCode = randomizer.nextInt(900000) + 100000;
+    while (lobbyRepository.findByInviteCode(inviteCode) != null) {
+      inviteCode = randomizer.nextInt(900000) + 100000;
+    }
+    newLobby.setInviteCode(inviteCode);
 
-      List<Team> teams = new ArrayList<Team>();
-      teams.add(teamService.createTeam(newLobby, "Team 1", TeamType.TEAM_ONE));
-      teams.add(teamService.createTeam(newLobby, "Team 2", TeamType.TEAM_TWO));
-      newLobby.setTeams(teams);
+    List<Team> teams = new ArrayList<Team>();
+    teams.add(teamService.createTeam(newLobby, "Team 1", TeamType.TEAM_ONE));
+    teams.add(teamService.createTeam(newLobby, "Team 2", TeamType.TEAM_TWO));
+    newLobby.setTeams(teams);
 
-      newLobby = lobbyRepository.save(newLobby);
-      lobbyRepository.flush();
-      return newLobby;
+    newLobby = lobbyRepository.save(newLobby);
+    lobbyRepository.flush();
+    return newLobby;
   }
 
   public Lobby getLobby(Long lobbyId) {
@@ -90,7 +95,7 @@ public class LobbyManagement {
   public Team getLeadingTeam(Game game) {
     Lobby lobby = getLobby(game);
 
-    if (lobby.getTeams().isEmpty()){
+    if (lobby.getTeams().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "List of teams was empty");
     }
 
@@ -125,7 +130,7 @@ public class LobbyManagement {
     lobbyRepository.flush();
   }
 
-  public void ableToJoin(int inviteCode, Player playerToCreate) {
+  public Player createPlayer(int inviteCode, Player playerToCreate) {
     Lobby lobby = getLobby(inviteCode);
     int cnt = 0;
     for (Player p : lobby.getUnassignedPlayers()) {
@@ -147,19 +152,23 @@ public class LobbyManagement {
     if (cnt == 8) {
       throw new ResponseStatusException(HttpStatus.LOCKED, "Player limit for lobby was reached!");
     }
+
+    Player player = playerService.createPlayer(playerToCreate, lobby);
+    addToUnassignedPlayers(lobby.getId(), player);
+    return player;
   }
 
   public void ableToStart(Long lobbyId) {
     Lobby lobby = getLobby(lobbyId);
     List<Team> teams = lobby.getTeams();
-    if (teams.size() < 2){
+    if (teams.size() < 2) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby doesn't have 2 teams");
     }
     int team1Size = teams.get(0).getPlayers().size();
     int team2Size = teams.get(1).getPlayers().size();
     if (lobby.getUnassignedPlayers().size() == 0) {
       if (team1Size > 0 && team2Size > 0) {
-        if (Math.abs(team1Size - team2Size) < 2){
+        if (Math.abs(team1Size - team2Size) < 2) {
           return;
         }
         throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "Please split the players more evenly!");
@@ -170,38 +179,50 @@ public class LobbyManagement {
     throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There players that are not assigned yet!");
   }
 
-  public void addGame(Game game, Long lobbyId){
+  public void addGame(Game game, Long lobbyId) {
     Lobby lobby = getLobby(lobbyId);
-    if (game == null){
+    if (game == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Game was not created successfully");
     }
     lobby.setGame(game);
-    if (lobby.getGame() != null){
-      for (Team t : lobby.getTeams()){
+    if (lobby.getGame() != null) {
+      for (Team t : lobby.getTeams()) {
         t.setScore(0);
-        for (Player p : t.getPlayers()){
+        for (Player p : t.getPlayers()) {
           p.setRoundsPlayed(0);
         }
       }
     }
   }
 
-  public boolean isGameSet(long lobbyId){
+  public boolean isGameSet(long lobbyId) {
     Lobby lobby = getLobby(lobbyId);
     return lobby.getGame() == null ? false : true;
   }
 
-  public void removePlayer(Player player, long lobbyId){
+  public void removePlayer(Player player, long lobbyId) {
     Lobby lobby = getLobby(lobbyId);
 
     List<Player> unassigned = lobby.getUnassignedPlayers();
     List<Team> teams = lobby.getTeams();
 
-    for(Team team : teams){
+    for (Team team : teams) {
       team.getPlayers().remove(player);
     }
     unassigned.remove(player);
 
     lobbyRepository.saveAndFlush(lobby);
+  }
+
+  public void disconnect(long playerId) {
+    Player player = playerService.getPlayer(playerId);
+    Lobby lobby = player.getLobby();
+    if (lobby.getGame() == null) {
+      removePlayer(player, lobby.getId());
+    }
+  }
+
+  public void assignPlayer(){
+    
   }
 }
