@@ -11,8 +11,9 @@ public class Strategy extends Minigame {
         super(
                 MinigameType.STRATEGY_GAME,
                 """
-                You play several rounds in which you try to achieve a higher total score than the other team.\n
-                Choose how many points you want, but you can only get the amount you chose if your opponent chose something different.""",
+                        Chose the amount of money you would like to receive. But choose wisely! If your opponent chooses the same amount as you, you will both not receive anything at all!
+                        You will play several rounds with the goal being to achieve a higher total score than your opponent.
+                        """,
                 500,
                 new MinigamePlayers[] { MinigamePlayers.TWO });
     }
