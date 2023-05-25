@@ -274,6 +274,11 @@ Upcoming:
 
 # 19.05 - 25.05
 ## Nils Grob
+- Added rejoin functionality to server and clients
+- Handled errors on mobile
+- clenaup
+- hotfixes both on backend and frontends
+
 ## Stefan Schuler
 ## Naseem Hassan
 - Added settings option for Minigame choice [#71](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/71):
