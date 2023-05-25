@@ -222,7 +222,21 @@ public class LobbyManagement {
     }
   }
 
-  public void assignPlayer(){
-    
+  public void assignPlayer(Long lobbyId, Player player, TeamType type){
+    Lobby lobby = getLobby(lobbyId);
+    removeFromUnassignedPlayers(lobbyId, player);
+    teamService.addPlayer(lobby, type, player);
+  }
+
+  public void unassignPlayer(Long lobbyId, Player player, TeamType type){
+    Lobby lobby = getLobby(lobbyId);
+    teamService.removePlayer(lobby, type, player);
+    addToUnassignedPlayers(lobbyId, player);
+  }
+
+  public void reassignPlayer(Long lobbyId, Player player, TeamType from, TeamType to){
+    Lobby lobby = getLobby(lobbyId);
+    teamService.removePlayer(lobby, from, player);
+    teamService.addPlayer(lobby, to, player);
   }
 }
