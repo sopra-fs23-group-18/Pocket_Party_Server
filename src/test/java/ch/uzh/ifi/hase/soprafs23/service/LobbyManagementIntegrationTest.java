@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,6 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
+import ch.uzh.ifi.hase.soprafs23.constant.TeamType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -112,5 +114,40 @@ public class LobbyManagementIntegrationTest {
         // assertEquals(1, game1Team2Player.getRoundsPlayed());
         // assertEquals(0, game2Team1Player.getRoundsPlayed());
         // assertEquals(0, game2Team2Player.getRoundsPlayed());
+    }
+
+    @Test
+    public void testDragAndDropPlayer(){
+        Lobby lobby = lobbyManager.createLobby();
+        // given
+        Player player1 = new Player();
+        player1.setNickname("test1");
+        Player player2 = new Player();
+        player2.setNickname("test2");
+        Player player3 = new Player();
+        player3.setNickname("test3");
+        Player player4 = new Player();
+        player4.setNickname("test4");
+
+        lobbyManager.createPlayer(lobby.getInviteCode(), player1);
+        lobbyManager.createPlayer(lobby.getInviteCode(), player2);
+        lobbyManager.createPlayer(lobby.getInviteCode(), player3);
+        lobbyManager.createPlayer(lobby.getInviteCode(), player4);
+
+        lobbyManager.assignPlayer(lobby.getId(), player1.getId(), TeamType.TEAM_ONE);
+        lobbyManager.assignPlayer(lobby.getId(), player2.getId(), TeamType.TEAM_ONE);
+        lobbyManager.assignPlayer(lobby.getId(), player3.getId(), TeamType.TEAM_TWO);
+        lobbyManager.assignPlayer(lobby.getId(), player4.getId(), TeamType.TEAM_TWO);
+
+        Lobby foundLobby = lobbyManager.getLobby(lobby.getId());
+        List<Team> teams = teamService.getTeams(foundLobby);
+        
+        lobbyManager.ableToStart(lobby.getId());
+
+        lobbyManager.reassignPlayer(lobby.getId(), player1.getId(), TeamType.TEAM_ONE, TeamType.TEAM_TWO);
+        lobbyManager.unassignPlayer(lobby.getId(), player4.getId(), TeamType.TEAM_TWO );
+        lobbyManager.assignPlayer(lobby.getId(), player4.getId(), TeamType.TEAM_ONE);
+
+        lobbyManager.ableToStart(lobby.getId());
     }
 }
