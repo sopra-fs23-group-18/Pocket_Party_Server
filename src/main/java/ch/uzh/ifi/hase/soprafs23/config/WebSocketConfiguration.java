@@ -3,6 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -10,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
-import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
+import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.websocket.WebSocketEventListener;
 
 @Configuration
@@ -18,9 +19,10 @@ import ch.uzh.ifi.hase.soprafs23.websocket.WebSocketEventListener;
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
-    private final PlayerService playerService;
-    public WebSocketConfiguration(PlayerService playerService) {
-        this.playerService = playerService;
+    private final LobbyManagement lobbyManagement;
+
+    public WebSocketConfiguration(LobbyManagement lobbyManagement) {
+        this.lobbyManagement = lobbyManagement;
     }
 
     @Override
@@ -31,7 +33,15 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/queue/", "/topic/");
+        long[] heartbeat = {1000L, 1000L};
+        ThreadPoolTaskScheduler te = new ThreadPoolTaskScheduler();
+        te.setPoolSize(1);
+        te.setThreadNamePrefix("wss-heartbeat-thread-");
+        te.initialize();
+
+        registry.enableSimpleBroker("/queue/", "/topic/")
+            .setTaskScheduler(te)
+            .setHeartbeatValue(heartbeat);
         registry.setUserDestinationPrefix("/user/");
         // registry.setApplicationDestinationPrefixes("/app");
     }
@@ -53,6 +63,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Bean
     public WebSocketEventListener webSocketEventListener() {
-        return new WebSocketEventListener(this.playerService);
+        return new WebSocketEventListener(this.lobbyManagement);
     }
 }

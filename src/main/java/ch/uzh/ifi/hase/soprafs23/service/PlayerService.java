@@ -45,8 +45,6 @@ public class PlayerService {
         newPlayer.setLobby(lobby);
         playerRepository.save(newPlayer);
         
-
-        log.debug("Created Information for User: {}", newPlayer);
         return newPlayer;
     }
 
@@ -128,11 +126,14 @@ public class PlayerService {
         return playerRepository.findByCurrentSessionId(sessionId);
     }
 
-    public Player disconnect(long playerId){
-        Player player = getPlayer(playerId);
-    
+    public void disconnect(Player player){
         player.setCurrentSessionId(null);
         player.setConnected(false);
+    }
+
+    public Player connect(Player player, String sessionId){
+        player.setCurrentSessionId(sessionId);
+        player.setConnected(true);
         return playerRepository.saveAndFlush(player);
     }
 }
