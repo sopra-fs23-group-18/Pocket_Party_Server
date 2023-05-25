@@ -282,6 +282,8 @@ Upcoming:
 - A LOT of styling/cleaning up in the Frontend.
 
 ## Guojun Wu
+- Display Strategy Game on the Web [#85](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/85)
+- In Game screen for Strategy Game [#30](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/30)
 ## Sven Ringger
 - Update images in GamePreview
 - Fix image rendering in GamePreview
