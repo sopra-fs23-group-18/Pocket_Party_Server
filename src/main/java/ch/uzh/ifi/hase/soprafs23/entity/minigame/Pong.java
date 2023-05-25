@@ -9,7 +9,7 @@ public class Pong extends Minigame {
 
     public Pong() {
         super(
-                MinigameType.PONG_GAME,
+                MinigameType.POCKET_PONG,
                 "Move your paddle by rotating your phone and try to stop the ball from hitting your side. If you miss the other player gets a point!",
                 500,
                 new MinigamePlayers[] { MinigamePlayers.ONE });

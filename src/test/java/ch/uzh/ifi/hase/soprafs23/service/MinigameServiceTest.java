@@ -43,7 +43,7 @@ public class MinigameServiceTest {
     @Test
     public void createMinigame_success() {
         // given
-        MinigameType minigameType = MinigameType.TIMING_GAME;
+        MinigameType minigameType = MinigameType.TIMING_TUMBLE;
 
         Player player1 = new Player();
         player1.setNickname("test1");
@@ -68,7 +68,7 @@ public class MinigameServiceTest {
     @Test
     public void getMinigame_validId_success() {
         // given
-        MinigameType minigameType = MinigameType.TIMING_GAME;
+        MinigameType minigameType = MinigameType.TIMING_TUMBLE;
 
         Player player1 = new Player();
         player1.setNickname("test1");
@@ -100,7 +100,7 @@ public class MinigameServiceTest {
     @Test
     public void getMinigame_invalidId_throwsException() {
         // given
-        MinigameType minigameType = MinigameType.TIMING_GAME;
+        MinigameType minigameType = MinigameType.TIMING_TUMBLE;
 
         Player player1 = new Player();
         player1.setNickname("test1");
@@ -125,7 +125,7 @@ public class MinigameServiceTest {
     @Test
     public void updateMinigame_success() {
         // given
-        MinigameType minigameType = MinigameType.TIMING_GAME;
+        MinigameType minigameType = MinigameType.TIMING_TUMBLE;
 
         Player player1 = new Player();
         player1.setNickname("test1");

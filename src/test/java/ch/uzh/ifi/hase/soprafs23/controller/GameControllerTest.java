@@ -156,7 +156,7 @@ public class GameControllerTest {
     @Test
     public void testGetMinigame() throws Exception {
         // create a Minigame
-        Minigame minigame = minigameService.createMinigame(MinigameType.PONG_GAME, 2);
+        Minigame minigame = minigameService.createMinigame(MinigameType.POCKET_PONG, 2);
 
         given(gameService.getMinigame(10L)).willReturn(minigame);
 

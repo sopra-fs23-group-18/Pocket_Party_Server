@@ -9,7 +9,7 @@ public class RPS extends Minigame {
 
     public RPS() {
         super(
-                MinigameType.RPS_GAME,
+                MinigameType.ROCK_PAPER_SCISSORS,
                 """
                         Rock Paper Scissors: Choose one of the three, if you beat your opponent you get a point.
                         Rock > Scissors

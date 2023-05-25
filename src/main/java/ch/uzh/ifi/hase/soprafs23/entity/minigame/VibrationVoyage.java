@@ -6,11 +6,11 @@ import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 
 @Entity
-public class Vibration extends Minigame {
+public class VibrationVoyage extends Minigame {
 
-    public Vibration() {
+    public VibrationVoyage() {
         super(
-                MinigameType.VIBRATION_GAME,
+                MinigameType.VIBRATION_VOYAGE,
                 "You will be shown 3 vibration patterns on your phone. Then one of the 3 patterns will be shown again and you need to choose which one it was that you have already felt.",
                 200,
                 new MinigamePlayers[] { MinigamePlayers.ONE });

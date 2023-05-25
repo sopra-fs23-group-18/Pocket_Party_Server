@@ -22,7 +22,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
-import ch.uzh.ifi.hase.soprafs23.entity.minigame.TappingGame;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.QuickFingers;
 import ch.uzh.ifi.hase.soprafs23.repository.LobbyRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.MinigameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;

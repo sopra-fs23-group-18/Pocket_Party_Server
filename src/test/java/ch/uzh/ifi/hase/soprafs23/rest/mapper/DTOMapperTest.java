@@ -3,7 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 //import ch.uzh.ifi.hase.soprafs23.entity.minigame.HotPotato;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
-import ch.uzh.ifi.hase.soprafs23.entity.minigame.Vibration;
+import ch.uzh.ifi.hase.soprafs23.entity.minigame.VibrationVoyage;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.WinnerTeamGetDTO;
@@ -108,7 +108,7 @@ public class DTOMapperTest {
   @Test
   public void testConvertEntityToMinigameGetDTO() {
     // Create a Minigame object and set the necessary properties for testing
-    Minigame minigame = new Vibration();
+    Minigame minigame = new VibrationVoyage();
 
     // Set other necessary properties of the Minigame object
 
@@ -205,7 +205,7 @@ public class DTOMapperTest {
   public void testConvertGamePostDTOtoEntity() {
     // Create a GamePostDTO object and set the necessary properties for testing
     GamePostDTO gamePostDTO = new GamePostDTO();
-    List<MinigameType> minigamesChoice = Arrays.asList(MinigameType.TAPPING_GAME, MinigameType.PONG_GAME);
+    List<MinigameType> minigamesChoice = Arrays.asList(MinigameType.QUICK_FINGERS, MinigameType.POCKET_PONG);
     gamePostDTO.setMinigamesChoice(minigamesChoice);
     gamePostDTO.setWinningScore(100);
     gamePostDTO.setPlayerChoice(PlayerChoice.RANDOM);
