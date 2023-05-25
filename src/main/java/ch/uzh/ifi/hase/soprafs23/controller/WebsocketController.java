@@ -76,27 +76,20 @@ public class WebsocketController {
     @MessageMapping("/lobbies/{lobbyId}/assign")
     public void assignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO assignData) {
         Player player = playerService.getPlayer(assignData.getPlayerId());
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        lobbyManager.removeFromUnassignedPlayers(lobbyId, player);
-        teamService.addPlayer(lobby, assignData.getTeam(), player);
+        lobbyManager.assignPlayer(lobbyId, player, assignData.getTeam());
     }
 
     @MessageMapping("/lobbies/{lobbyId}/unassign")
     public void unassignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO unassignData) {
-
         Player player = playerService.getPlayer(unassignData.getPlayerId());
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        teamService.removePlayer(lobby, unassignData.getTeam(), player);
-        lobbyManager.addToUnassignedPlayers(lobbyId, player);
+        lobbyManager.unassignPlayer(lobbyId, player, unassignData.getTeam());
     }
 
 
     @MessageMapping("/lobbies/{lobbyId}/reassign")
     public void reassignPlayer(@DestinationVariable long lobbyId, PlayerReassignTeamDTO reassignTeamDTO) {
         Player player = playerService.getPlayer(reassignTeamDTO.getPlayerId());
-        Lobby lobby = lobbyManager.getLobby(lobbyId);
-        teamService.removePlayer(lobby, reassignTeamDTO.getFrom(), player);
-        teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
+        lobbyManager.reassignPlayer(lobbyId, player, reassignTeamDTO.getFrom(), reassignTeamDTO.getTo());
     }
 
     @MessageMapping("/lobbies/{lobbyId}/rejoin")
