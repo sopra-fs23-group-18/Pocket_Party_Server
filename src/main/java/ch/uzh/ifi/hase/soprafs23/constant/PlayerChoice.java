@@ -1,5 +1,5 @@
-package ch.uzh.ifi.hase.soprafs23.constant;
+// package ch.uzh.ifi.hase.soprafs23.constant;
 
-public enum PlayerChoice {
-    RANDOM, VOTING
-}
+// public enum PlayerChoice {
+//     RANDOM, VOTING
+// }

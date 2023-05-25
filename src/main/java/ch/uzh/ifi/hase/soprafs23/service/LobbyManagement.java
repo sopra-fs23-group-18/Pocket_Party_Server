@@ -115,8 +115,6 @@ public class LobbyManagement {
     if (lobby == null || newPlayer == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby or Player is empty!");
     }
-
-    lobby.getUnassignedPlayers().size();
     lobby.addToUnassignedPlayers(newPlayer);
     
   }

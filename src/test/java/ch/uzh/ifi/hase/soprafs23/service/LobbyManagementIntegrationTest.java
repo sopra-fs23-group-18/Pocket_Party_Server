@@ -16,7 +16,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
-import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
