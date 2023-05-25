@@ -123,8 +123,7 @@ public class LobbyManagementTest {
         Lobby createdLobby = lobbyManager.createLobby();
         Player player = new Player();
         player.setNickname("test");
-        Player newPlayer = playerService.createPlayer(player);
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
+        Player newPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
         assertNotNull(createdLobby.getUnassignedPlayers());
     }
 
@@ -132,7 +131,7 @@ public class LobbyManagementTest {
     public void testAddToUnassignedPlayersFail() {
         Lobby createdLobby = lobbyManager.createLobby();
         assertThrows(ResponseStatusException.class,
-                () -> lobbyManager.addToUnassignedPlayers(createdLobby.getId(), null));
+                () -> lobbyManager.addToUnassignedPlayers(createdLobby, null));
     }
 
     @Test
@@ -140,9 +139,9 @@ public class LobbyManagementTest {
         Lobby createdLobby = lobbyManager.createLobby();
         Player player = new Player();
         player.setNickname("test");
-        Player newPlayer = playerService.createPlayer(player);
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
-        lobbyManager.removeFromUnassignedPlayers(createdLobby.getId(), newPlayer);
+        Player newPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
+        lobbyManager.addToUnassignedPlayers(createdLobby, newPlayer);
+        lobbyManager.removeFromUnassignedPlayers(createdLobby, newPlayer);
         assertEquals(0, createdLobby.getUnassignedPlayers().size());
     }
 
@@ -150,7 +149,7 @@ public class LobbyManagementTest {
     public void testRemoveFromUnassignedPlayersFail() {
         Lobby createdLobby = lobbyManager.createLobby();
         assertThrows(ResponseStatusException.class,
-                () -> lobbyManager.removeFromUnassignedPlayers(createdLobby.getId(), null));
+                () -> lobbyManager.removeFromUnassignedPlayers(createdLobby, null));
     }
 
     @Test
@@ -158,11 +157,11 @@ public class LobbyManagementTest {
         Lobby createdLobby = lobbyManager.createLobby();
         Player player = new Player();
         player.setNickname("test");
-        Player newPlayer = playerService.createPlayer(player);
+        Player newPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
         Player player2 = new Player();
         player2.setNickname("test2");
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
-        lobbyManager.ableToJoin(createdLobby.getInviteCode(), player2);
+        lobbyManager.addToUnassignedPlayers(createdLobby, newPlayer);
+        lobbyManager.createPlayer(createdLobby.getInviteCode(), player2);
     }
 
     @Test
@@ -170,10 +169,10 @@ public class LobbyManagementTest {
         Lobby createdLobby = lobbyManager.createLobby();
         Player player = new Player();
         player.setNickname("test");
-        Player newPlayer = playerService.createPlayer(player);
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), newPlayer);
+        Player newPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
+        lobbyManager.addToUnassignedPlayers(createdLobby, newPlayer);
         assertThrows(ResponseStatusException.class,
-                () -> lobbyManager.ableToJoin(createdLobby.getInviteCode(), newPlayer));
+                () -> lobbyManager.createPlayer(createdLobby.getInviteCode(), newPlayer));
     }
 
     @Test
@@ -214,7 +213,7 @@ public class LobbyManagementTest {
         player1.setNickname("test");
         Player player2 = new Player();
         player2.setNickname("test2");
-        lobbyManager.addToUnassignedPlayers(createdLobby.getId(), player2);
+        lobbyManager.addToUnassignedPlayers(createdLobby, player2);
         lobbyRepository.save(createdLobby);
         assertThrows(ResponseStatusException.class, () -> lobbyManager.ableToStart(createdLobby.getId()));
     }

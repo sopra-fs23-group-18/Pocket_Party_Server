@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import org.junit.jupiter.api.Test;
@@ -22,14 +23,18 @@ public class PlayerServiceTest {
     @Autowired
     private PlayerService playerService;
 
+    @Autowired
+    private LobbyManagement lobbyManager;
+
     @Test
     public void createPlayer_success() {
+        Lobby createdLobby = lobbyManager.createLobby();
         // given
         Player player = new Player();
         player.setNickname("test");
 
         // when
-        Player createdPlayer = playerService.createPlayer(player);
+        Player createdPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
 
         // then
         assertNotNull(createdPlayer);
@@ -38,12 +43,13 @@ public class PlayerServiceTest {
 
     @Test
     public void getPlayer_validId_success() {
+        Lobby createdLobby = lobbyManager.createLobby();
         // given
         Player player = new Player();
         player.setNickname("test");
 
         // when
-        Player createdPlayer = playerService.createPlayer(player);
+        Player createdPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
         Player foundPlayer = playerService.getPlayer(createdPlayer.getId());
 
         // then
@@ -86,12 +92,13 @@ public class PlayerServiceTest {
 
     @Test
     public void updatePlayer_success() {
+        Lobby createdLobby = lobbyManager.createLobby();
         // given
         Player player = new Player();
         player.setNickname("test");
 
         // when
-        Player createdPlayer = playerService.createPlayer(player);
+        Player createdPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
         List<Player> minigamePlayers = new ArrayList<Player>();
         minigamePlayers.add(createdPlayer);
         playerService.updatePlayers(minigamePlayers);
