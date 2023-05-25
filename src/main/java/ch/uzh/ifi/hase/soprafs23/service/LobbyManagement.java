@@ -11,6 +11,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,8 @@ public class LobbyManagement {
   @Autowired
   private final LobbyRepository lobbyRepository;
   
+  @PersistenceContext
+    private EntityManager entityManager;
 
   private Random randomizer = new Random();
 
@@ -96,8 +101,6 @@ public class LobbyManagement {
     return lobby;
   }
 
-  
-
   // @Transactional
   // public void finishedMinigameUpdate(Long lobbyId, Team winnerTeamInput) {
   //   Lobby lobby = getLobby(lobbyId);
@@ -139,6 +142,8 @@ public class LobbyManagement {
     if (lobby == null || newPlayer == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby or Player is empty!");
     }
+
+    lobby.getUnassignedPlayers().size();
     lobby.addToUnassignedPlayers(newPlayer);
     lobbyRepository.save(lobby);
     lobbyRepository.flush();
@@ -202,4 +207,24 @@ public class LobbyManagement {
     // lobbyRepository.save(lobby);
     // lobbyRepository.flush();
   }
+
+  public boolean isGameSet(long lobbyId){
+    Lobby lobby = getLobby(lobbyId);
+    return lobby.getGame() == null ? false : true;
+  }
+
+  public void removePlayer(Player player, long lobbyId){
+    Lobby lobby = getLobby(lobbyId);
+
+    List<Player> unassigned = lobby.getUnassignedPlayers();
+    List<Team> teams = lobby.getTeams();
+
+    for(Team team : teams){
+      team.getPlayers().remove(player);
+    }
+    unassigned.remove(player);
+
+    lobbyRepository.saveAndFlush(lobby);
+  }
+
 }

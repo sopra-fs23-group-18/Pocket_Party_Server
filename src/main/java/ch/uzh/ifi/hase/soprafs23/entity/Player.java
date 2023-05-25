@@ -26,13 +26,36 @@ public class Player implements Serializable{
     @Column(nullable = false)
     private String nickname;
 
+    
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "teamId")
-    private Team team;
+    @JoinColumn(name = "lobbyId")
+    private Lobby lobby;
 
     @Column(nullable = false)
     private int roundsPlayed = 0;
+
+    @Column(nullable = false)
+    private boolean isConnected;
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public void setConnected(boolean isConnected) {
+        this.isConnected = isConnected;
+    }
+
+    @Column(nullable = true)
+    private String currentSessionId;
+    
+    public String getCurrentSessionId() {
+        return currentSessionId;
+    }
+
+    public void setCurrentSessionId(String currentSessionId) {
+        this.currentSessionId = currentSessionId;
+    }
 
     public int getRoundsPlayed() {
         return roundsPlayed;
@@ -80,10 +103,18 @@ public class Player implements Serializable{
         }
     }
 
-    @Override
-    public int hashCode(){
-        return Long.hashCode(id);
+    public Lobby getLobby() {
+        return lobby;
     }
+
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
+    }
+
+    // @Override
+    // public int hashCode(){
+    //     return Long.hashCode(id);
+    // }
 
     
 }

@@ -2,8 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -20,6 +18,7 @@ import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerAssignTeamDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerJoinDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerReassignTeamDTO;
+import ch.uzh.ifi.hase.soprafs23.websocket.dto.PlayerRejoinDTO;
 import ch.uzh.ifi.hase.soprafs23.websocket.mapper.DTOMapperWebsocket;
 
 import org.slf4j.Logger;
@@ -56,14 +55,19 @@ public class WebsocketController {
         lobbyManager.ableToJoin(inviteCode, playerToCreate);
 
 
-        Player createdPlayer = playerService.createPlayer(playerToCreate);
+        Player createdPlayer = playerService.createPlayer(playerToCreate, inviteCode);
+
+        // lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
+
         Lobby joinedLobby = lobbyManager.getLobby(inviteCode);
-        lobbyManager.addToUnassignedPlayers(joinedLobby.getId(), createdPlayer);
+
         PlayerDTO createdPlayerDTO = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(createdPlayer);
         createdPlayerDTO.setAvatar(player.getAvatar());
         
         // Get the session ID of the user who sent the message
         String sessionId = headerAccessor.getSessionId();
+        playerService.setCurrentSessionId(createdPlayer.getId(), sessionId);
+
         log.warn("Session Id: {}", sessionId);
         // // Send a message to the user's queue
         messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", joinedLobby.getId()), createdPlayerDTO);
@@ -98,6 +102,10 @@ public class WebsocketController {
         teamService.addPlayer(lobby, reassignTeamDTO.getTo(), player);
     }
 
+    @MessageMapping("/lobbies/{lobbyId}/rejoin")
+    public void rejoinLobby(@DestinationVariable long lobbyId, PlayerRejoinDTO playerDTO){
+        return;
+    }
     // @MessageMapping("/lobbies/{lobbyId}/voting")
     // @SendToUser("")
     // public void votingChoice(@DestinationVariable long lobbyId) {

@@ -3,6 +3,10 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
@@ -21,18 +26,29 @@ import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 public class PlayerService {
     private final Logger log = LoggerFactory.getLogger(PlayerService.class);
     private Random randomizer = new Random();
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private final PlayerRepository playerRepository;
 
-    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository) {
+    @Autowired
+    private final LobbyManagement lobbyService;
+
+    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository, LobbyManagement lobbyService) {
         this.playerRepository = playerRepository;
+        this.lobbyService = lobbyService;
     }
 
-    public Player createPlayer(Player newPlayer) {
-
-        newPlayer = playerRepository.save(newPlayer);
-        playerRepository.flush();
+    public Player createPlayer(Player newPlayer, int inviteCode) {
+        Lobby lobby = lobbyService.getLobby(inviteCode);
+       
+        // lobby = entityManager.find(Lobby.class, lobby.getId());
+        newPlayer.setLobby(lobby);
+        playerRepository.save(newPlayer);
+        lobbyService.addToUnassignedPlayers(lobby.getId(), newPlayer);
+        
 
         log.debug("Created Information for User: {}", newPlayer);
         return newPlayer;
@@ -83,5 +99,28 @@ public class PlayerService {
             playerRepository.save(player);
             playerRepository.flush();
         }
+    }
+
+    public Player setCurrentSessionId(long playerId, String sessionId){
+        Player player = getPlayer(playerId);
+        player.setCurrentSessionId(sessionId);
+        player.setConnected(true);
+        return playerRepository.saveAndFlush(player);
+    }
+
+    public Player disconnect(long playerId){
+        Player player = getPlayer(playerId);
+        Lobby lobby = player.getLobby();
+        if(lobby.getGame() == null){
+            lobbyService.removePlayer(player, lobby.getId());
+        }
+        
+        player.setCurrentSessionId(null);
+        player.setConnected(false);
+        return playerRepository.saveAndFlush(player);
+    }
+
+    public Player getPlayerBySession(String sessionId){
+        return playerRepository.findByCurrentSessionId(sessionId);
     }
 }
