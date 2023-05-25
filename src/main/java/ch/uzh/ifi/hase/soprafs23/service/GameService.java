@@ -77,9 +77,11 @@ public class GameService {
         int index = randomizer.nextInt(minigamesChoice.size());
         MinigameType nextMinigameType = minigamesChoice.get(index);
         if (minigamesPlayed.size() != 0) {
+          if (minigamesChoice.size() > 1){
           while (nextMinigameType.equals(minigamesPlayed.get(minigamesPlayed.size() - 1).getType())) {
             nextMinigameType = minigamesChoice.get(randomizer.nextInt(minigamesChoice.size()));
           }
+        }
         }
         return nextMinigameType;
     }
