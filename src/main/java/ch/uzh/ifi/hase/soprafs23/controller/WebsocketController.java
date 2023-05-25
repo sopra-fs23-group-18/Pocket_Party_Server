@@ -75,26 +75,30 @@ public class WebsocketController {
 
     @MessageMapping("/lobbies/{lobbyId}/assign")
     public void assignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO assignData) {
-        Player player = playerService.getPlayer(assignData.getPlayerId());
-        lobbyManager.assignPlayer(lobbyId, player, assignData.getTeam());
+        lobbyManager.assignPlayer(lobbyId, assignData.getPlayerId(), assignData.getTeam());
     }
 
     @MessageMapping("/lobbies/{lobbyId}/unassign")
     public void unassignPlayer(@DestinationVariable long lobbyId, PlayerAssignTeamDTO unassignData) {
-        Player player = playerService.getPlayer(unassignData.getPlayerId());
-        lobbyManager.unassignPlayer(lobbyId, player, unassignData.getTeam());
+        lobbyManager.unassignPlayer(lobbyId, unassignData.getPlayerId(), unassignData.getTeam());
     }
 
 
     @MessageMapping("/lobbies/{lobbyId}/reassign")
     public void reassignPlayer(@DestinationVariable long lobbyId, PlayerReassignTeamDTO reassignTeamDTO) {
-        Player player = playerService.getPlayer(reassignTeamDTO.getPlayerId());
-        lobbyManager.reassignPlayer(lobbyId, player, reassignTeamDTO.getFrom(), reassignTeamDTO.getTo());
+        lobbyManager.reassignPlayer(lobbyId, reassignTeamDTO.getPlayerId(), reassignTeamDTO.getFrom(), reassignTeamDTO.getTo());
     }
 
     @MessageMapping("/lobbies/{lobbyId}/rejoin")
-    public void rejoinLobby(@DestinationVariable long lobbyId, PlayerRejoinDTO playerDTO){
-        return;
+    @SendToUser("/queue/join")
+    public PlayerDTO rejoinLobby(@DestinationVariable long lobbyId, PlayerRejoinDTO playerDTO, SimpMessageHeaderAccessor headerAccessor){
+        Player player = lobbyManager.rejoinPlayer(playerDTO.getId(), headerAccessor.getSessionId());
+        PlayerDTO playerDTOReturned = DTOMapperWebsocket.INSTANCE.convertEntityToPlayerDTO(player);
+        playerDTOReturned.setAvatar(playerDTO.getAvatar());
+        playerDTOReturned.setLobbyId(player.getLobby().getId());
+
+        messagingTemplate.convertAndSend(String.format("/queue/lobbies/%d", player.getLobby().getId()), playerDTOReturned);
+        return playerDTOReturned;
     }
     // @MessageMapping("/lobbies/{lobbyId}/voting")
     // @SendToUser("")
