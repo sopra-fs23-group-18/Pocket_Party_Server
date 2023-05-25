@@ -54,10 +54,10 @@ public class TeamService {
         Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.add(player);
-        // teamRepository.save(team);
+        teamRepository.save(team);
         // teamRepository.flush();
     }
-
+    
     public void removePlayer(Lobby lobby, TeamType type, Player player) {
         if (lobby == null || type == null || player == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -66,7 +66,7 @@ public class TeamService {
         Team team = getByTypeAndLobby(lobby, type);
         List<Player> players = team.getPlayers();
         players.remove(player);
-        // teamRepository.save(team);
+        teamRepository.save(team);
         // teamRepository.flush();
     }
 
