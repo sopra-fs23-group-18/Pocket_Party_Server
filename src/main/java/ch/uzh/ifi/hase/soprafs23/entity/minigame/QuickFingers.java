@@ -12,7 +12,6 @@ public class QuickFingers extends Minigame {
                 MinigameType.QUICK_FINGERS,
                 "Tap the screen as fast as you can! Whoever tapped more often after 20 seconds will win this round.",
                 500,
-                new MinigamePlayers[] { MinigamePlayers.ONE });
+                new MinigamePlayers[] { MinigamePlayers.ONE, MinigamePlayers.TWO });
     }
-
 }

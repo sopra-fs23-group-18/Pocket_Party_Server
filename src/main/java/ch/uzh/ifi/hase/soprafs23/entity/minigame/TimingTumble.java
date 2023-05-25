@@ -14,5 +14,4 @@ public class TimingTumble extends Minigame {
                 500,
                 new MinigamePlayers[] { MinigamePlayers.ONE });
     }
-
 }
