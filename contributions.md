@@ -276,6 +276,11 @@ Upcoming:
 ## Nils Grob
 ## Stefan Schuler
 ## Naseem Hassan
+- Added settings option for Minigame choice [#71](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/71):
+  - It is now possible to choose which minigames can occur
+  - added MinigameChoiceSettings page
+- A LOT of styling/cleaning up in the Frontend.
+
 ## Guojun Wu
 ## Sven Ringger
 - Update images in GamePreview
