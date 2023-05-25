@@ -11,10 +11,7 @@ public class RPS extends Minigame {
         super(
                 MinigameType.ROCK_PAPER_SCISSORS,
                 """
-                        Rock Paper Scissors: Choose one of the three, if you beat your opponent you get a point.
-                        Rock > Scissors
-                        Scissors > Paper
-                        Paper > Rock
+                    Engage in an epic Rock Paper Scissors battle on your smartphones! Compete to be the first to reach three points. Choose your move wisely by tapping on your device, whether it's rock, paper, or scissors. With the right strategy, can you outsmart your opponents and claim victory?
                         """,
                 500,
                 new MinigamePlayers[] { MinigamePlayers.ONE });

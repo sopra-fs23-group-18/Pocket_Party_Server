@@ -10,7 +10,7 @@ public class Pong extends Minigame {
     public Pong() {
         super(
                 MinigameType.POCKET_PONG,
-                "Move your paddle by rotating your phone and try to stop the ball from hitting your side. If you miss the other player gets a point!",
+                "Take control of the action using your smartphone as a paddle controller! Tilt your device to move the paddles and outmaneuver your opponent. The host screen displays the gameplay as you compete to be the first to reach 5 points. Experience the excitement of this classic arcade game in a whole new way.",
                 500,
                 new MinigamePlayers[] { MinigamePlayers.ONE });
     }
