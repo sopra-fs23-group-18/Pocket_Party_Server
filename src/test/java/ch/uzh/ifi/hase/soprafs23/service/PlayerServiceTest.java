@@ -111,4 +111,65 @@ public class PlayerServiceTest {
 
     }
 
+    @Test
+    public void testSetCurrentSessionId(){
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player createdPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
+        Player saved = playerService.setCurrentSessionId(createdPlayer.getId(), "testSessionId");
+
+        // then
+        assertNotNull(saved);
+        assertEquals(player.getNickname(), saved.getNickname());
+        assertEquals(saved.getCurrentSessionId(), "testSessionId");
+        assertEquals(true, saved.isConnected());
+    }
+
+    @Test
+    public void testGetPlayerBySession(){
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player createdPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
+        Player saved = playerService.setCurrentSessionId(createdPlayer.getId(), "testSessionId");
+        Player foundPLayer = playerService.getPlayerBySession("testSessionId");
+
+        // then
+        assertNotNull(saved);
+        assertEquals(foundPLayer.getNickname(), saved.getNickname());
+        assertEquals(foundPLayer.getCurrentSessionId(), saved.getCurrentSessionId());
+        assertEquals(true, foundPLayer.isConnected());
+    }
+
+    @Test
+    public void testDisconnect(){
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player createdPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
+        Player saved = playerService.setCurrentSessionId(createdPlayer.getId(), "testSessionId");
+        playerService.disconnect(saved);
+
+        assertEquals(createdPlayer.getNickname(), saved.getNickname());
+        assertEquals(null, saved.getCurrentSessionId());
+        assertEquals(false, saved.isConnected());
+    }
+
+    @Test
+    public void testConnect(){
+        Lobby createdLobby = lobbyManager.createLobby();
+        Player player = new Player();
+        player.setNickname("test");
+        Player createdPlayer = lobbyManager.createPlayer(createdLobby.getInviteCode(), player);
+        Player saved = playerService.setCurrentSessionId(createdPlayer.getId(), "testSessionId");
+        playerService.disconnect(saved);
+        Player connected = playerService.connect(createdPlayer, "testSessionId2");
+
+        assertEquals(saved.getNickname(), connected.getNickname());
+        assertEquals("testSessionId2", connected.getCurrentSessionId());
+        assertEquals(true, connected.isConnected());
+    }
+
+
 }

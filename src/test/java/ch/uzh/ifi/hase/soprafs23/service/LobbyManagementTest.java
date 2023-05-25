@@ -283,4 +283,14 @@ public class LobbyManagementTest {
         assertEquals(0, teamService.lowestPlayerAmount(createdLobby));
     }
 
+
+
+    @Test
+    public void testIsGameSetFalse(){
+        Lobby lobby = lobbyManager.createLobby(); 
+        assertEquals(false, lobbyManager.isGameSet(lobby.getId()));
+    }
+
+    
+
 }
