@@ -278,3 +278,9 @@ Upcoming:
 ## Naseem Hassan
 ## Guojun Wu
 ## Sven Ringger
+- Update images in GamePreview
+- Fix image rendering in GamePreview
+- Add play again button after game has finished #77
+- Add error display in web #68
+- Add ability to check for draw and display special screen if a draw has occurred #86
+- Add catch statements for all errors
