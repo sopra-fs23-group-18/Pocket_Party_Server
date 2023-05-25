@@ -12,6 +12,6 @@ public class QuickFingers extends Minigame {
                 MinigameType.QUICK_FINGERS,
                 "Test your finger dexterity in this high-speed tapping challenge! Compete to tap your smartphone screen faster and accumulate the most taps in 20 seconds. It's a battle of nimble fingers. Can you secure the Quick Fingers champion title?",
                 500,
-                new MinigamePlayers[] { MinigamePlayers.ONE, MinigamePlayers.TWO });
+                new MinigamePlayers[] { MinigamePlayers.ONE });
     }
 }
