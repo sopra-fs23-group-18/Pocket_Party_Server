@@ -144,9 +144,12 @@ public class LobbyManagementIntegrationTest {
         
         lobbyManager.ableToStart(lobby.getId());
 
-        lobbyManager.reassignPlayer(lobby.getId(), player1.getId(), TeamType.TEAM_ONE, TeamType.TEAM_TWO);
+        //lobbyManager.reassignPlayer(lobby.getId(), player1.getId(), TeamType.TEAM_TWO, TeamType.TEAM_ONE);
         lobbyManager.unassignPlayer(lobby.getId(), player4.getId(), TeamType.TEAM_TWO );
         lobbyManager.assignPlayer(lobby.getId(), player4.getId(), TeamType.TEAM_ONE);
+        
+        lobbyManager.unassignPlayer(lobby.getId(), player1.getId(), TeamType.TEAM_ONE );
+        lobbyManager.assignPlayer(lobby.getId(), player1.getId(), TeamType.TEAM_TWO);
 
         lobbyManager.ableToStart(lobby.getId());
     }
