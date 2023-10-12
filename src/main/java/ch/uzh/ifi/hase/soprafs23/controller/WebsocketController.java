@@ -84,7 +84,9 @@ public class WebsocketController {
 
     @MessageMapping("/lobbies/{lobbyId}/reassign")
     public void reassignPlayer(@DestinationVariable long lobbyId, PlayerReassignTeamDTO reassignTeamDTO) {
-        lobbyManager.reassignPlayer(lobbyId, reassignTeamDTO.getPlayerId(), reassignTeamDTO.getFrom(), reassignTeamDTO.getTo());
+        lobbyManager.unassignPlayer(lobbyId, reassignTeamDTO.getPlayerId(), reassignTeamDTO.getFrom());
+        lobbyManager.assignPlayer(lobbyId, reassignTeamDTO.getPlayerId(), reassignTeamDTO.getTo());
+        //lobbyManager.reassignPlayer(lobbyId, reassignTeamDTO.getPlayerId(), reassignTeamDTO.getFrom(), reassignTeamDTO.getTo());
     }
 
     @MessageMapping("/lobbies/{lobbyId}/rejoin")

@@ -15,6 +15,6 @@ public class GreedyGambit extends Minigame {
                         You will play several rounds with the goal being to achieve a higher total score than your opponent.
                         """,
                 500,
-                new MinigamePlayers[] { MinigamePlayers.TWO });
+                new MinigamePlayers[] { MinigamePlayers.ONE, MinigamePlayers.TWO });
     }
 }

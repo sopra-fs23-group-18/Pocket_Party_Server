@@ -18,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigamePlayers;
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
-import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
@@ -82,7 +81,6 @@ public class GameServiceTest {
     @Test
     public void testGetGame() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         gameRepository.save(game);
 
         Game foundGame = gameService.getGame(game.getId());
@@ -99,7 +97,6 @@ public class GameServiceTest {
     @Test
     public void testGetMinigame() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
 
         Minigame minigame = new TimingTumble();
         minigame.setAmountOfPlayers(MinigamePlayers.TWO);
@@ -114,7 +111,6 @@ public class GameServiceTest {
     @Test
     public void testGetMinigameFail() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         gameRepository.save(game);
         assertThrows(ResponseStatusException.class, () -> gameService.getMinigame(game.getId()));
 
@@ -125,7 +121,6 @@ public class GameServiceTest {
         Game game = new Game();
         List<MinigameType> minigameTypes = Arrays.asList(MinigameType.values());
 
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setMinigamesChoice(minigameTypes);
 
         Lobby lobby = lobbyManager.createLobby();
@@ -140,7 +135,6 @@ public class GameServiceTest {
     @Test
     public void testGetWinner() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setGameOutcome(OutcomeType.WINNER);
 
         Lobby lobby = lobbyManager.createLobby();
@@ -156,7 +150,6 @@ public class GameServiceTest {
     @Test
     public void testGetWinnerFail() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setGameOutcome(OutcomeType.NOT_FINISHED);
 
         Lobby lobby = lobbyManager.createLobby();
@@ -168,7 +161,6 @@ public class GameServiceTest {
     @Test
     public void testIsFinished() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
 
         Lobby lobby = lobbyManager.createLobby();
@@ -184,7 +176,6 @@ public class GameServiceTest {
     @Test
     public void testNotFinished() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
 
         Lobby lobby = lobbyManager.createLobby();
@@ -200,7 +191,6 @@ public class GameServiceTest {
     @Test
     public void testCreateGame() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
 
         Lobby lobby = lobbyManager.createLobby();
@@ -214,7 +204,6 @@ public class GameServiceTest {
     @Test
     public void testCreateGameFail1() {
         Game game = new Game();
-        game.setWinningScore(10);
 
         Lobby lobby = lobbyManager.createLobby();
 
@@ -224,7 +213,6 @@ public class GameServiceTest {
     @Test
     public void testCreateGameFail2() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(-1);
 
         Lobby lobby = lobbyManager.createLobby();
@@ -235,7 +223,6 @@ public class GameServiceTest {
     @Test
     public void testUpdateMinigame() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
 
         Minigame minigame = new QuickFingers();
@@ -257,7 +244,6 @@ public class GameServiceTest {
     @Test
     public void testUpdateMinigameFail1() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
         Minigame minigame = new VibrationVoyage();
         minigame.setAmountOfPlayers(MinigamePlayers.ONE);
@@ -276,7 +262,6 @@ public class GameServiceTest {
     @Test
     public void testUpdateMinigameFail2() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
         Minigame minigame = new RPS();
         minigame.setAmountOfPlayers(MinigamePlayers.ONE);
@@ -296,7 +281,6 @@ public class GameServiceTest {
     @Test
     public void testFinishedMinigameUpdate() {
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
         Minigame minigame = new GreedyGambit();
         minigame.setAmountOfPlayers(MinigamePlayers.TWO);
@@ -318,7 +302,6 @@ public class GameServiceTest {
     public void testUpdateUpcomingMinigame() {
         Game game = new Game();
         List<MinigameType> minigameTypes = Arrays.asList(MinigameType.values());
-        game.setPlayerChoice(PlayerChoice.RANDOM);
         game.setWinningScore(10);
         game.setMinigamesChoice(minigameTypes);
         Minigame minigame = new TimingTumble();

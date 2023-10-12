@@ -24,7 +24,6 @@ import javax.persistence.JoinColumn;
 
 import ch.uzh.ifi.hase.soprafs23.constant.MinigameType;
 import ch.uzh.ifi.hase.soprafs23.constant.OutcomeType;
-import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
 
 @Entity
@@ -61,8 +60,8 @@ public class Game implements Serializable{
     @OneToMany(cascade = CascadeType.ALL)
     private List<Minigame> minigamesPlayed = new ArrayList<Minigame>();
 
-    @Column(nullable = false)
-    private PlayerChoice playerChoice;
+    // @Column(nullable = false)
+    // private PlayerChoice playerChoice;
 
     @Column(nullable = true)
     private OutcomeType gameOutcome = OutcomeType.NOT_FINISHED;
@@ -79,13 +78,13 @@ public class Game implements Serializable{
         this.gameOutcome = gameOutcome;
     }
 
-    public PlayerChoice getPlayerChoice() {
-        return playerChoice;
-    }
+    // public PlayerChoice getPlayerChoice() {
+    //     return playerChoice;
+    // }
 
-    public void setPlayerChoice(PlayerChoice playerChoice) {
-        this.playerChoice = playerChoice;
-    }
+    // public void setPlayerChoice(PlayerChoice playerChoice) {
+    //     this.playerChoice = playerChoice;
+    // }
 
     public Long getId() {
         return id;

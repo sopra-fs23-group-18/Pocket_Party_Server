@@ -274,9 +274,27 @@ Upcoming:
 
 # 19.05 - 25.05
 ## Nils Grob
+- Added rejoin functionality to server and clients
+- Handled errors on mobile
+- clenaup
+- hotfixes both on backend and frontends
+
 ## Stefan Schuler
+- lobby can have several games now without needing to create another lobby [#160](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/160)
+- added subclasses again for minigames and handled information via constructor [#158](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/158)
+- backend is ready to include several players in a minigame [#142](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/142)
+- adapted the services [#145](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/145)
+- added case in backend for a draw happening [#171](https://github.com/sopra-fs23-group-18/pocket-party-server/issues/171)
+
 ## Naseem Hassan
+- Added settings option for Minigame choice [#71](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/71):
+  - It is now possible to choose which minigames can occur
+  - added MinigameChoiceSettings page
+- A LOT of styling/cleaning up in the Frontend.
+
 ## Guojun Wu
+- Display Strategy Game on the Web [#85](https://github.com/sopra-fs23-group-18/pocket-party-web/issues/85)
+- In Game screen for Strategy Game [#30](https://github.com/sopra-fs23-group-18/pocket-party-mobile/issues/30)
 ## Sven Ringger
 - Update images in GamePreview
 - Fix image rendering in GamePreview

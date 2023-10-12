@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
-import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import org.junit.jupiter.api.Test;
@@ -59,7 +58,6 @@ public class LobbyRepositoryTest {
         // Create a Lobby entity and a corresponding Game entity, and associate them
         Lobby lobby = new Lobby();
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.VOTING);
         lobby.setGame(game);
         entityManager.persist(lobby);
         entityManager.flush();

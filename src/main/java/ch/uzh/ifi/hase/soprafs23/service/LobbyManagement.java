@@ -115,8 +115,6 @@ public class LobbyManagement {
     if (lobby == null || newPlayer == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby or Player is empty!");
     }
-
-    lobby.getUnassignedPlayers().size();
     lobby.addToUnassignedPlayers(newPlayer);
     
   }
@@ -189,7 +187,7 @@ public class LobbyManagement {
       throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED,
           "There are not enough players in the teams to start!");
     }
-    throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There players that are not assigned yet!");
+    throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "There are players that are not assigned yet!");
   }
 
   public void addGame(Game game, Long lobbyId) {

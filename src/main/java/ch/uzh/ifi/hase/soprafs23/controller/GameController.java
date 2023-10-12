@@ -77,7 +77,8 @@ public class GameController {
     }
 
     /**
-     * @return minigame; format: description, scoreToGain, team1Players, team2Players,
+     * @return minigame; format: description, scoreToGain, team1Players,
+     *         team2Players,
      *         type, amountOfPlayers
      */
     @GetMapping("/lobbies/{lobbyId}/games/{gameId}/minigame")
@@ -96,7 +97,9 @@ public class GameController {
     @ResponseBody
     public MinigameGetDTO addMinigame(@PathVariable long gameId) {
         Minigame nextMinigame = gameService.addUpcomingMinigame(gameId);
-        return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(nextMinigame);
+        gameService.updateUpcomingMinigame(gameId);
+        Minigame updatedMinigame = gameService.getMinigame(gameId);
+        return DTOMapper.INSTANCE.convertEntityToMinigameGetDTO(updatedMinigame);
     }
 
     /**

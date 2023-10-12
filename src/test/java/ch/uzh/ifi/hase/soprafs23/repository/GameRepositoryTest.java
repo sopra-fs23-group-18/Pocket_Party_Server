@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-import ch.uzh.ifi.hase.soprafs23.constant.PlayerChoice;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 
 @DataJpaTest
@@ -24,7 +23,6 @@ public class GameRepositoryTest {
     public void testFindById() {
         // Create a game entity and persist it to the in-memory database
         Game game = new Game();
-        game.setPlayerChoice(PlayerChoice.VOTING);
 
         entityManager.persist(game);
         entityManager.flush();

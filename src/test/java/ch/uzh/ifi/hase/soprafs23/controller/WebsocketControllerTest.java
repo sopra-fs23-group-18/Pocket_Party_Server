@@ -46,7 +46,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Lobby;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Team;
 import ch.uzh.ifi.hase.soprafs23.entity.minigame.Minigame;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.LobbyPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.MinigameWinnerTeamPutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.LobbyManagement;
 import ch.uzh.ifi.hase.soprafs23.service.MinigameService;

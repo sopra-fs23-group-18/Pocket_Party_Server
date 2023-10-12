@@ -11,7 +11,7 @@ public class VibrationVoyage extends Minigame {
     public VibrationVoyage() {
         super(
                 MinigameType.VIBRATION_VOYAGE,
-                "You will be shown 3 vibration patterns on your phone. Then one of the 3 patterns will be shown again and you need to choose which one it was that you have already felt.",
+                " Prepare for a test of observation and memory in this intriguing game! Your phone will present you with three distinctive vibration patterns, each corresponding to a different shape: square, triangle, and circle. Pay careful attention to the patterns, as one of them will be replayed later. Your challenge is to accurately recall and select the matching shape you felt before.",
                 200,
                 new MinigamePlayers[] { MinigamePlayers.ONE });
     }
